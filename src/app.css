@@ -1,0 +1,40 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+/* Define global design tokens for Tailwind v4 */
+@theme {
+  /* Primary brand color */
+  --color-primary: #3273DC;
+  --color-primary-foreground: hsl(210 20% 98%);
+
+  --color-accent: #FFAA00;
+  --color-accent-foreground: #FFFFFF;
+}
+
+
+/* Layout helpers */
+.glass-bar {
+    @apply flex bg-gray-900/20  p-1.5 rounded-4xl backdrop-blur-sm w-min font-mono uppercase text-sm drop-shadow-2xl drop-shadow-slate-500/50;
+    .item {
+        @apply px-4 py-1 text-white text-shadow-sm text-shadow-gray-600/30;
+        &.selected {
+            @apply bg-white/50  text-primary text-shadow-sm text-shadow-gray-600/10 rounded-4xl;
+        }        
+    }
+}
+
+.glass-circle {
+    @apply flex bg-transparent drop-shadow-md drop-shadow-gray-200 p-2 rounded-full backdrop-blur-sm w-12 h-12 items-center justify-center ;
+}
+
+.pos-fixed-bottom {
+    @apply fixed bottom-0 p-3;
+    &.left {
+        @apply left-0;
+    }
+    &.right {
+        @apply right-0;
+    } 
+}
+
