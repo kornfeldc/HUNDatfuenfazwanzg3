@@ -1,4 +1,4 @@
-import type { IArticle, IHfzApi, IId, IPerson, ISale } from "$lib/data/hfzApi";
+import type { IArticle, IHfzApi, IId, IPerson, IRobCourse, ISale} from "$lib/data/hfzApi";
 
 // In-memory mock data for development/testing only.
 // Generates ~10 persons, 10 articles, and 50 sales with dates from now and the last month.
@@ -22,7 +22,7 @@ function randomRecentDate(): Date {
 }
 
 // Create persons
-const persons: IPerson[] = Array.from({ length: 10 }).map((_, idx) => {
+const persons: IPerson[] = Array.from({length: 10}).map((_, idx) => {
     const id = idx + 1;
     const firstNames = [
         "Alex", "Jamie", "Taylor", "Jordan", "Casey",
@@ -66,7 +66,7 @@ const persons: IPerson[] = Array.from({ length: 10 }).map((_, idx) => {
 persons.forEach(p => (p.mainPerson = p));
 
 // Create articles
-const articles: IArticle[] = Array.from({ length: 10 }).map((_, idx) => {
+const articles: IArticle[] = Array.from({length: 10}).map((_, idx) => {
     const id = idx + 1;
     const titles = [
         "Single Course", "5-Course Pack", "10-Course Pack", "Annual Membership",
@@ -94,7 +94,7 @@ for (let idx = 0; idx < 50; idx++) {
 
     // choose 1-3 articles and amounts
     const articleCount = randomInt(1, 3);
-    const chosenArticles = Array.from({ length: articleCount }).map((_, i) => articles[(idx + i) % articles.length]);
+    const chosenArticles = Array.from({length: articleCount}).map((_, i) => articles[(idx + i) % articles.length]);
 
     // We'll first create a partial sale to reference from saleArticles, then finalize it
     const partialSale: ISale = {
@@ -158,7 +158,53 @@ for (let idx = 0; idx < 50; idx++) {
     sales.push(partialSale);
 }
 
+// Create ROB courses (mock)
+const robCourses: IRobCourse[] = (() => {
+    const courseCount = 8;
+    const list: IRobCourse[] = [] as any;
+    for (let i = 0; i < courseCount; i++) {
+        const id = i + 1;
+        const date = new Date();
+        // Distribute some in the past 10 days and next 10 days
+        const offsetDays = randomInt(-10, 10);
+        date.setDate(date.getDate() + offsetDays);
+        date.setHours(randomInt(9, 19), [0, 15, 30, 45][randomInt(0, 3)], 0, 0);
+
+        const maxPersons = [6, 8, 10][i % 3];
+        const course: IRobCourse = {
+            id,
+            date,
+            link: `https://example.com/rob/${300 + id}`,
+            maxPersons,
+            persons: [] as any
+        };
+
+        // Enroll 0..maxPersons randomly from persons list
+        const enrolledCount = randomInt(0, Math.min(maxPersons, persons.length));
+        const shuffled = [...persons].sort(() => Math.random() - 0.5).slice(0, enrolledCount);
+        const coursePersons = shuffled.map((p, idxP) => ({
+            id: idxP + 1,
+            course,
+            dogName: p.dogNames,
+            personName: `${p.firstName} ${p.lastName}`,
+            timestamp: new Date(course.date.getTime() - randomInt(1, 7) * 24 * 60 * 60 * 1000)
+        }));
+        course.persons = coursePersons as any;
+        list.push(course);
+    }
+    return list;
+})();
+
 export class HfzMockApi implements IHfzApi {
+    async getRobCourses(): Promise<Array<IRobCourse>> {
+        return robCourses;
+    }
+    async getRobCourse(id: IId): Promise<IRobCourse> {
+        const found = robCourses.find(c => c.id === id.id);
+        if (!found) throw new Error(`Rob course with id ${id.id} not found`);
+        return found;
+    }
+    
     async getArticles(): Promise<Array<IArticle>> {
         return articles;
     }

@@ -3,13 +3,14 @@
     import GlassBar from "./GlassBar.svelte";
     import GlassBarLink from "./GlassBarLink.svelte";
     import PlaceAtBottom from "./PlaceAtBottom.svelte";
+    
+    import {uiState} from "$lib/stores/uiState.svelte";
 
     let modules = $state([
         { name: "Verkauf", href: "/l/modules/sales" },
-        { name: "Kurs", href: "/l/modules/courses" },
-        { name: "ROB", href: "/l/modules/rob" },
         { name: "Personen", href: "/l/modules/persons" },
         { name: "Artikel", href: "/l/modules/articles" },
+        { name: "ROB", href: "/l/modules/rob" },
     ]);
 
     const isSelected = (href: string) => {
@@ -18,6 +19,7 @@
     };
 </script>
 
+{#if uiState.showNavBar}
 <PlaceAtBottom>
     <GlassBar>
         {#each modules as module}
@@ -25,3 +27,4 @@
         {/each}
     </GlassBar>
 </PlaceAtBottom>
+{/if}

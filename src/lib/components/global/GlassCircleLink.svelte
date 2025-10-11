@@ -1,6 +1,6 @@
 <script lang="ts">
     import GlassCircle from "./GlassCircle.svelte";
-    let {children, href} = $props();
+    let {children, href = ""} = $props();
 </script>
 <GlassCircle>
     <a href={href} class={""}>

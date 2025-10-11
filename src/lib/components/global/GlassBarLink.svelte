@@ -3,7 +3,7 @@
     let {children, selected, href} = $props();
 </script>
 <a href={href} class={Util.mapClass(
-    "px-4 py-1 ", 
+    "px-4 py-1.5 ", 
     selected, 
     "bg-white/70  text-gray-600  rounded-4xl", 
     "text-white")}>

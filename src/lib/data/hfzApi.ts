@@ -9,6 +9,9 @@ export interface IHfzApi {
     
     getSales(): Promise<Array<ISale>>;
     getSale(id: IId): Promise<ISale>;
+    
+    getRobCourses(): Promise<Array<IRobCourse>>;
+    getRobCourse(id: IId): Promise<IRobCourse>;
 }
 
 export class HfzApi {
@@ -103,6 +106,7 @@ export interface IRobCourse extends IId {
     date: Date;
     link: string;
     maxPersons: number;
+    persons: Array<IRobCoursePerson>;
 }
 
 export interface IRobCoursePerson extends IId {
