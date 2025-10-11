@@ -1,8 +1,7 @@
 <script lang="ts">
-    import NavigationBar from "../../../components/global/NavigationBar.svelte";
-    import logo from '$lib/assets/logo.svg';
-    import TopBar from "../../../components/global/TopBar.svelte";
-    
+    import TopBar from "$lib/components/global/TopBar.svelte";
+    import NavigationBar from "$lib/components/global/NavigationBar.svelte";
+
     let { children } = $props();
 </script>
 

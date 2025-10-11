@@ -1,5 +1,8 @@
 <script lang="ts">
     import { page } from '$app/stores';
+    import GlassBar from "./GlassBar.svelte";
+    import GlassBarLink from "./GlassBarLink.svelte";
+    import PlaceAtBottom from "./PlaceAtBottom.svelte";
 
     let modules = $state([
         { name: "Verkauf", href: "/l/modules/sales" },
@@ -15,10 +18,10 @@
     };
 </script>
 
-<div class="pos-fixed-bottom">
-    <div class="glass-bar">
+<PlaceAtBottom>
+    <GlassBar>
         {#each modules as module}
-            <a class={(isSelected(module.href) ? "selected" : "") + " item"} href={module.href}>{module.name}</a>
+            <GlassBarLink selected={isSelected(module.href)} href={module.href}>{module.name}</GlassBarLink>
         {/each}
-    </div>
-</div>
+    </GlassBar>
+</PlaceAtBottom>

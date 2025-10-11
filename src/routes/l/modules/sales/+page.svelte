@@ -1,21 +1,18 @@
 <script lang="ts">
-    import {HfzApi} from "$lib/data/hfzApi";
-    import SalesList from "../../../../components/sales/SalesList.svelte";
     import {Plus} from "@lucide/svelte";
-
-    const api = HfzApi.create();
-
+    import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
+    import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
+    import SalesList from "$lib/components/sales/SalesList.svelte";
+    let { data }: { data: any } = $props();
 </script>
-{#await api.getSales()}
+{#await data.sales}
     loading ...
 {:then sales}
     <SalesList {sales}/>
 {/await}
 
-<div class="pos-fixed-bottom right">
-    <div class="glass-circle m-1 p-1 flex">
-        <a href="/l/dialogs/sale">
-           <Plus class="text-slate-500"/>
-        </a>
-    </div>
-</div>
+<PlaceAtBottom at="right">
+    <GlassCircleLink href="/l/dialogs/sale">
+        <Plus class="text-slate-500"/>
+    </GlassCircleLink>
+</PlaceAtBottom>

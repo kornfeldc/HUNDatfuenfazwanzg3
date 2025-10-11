@@ -1,6 +1,7 @@
 <script lang="ts">
     import type {ISale} from "$lib/data/hfzApi";
     import {Util} from "$lib/util";
+    import Card from "$lib/components/global/Card.svelte";
 
     interface IProps {
         sale: ISale;
@@ -9,7 +10,7 @@
     let {sale}: IProps = $props();
 </script>
 
-<div class="m-4 p-4 shadow-lg shadow-slate-300 rounded-lg">
+<Card >
     <div class="flex items-center">
         <div class="whitespace-nowrap font-bold text-lg">{sale.personName}</div>
         {#if sale.person?.dogNames}
@@ -19,4 +20,4 @@
     </div>
     <div>{Util.formatDate(sale.saleDate)}</div>
     <div>{sale.saleArticles.map(sa => `${sa.amount}x ${sa.articleTitle}`).join(", ")}</div>
-</div>
+</Card>

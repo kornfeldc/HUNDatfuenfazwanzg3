@@ -10,5 +10,7 @@
 </script>
 
 {#each sales as sale}
-    <SalesListEntry {sale}/>
+    <div class="m-4">
+        <SalesListEntry {sale}/>
+    </div>
 {/each}
