@@ -1,9 +1,13 @@
 <script lang="ts">
     import GlassCircle from "./GlassCircle.svelte";
-    let {children, href = ""} = $props();
+    let {children, href = "", className = ""} = $props();
 </script>
-<GlassCircle>
-    <a href={href} class={""}>
+<GlassCircle {className}>
+    {#if href}
+        <a href={href}>
+            {@render children?.()}
+        </a>
+    {:else}
         {@render children?.()}
-    </a>
+    {/if}
 </GlassCircle>

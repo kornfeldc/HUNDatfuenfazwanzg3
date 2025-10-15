@@ -1,23 +1,43 @@
 <script lang="ts">
     import Loading from "$lib/components/global/Loading.svelte";
     import ArticlesGrid from "$lib/components/articles/ArticlesGrid.svelte";
-    import AddButton from "$lib/components/global/AddButton.svelte";
+    import AddButton from "$lib/components/global/NavigationButtons/AddButton.svelte";
     import NavigationActions from "$lib/components/global/NavigationActions.svelte";
-    import SearchButton from "$lib/components/global/SearchButton.svelte";
-    import type {IArticle} from "$lib/data/hfzApi";
+    import SearchButton from "$lib/components/global/NavigationButtons/SearchButton.svelte";
+    import {ArticleTypes, type IArticle} from "$lib/data/hfzApi";
+    import FilterBar from "$lib/components/global/FilterBar.svelte";
 
     let {data}: { data: any } = $props();
     let searchString = $state("");
+
+    import { page } from '$app/stores';
+    let type = $derived($page.url.searchParams.get("type") ?? "favorite");
+    
     const onSearch = (value: string) => {
         searchString = value;
     }
 
     const filter = (articles: Array<IArticle>) => {
         return articles.filter((a: IArticle) =>
-            a.title?.toLowerCase().includes(searchString.toLowerCase())
+            a.title?.toLowerCase().includes(searchString.toLowerCase()) &&
+            (
+                !type || 
+                (type === "favorite" && a.isFavorite && a.isActive) ||
+                (type === "inActive" && !a.isActive) ||
+                a.type === type
+            )
         );
     }
+    
+    const filterItems = [
+        {id: "favorite", label: "Favoriten"},
+        ...Object.keys(ArticleTypes).map((t) => ({id: t, label: ArticleTypes[t]})),
+        {id: "inactive", label: "Inaktiv"}
+    ];
+    
+    
 </script>
+<FilterBar items={filterItems} selected={type} parameterName="type"></FilterBar>
 {#await data.articles}
     <Loading></Loading>
 {:then articles}

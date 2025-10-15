@@ -1,0 +1,95 @@
+<script lang="ts">
+    import {page} from '$app/stores';
+    import NavigationActions from "$lib/components/global/NavigationActions.svelte";
+    import SaveButton from "$lib/components/global/NavigationButtons/SaveButton.svelte";
+    import {Label} from "$lib/components/shadcn/ui/label";
+    // noinspection ES6UnusedImports
+    import * as InputGroup from "$lib/components/shadcn/ui/input-group/index.js";
+    // noinspection ES6UnusedImports
+    import * as Select from "$lib/components/shadcn/ui/select/index.js";
+
+    import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
+    import BackButton from "$lib/components/global/NavigationButtons/BackButton.svelte";
+    import Card from "$lib/components/global/Card.svelte";
+    import CardTitleBig from "$lib/components/global/CardTitleBig.svelte";
+    import Loading from "$lib/components/global/Loading.svelte";
+    import {ArticleTypes, type IArticle} from "$lib/data/hfzApi";
+    import {Input} from "$lib/components/shadcn/ui/input";
+    import {Checkbox} from "$lib/components/shadcn/ui/checkbox";
+
+    let id = $page.params.id;
+    let {data}: { data: any; } = $props();
+    let formArticle = $state({} as IArticle);
+
+    $effect(() => {
+        const article = data.article;
+        formArticle.id = article?.id;
+        formArticle.price = article?.price ?? 0;
+        formArticle.title = article?.title ?? "Neuer Artikel";
+        formArticle.type = article?.type ?? "other";
+        formArticle.isFavorite = article?.isFavorite ?? false;
+        formArticle.isActive = article?.isActive ?? true;
+    });
+</script>
+
+{#await data.article}
+    <Loading></Loading>
+{:then _}
+    <form method="post" action="/l/dialogs/article/{id}">
+        <Card>
+            <CardTitleBig>{formArticle.title}</CardTitleBig>
+            <div class="grid w-full max-w-sm gap-6">
+                <div class="grid gap-2">
+                    <Label for="title-{id}">Bezeichnung</Label>
+                    <InputGroup.Root>
+                        <InputGroup.Input name="title" id="title-{id}" bind:value={formArticle.title}></InputGroup.Input>
+                    </InputGroup.Root>
+                </div>
+
+                <div class="grid gap-2">
+                    <Label for="type-{id}">Art</Label>
+                    <Select.Root type="single" name="type" bind:value={formArticle.type}>
+                        <Select.Trigger class="w-full">{ArticleTypes[formArticle.type]}</Select.Trigger>
+                        <Select.Content>
+                            {#each Object.keys(ArticleTypes) as type}
+                                <Select.Item value={type}>{ArticleTypes[type]}</Select.Item>
+                            {/each}
+                        </Select.Content>
+                    </Select.Root>
+                </div>
+
+                <div class="flex gap-10">
+                    <div class="grid gap-2 w-30">
+                        <Label for="price-{id}">Preis</Label>
+                        <InputGroup.Root>
+                            <InputGroup.Addon>
+                                <InputGroup.Text>€</InputGroup.Text>
+                            </InputGroup.Addon>
+                            <InputGroup.Input class="text-right" name="price" bind:value={formArticle.price} id="price-{id}" step="0.01"
+                                              type="number"/>
+                        </InputGroup.Root>
+                    </div>
+
+                    <div class="grid gap-2">
+                        <Label for="favorite-{id}" class="whitespace-nowrap">Ist Favorit</Label>
+                        <Checkbox name="isFavorite" id="favorite-{id}" bind:checked={formArticle.isFavorite}/>
+                    </div>
+
+                    <div class="grid gap-2">
+                        <Label for="active-{id}" class="whitespace-nowrap">Ist Aktiv</Label>
+                        <Checkbox name="isActive" id="active-{id}" bind:checked={formArticle.isActive}/>
+                    </div>
+                </div>
+            </div>
+        </Card>
+        
+        <PlaceAtBottom>
+            <BackButton></BackButton>
+        </PlaceAtBottom>
+        <NavigationActions>
+            <button type="submit" slot="actions">
+                <SaveButton></SaveButton>
+            </button>
+        </NavigationActions>
+    </form>
+{/await}

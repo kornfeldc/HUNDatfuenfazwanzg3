@@ -1,8 +1,8 @@
 <script lang="ts">
     import SalesGrid from "$lib/components/sales/SalesGrid.svelte";
-    import AddButton from "$lib/components/global/AddButton.svelte";
+    import AddButton from "$lib/components/global/NavigationButtons/AddButton.svelte";
     import NavigationActions from "$lib/components/global/NavigationActions.svelte";
-    import SearchButton from "$lib/components/global/SearchButton.svelte";
+    import SearchButton from "$lib/components/global/NavigationButtons/SearchButton.svelte";
     import type {ISale} from "$lib/data/hfzApi";
 
     let {data}: { data: any } = $props();

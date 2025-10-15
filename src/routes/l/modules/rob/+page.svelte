@@ -1,8 +1,8 @@
 <script lang="ts">
     import Loading from "$lib/components/global/Loading.svelte";
     import RobGrid from "$lib/components/rob/RobGrid.svelte";
-    import AddButton from "$lib/components/global/AddButton.svelte";
-    import SearchButton from "$lib/components/global/SearchButton.svelte";
+    import AddButton from "$lib/components/global/NavigationButtons/AddButton.svelte";
+    import SearchButton from "$lib/components/global/NavigationButtons/SearchButton.svelte";
     import NavigationActions from "$lib/components/global/NavigationActions.svelte";
     import type {IRobCourse, IRobCoursePerson} from "$lib/data/hfzApi";
 

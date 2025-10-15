@@ -2,15 +2,19 @@ import {HfzMockApi} from "$lib/data/hfzMockApi";
 
 export interface IHfzApi {
     getArticles(): Promise<Array<IArticle>>;
+
     getArticle(id: IId): Promise<ISale>;
-    
+
     getPersons(): Promise<Array<IPerson>>;
+
     getPerson(id: IId): Promise<ISale>;
-    
+
     getSales(): Promise<Array<ISale>>;
+
     getSale(id: IId): Promise<ISale>;
-    
+
     getRobCourses(): Promise<Array<IRobCourse>>;
+
     getRobCourse(id: IId): Promise<IRobCourse>;
 }
 
@@ -42,7 +46,7 @@ export interface ISale extends IId {
 
 export interface ISaleArticle extends IId {
     article: IArticle;
-    amount: number; 
+    amount: number;
     articlePrice: number;
     articleTitle: number;
     sale: ISale;
@@ -59,13 +63,13 @@ export interface IPerson extends IId {
     credit: number;
     dogNames: string;
     email: string;
-    extId: string;  
+    extId: string;
     firstName: string;
     lastName: string;
     isActive: boolean;
     isMember: boolean;
     mainPerson: IPerson;
-    personGroup: string; 
+    personGroup: string;
     phone: string;
     saleCount: number;
     saleCountActive: number;
@@ -116,3 +120,11 @@ export interface IRobCoursePerson extends IId {
     timestamp: Date;
 }
 
+export const ArticleTypes = {
+    "alcoholic": "Alkoholisch",
+    "nonalcoholic": "Antialkoholisch",
+    "snack": "Snacks",
+    "sweets": "Süßes",
+    "meal": "Mahlzeit",
+    "other": "Sonstiges",
+};

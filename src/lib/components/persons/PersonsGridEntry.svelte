@@ -10,25 +10,27 @@
 
     let {person}: IProps = $props();
 </script>
-<Card>
-    <div class="flex">
-        <div class="font-bold text-lg w-full">
-            {person.lastName} {person.firstName}
-        </div>
-        {#if person.isMember}
-            <div>
-                <Star size="16" class="text-accent"></Star>
+<a href="/l/dialogs/person/{person.id}">
+    <Card>
+        <div class="flex">
+            <div class="font-bold text-lg w-full">
+                {person.lastName} {person.firstName}
             </div>
-        {/if}
-    </div>
-    <div class="flex items-center">
-        <div class="text-muted-foreground text-md flex items-center w-full">
-            {#if person.dogNames}
-                <Bone size="16"></Bone>&nbsp;{person.dogNames}
+            {#if person.isMember}
+                <div>
+                    <Star size="16" class="text-accent"></Star>
+                </div>
             {/if}
         </div>
-        <div class="whitespace-nowrap text-sm text-ok">
-            {Util.formatCurrency(person.credit)}
+        <div class="flex items-center">
+            <div class="text-muted-foreground text-md flex items-center w-full">
+                {#if person.dogNames}
+                    <Bone size="16"></Bone>&nbsp;{person.dogNames}
+                {/if}
+            </div>
+            <div class="whitespace-nowrap text-sm text-ok">
+                {Util.formatCurrency(person.credit)}
+            </div>
         </div>
-    </div>
-</Card>
+    </Card>
+</a>
