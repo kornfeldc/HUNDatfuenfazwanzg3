@@ -10,8 +10,7 @@
     let {sales}: IProps = $props();
 </script>
 
-
-<Grid minColumnWidth="28em">
+<Grid minColumnWidth="16em">
     {#each sales as sale}
         <SalesGridEntry {sale}/>
     {/each}

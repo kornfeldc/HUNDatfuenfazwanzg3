@@ -1,5 +1,6 @@
 <script lang="ts">
     import {Util} from "$lib/util";
+    import Pill from "$lib/components/global/Pill.svelte";
     
     interface IFilterItem {
         id: string;
@@ -10,21 +11,21 @@
         items: Array<IFilterItem>;
         parameterName: string;
         selected: string;
+        className: string;
     }
 
     let {
         items = [],
         parameterName = "type",
-        selected = ""
+        selected = "",
+        className = ""
     }: IProps = $props();
 </script>
 
-<div class="flex flex-wrap p-3">
+<div class={"flex flex-wrap p-3 "+className}>
     {#each items as item}
-        <a href={"?"+parameterName+"="+item.id} class={Util.mapClass(
-            "whitespace-nowrap p-1 px-2 text-sm m-1 rounded-full", 
-            selected === item.id, 
-            "bg-pill-active text-pill-active-foreground drop-shadow-slate-700/50 drop-shadow-md", 
-            "bg-pill text-pill-foreground")}>{item.label}</a>
+        <Pill selected={selected === item.id}>
+            <a href={"?"+parameterName+"="+item.id}>{item.label}</a>
+        </Pill>
     {/each}
 </div>

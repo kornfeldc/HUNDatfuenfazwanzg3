@@ -34,13 +34,11 @@
         ...Object.keys(ArticleTypes).map((t) => ({id: t, label: ArticleTypes[t]})),
         {id: "inactive", label: "Inaktiv"}
     ];
-    
-    
 </script>
-<FilterBar items={filterItems} selected={type} parameterName="type"></FilterBar>
 {#await data.articles}
     <Loading></Loading>
 {:then articles}
+    <FilterBar items={filterItems} selected={type} parameterName="type"></FilterBar>
     <ArticlesGrid articles={filter(articles)}/>
 {/await}
 
