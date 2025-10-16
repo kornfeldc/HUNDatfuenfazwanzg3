@@ -1,29 +1,121 @@
 <script lang="ts">
     import {page} from '$app/stores';
     import SaveButton from "$lib/components/global/NavigationButtons/SaveButton.svelte";
-    import BackButton from "$lib/components/global/NavigationButtons/BackButton.svelte";
-    import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
     import NavigationActions from "$lib/components/global/NavigationActions.svelte";
     import Card from "$lib/components/global/Card.svelte";
     import Loading from "$lib/components/global/Loading.svelte";
+    import {ArrowUpDown} from "@lucide/svelte";
     import type {IPerson} from "$lib/data/hfzApi";
+    import {Label} from "$lib/components/shadcn/ui/label";
+
+    // noinspection ES6UnusedImports
+    import * as InputGroup from "$lib/components/shadcn/ui/input-group/index.js";
+    import {Button} from "$lib/components/shadcn/ui/button";
+    import {Checkbox} from "$lib/components/shadcn/ui/checkbox";
+    import CardTitleBig from "$lib/components/global/CardTitleBig.svelte";
 
     let id = $page.params.id;
     let {data}: { data: any; } = $props();
     let formPerson = $state({} as IPerson);
+    let isConnected = $state(false);
 
     $effect(() => {
         const person = data.person;
         formPerson.id = person?.id;
+        formPerson.lastName = person?.lastName ?? "";
+        formPerson.firstName = person?.firstName ?? "";
+        formPerson.dogNames = person?.dogNames ?? "";
+        formPerson.phone = person?.phone ?? "";
+        formPerson.email = person?.email ?? "";
+        formPerson.isMember = person?.isMember ?? false;
+        formPerson.isActive = person?.isActive ?? true;
+        formPerson.personGroup = person?.personGroup ?? "";
     });
 </script>
 
-{#await data.article}
+{#await data.person}
     <Loading></Loading>
 {:then _}
     <form method="post" action="/l/dialogs/person/{id}/data">
-        <Card>
-            xxx
+        <Card className="max-w-xl m-auto">
+            <CardTitleBig className="hidden sm:block pb-2">{formPerson.id ? (formPerson.lastName + " " + formPerson.firstName) : "Neue Person"}</CardTitleBig>
+            <div class="grid grid-cols-12 gap-6">
+                <div class="col-span-12 flex flex-col gap-2">
+                    <Label for="firstName-{id}">Vorname</Label>
+                    <InputGroup.Root>
+                        <InputGroup.Input name="firstName" id="firstName-{id}"
+                                          bind:value={formPerson.firstName}></InputGroup.Input>
+                    </InputGroup.Root>
+                </div>
+
+                <div class="col-span-10 flex flex-col gap-2">
+                    <Label for="lastName-{id}">Nachname</Label>
+                    <InputGroup.Root>
+                        <InputGroup.Input name="lastName" id="lastName-{id}"
+                                          bind:value={formPerson.lastName}></InputGroup.Input>
+                    </InputGroup.Root>
+                </div>
+                <div class="col-span-2 flex items-end justify-end">
+                    <Button variant="outline" class="font-light text-muted-foreground">
+                        <ArrowUpDown class="h-4 w-4"></ArrowUpDown>
+                    </Button>
+                </div>
+
+                <div class="col-span-12 flex flex-col gap-2">
+                    <Label for="dogNames-{id}">Hunde Namen</Label>
+                    <InputGroup.Root>
+                        <InputGroup.Input name="dogNames" id="dogNames-{id}"
+                                          bind:value={formPerson.dogNames}></InputGroup.Input>
+                    </InputGroup.Root>
+                </div>
+
+
+                <div class="col-span-12 flex flex-col gap-2">
+                    <Label for="phone-{id}">Telefon</Label>
+                    <InputGroup.Root>
+                        <InputGroup.Input name="phone" id="phone-{id}"
+                                          bind:value={formPerson.phone}></InputGroup.Input>
+                    </InputGroup.Root>
+                </div>
+
+                <div class="col-span-12 flex flex-col gap-2">
+                    <Label for="email-{id}">Email</Label>
+                    <InputGroup.Root>
+                        <InputGroup.Input name="email" id="email-{id}"
+                                          bind:value={formPerson.email}></InputGroup.Input>
+                    </InputGroup.Root>
+                </div>
+
+                <div class="col-span-6 flex flex-col gap-2">
+                    <Label for="member-{id}" class="whitespace-nowrap">Ist Mitglied</Label>
+                    <Checkbox name="isMember" id="member-{id}" bind:checked={formPerson.isMember} />
+                </div>
+
+                <div class="col-span-6 flex flex-col gap-2">
+                    <Label for="active-{id}" class="whitespace-nowrap">Ist Aktiv</Label>
+                    <Checkbox name="isActive" id="active-{id}" bind:checked={formPerson.isActive} />
+                </div>
+
+                <div class="col-span-6 flex flex-col gap-2">
+                    <Label for="connected-{id}" class="whitespace-nowrap">Zusammenhängend</Label>
+                    <Checkbox name="isConnected" id="connected-{id}" bind:checked={isConnected} />
+                </div>
+
+                <div class="col-span-6 flex flex-col gap-2">
+                    {#if isConnected}
+                    <Label for="personGroup-{id}" class="whitespace-nowrap">Personengruppe</Label>
+                    <InputGroup.Root>
+                        <InputGroup.Input 
+                                name="personGroup" 
+                                id="personGroup-{id}-{id}"
+                                required 
+                                bind:value={formPerson.personGroup}></InputGroup.Input>
+                    </InputGroup.Root>
+                    {/if}
+                </div>
+
+            </div>
+
         </Card>
 
         <NavigationActions>

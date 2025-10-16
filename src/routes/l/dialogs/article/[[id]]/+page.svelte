@@ -14,7 +14,6 @@
     import CardTitleBig from "$lib/components/global/CardTitleBig.svelte";
     import Loading from "$lib/components/global/Loading.svelte";
     import {ArticleTypes, type IArticle} from "$lib/data/hfzApi";
-    import {Input} from "$lib/components/shadcn/ui/input";
     import {Checkbox} from "$lib/components/shadcn/ui/checkbox";
 
     let id = $page.params.id;
@@ -36,17 +35,18 @@
     <Loading></Loading>
 {:then _}
     <form method="post" action="/l/dialogs/article/{id}">
-        <Card>
-            <CardTitleBig>{formArticle.title}</CardTitleBig>
-            <div class="grid w-full max-w-sm gap-6">
-                <div class="grid gap-2">
+        <Card className="max-w-xl m-auto">
+            <CardTitleBig className="hidden sm:block pb-2">{formArticle.id ? formArticle.title : "Neuer Artikel"}</CardTitleBig>
+            <div class="grid grid-cols-12 gap-6">
+                <div class="col-span-12 flex flex-col gap-2">
                     <Label for="title-{id}">Bezeichnung</Label>
                     <InputGroup.Root>
-                        <InputGroup.Input name="title" id="title-{id}" bind:value={formArticle.title}></InputGroup.Input>
+                        <InputGroup.Input name="title" id="title-{id}"
+                                          bind:value={formArticle.title}></InputGroup.Input>
                     </InputGroup.Root>
                 </div>
 
-                <div class="grid gap-2">
+                <div class="col-span-6 flex flex-col gap-2">
                     <Label for="type-{id}">Art</Label>
                     <Select.Root type="single" name="type" bind:value={formArticle.type}>
                         <Select.Trigger class="w-full">{ArticleTypes[formArticle.type]}</Select.Trigger>
@@ -58,31 +58,30 @@
                     </Select.Root>
                 </div>
 
-                <div class="flex gap-10">
-                    <div class="grid gap-2 w-30">
-                        <Label for="price-{id}">Preis</Label>
-                        <InputGroup.Root>
-                            <InputGroup.Addon>
-                                <InputGroup.Text>€</InputGroup.Text>
-                            </InputGroup.Addon>
-                            <InputGroup.Input class="text-right" name="price" bind:value={formArticle.price} id="price-{id}" step="0.01"
-                                              type="number"/>
-                        </InputGroup.Root>
-                    </div>
+                <div class="col-span-6 flex flex-col gap-2">
+                    <Label for="price-{id}">Preis</Label>
+                    <InputGroup.Root>
+                        <InputGroup.Addon>
+                            <InputGroup.Text>€</InputGroup.Text>
+                        </InputGroup.Addon>
+                        <InputGroup.Input class="text-right" name="price" bind:value={formArticle.price} id="price-{id}"
+                                          step="0.01"
+                                          type="number"/>
+                    </InputGroup.Root>
+                </div>
 
-                    <div class="grid gap-2">
-                        <Label for="favorite-{id}" class="whitespace-nowrap">Ist Favorit</Label>
-                        <Checkbox name="isFavorite" id="favorite-{id}" bind:checked={formArticle.isFavorite}/>
-                    </div>
+                <div class="col-span-6 flex flex-col gap-2">
+                    <Label for="favorite-{id}" class="whitespace-nowrap">Ist Favorit</Label>
+                    <Checkbox name="isFavorite" id="favorite-{id}" bind:checked={formArticle.isFavorite}/>
+                </div>
 
-                    <div class="grid gap-2">
-                        <Label for="active-{id}" class="whitespace-nowrap">Ist Aktiv</Label>
-                        <Checkbox name="isActive" id="active-{id}" bind:checked={formArticle.isActive}/>
-                    </div>
+                <div class="col-span-6 flex flex-col gap-2">
+                    <Label for="active-{id}" class="whitespace-nowrap">Ist Aktiv</Label>
+                    <Checkbox name="isActive" id="active-{id}" bind:checked={formArticle.isActive}/>
                 </div>
             </div>
         </Card>
-        
+
         <PlaceAtBottom>
             <BackButton></BackButton>
         </PlaceAtBottom>

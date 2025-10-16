@@ -20,17 +20,17 @@ export const actions = {
         formData.delete('redirectTo');
 
         let data = Util.parseFormData(formData, [
-                // {
-                //     properties: ["price"],
-                //     method: (value: any) => Util.parseLocalizedFloat(value)
-                // },
-                // {
-                //     properties: ["isFavorite", "isActive"],
-                //     method: (value: any) => value === 'true' || value === 'on'
-                // }
+                {
+                    properties: ["isMember", "isActive", "isConnected"],
+                    method: (value: any) => value === 'true' || value === 'on'
+                }
             ]);
         if(id)
             data.id = parseInt(id);
+        
+        if(!data.isConnected && data.personGroup)
+            data.personGroup = null;
+        
         console.log("parsed data", data);
 
         try {

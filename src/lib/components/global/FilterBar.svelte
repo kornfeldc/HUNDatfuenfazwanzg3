@@ -22,7 +22,7 @@
     }: IProps = $props();
 </script>
 
-<div class={"flex flex-wrap p-3 "+className}>
+<div class={"flex flex-wrap px-3 "+className}>
     {#each items as item}
         <Pill selected={selected === item.id}>
             <a href={"?"+parameterName+"="+item.id}>{item.label}</a>

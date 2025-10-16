@@ -3,6 +3,7 @@
     import GlassBar from "./GlassBar.svelte";
     import GlassBarLink from "./GlassBarLink.svelte";
     import PlaceAtBottom from "./PlaceAtBottom.svelte";
+    import {Euro, User, CalendarClock, ShoppingBag} from "@lucide/svelte";
     
     import {uiState} from "$lib/stores/uiState.svelte";
 
@@ -19,11 +20,36 @@
     };
 </script>
 
+{#snippet renderIcon(href)}
+    {#if href.toLowerCase().endsWith('sales')}
+        <Euro />
+    {:else if href.toLowerCase().endsWith('persons') }
+        <User />
+    {:else if href.toLowerCase().endsWith('articles') }
+        <ShoppingBag />
+    {:else if href.toLowerCase().endsWith('rob') }
+        <CalendarClock />
+    {/if}
+{/snippet}
+
 {#if uiState.showNavBar}
 <PlaceAtBottom>
     <GlassBar>
         {#each modules as module}
-            <GlassBarLink selected={isSelected(module.href)} href={module.href}>{module.name}</GlassBarLink>
+            <GlassBarLink 
+                    selected={isSelected(module.href)} 
+                    href={module.href}>
+                <div class="hidden sm:flex items-center gap-2">
+                    {@render renderIcon(module.href)}
+                    {module.name}
+                </div> 
+                <div class="flex items-center sm:hidden">
+                    {@render renderIcon(module.href)}
+                    {#if isSelected(module.href)}
+                    {module.name}
+                    {/if}
+                </div>
+            </GlassBarLink>
         {/each}
     </GlassBar>
 </PlaceAtBottom>
