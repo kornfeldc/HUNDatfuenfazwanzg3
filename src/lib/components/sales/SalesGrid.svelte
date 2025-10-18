@@ -36,7 +36,7 @@
     {/snippet} 
 
 <div class="h-4"/>
-{@render header('Offen', 'text-amber-500', unpaidSum)}
+{@render header('Offen', 'text-warning', unpaidSum)}
 {@render grid(unpaidSales)}
 
 {#if paidSum && unpaidSum}

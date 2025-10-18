@@ -6,12 +6,14 @@
     import type {ISale} from "$lib/data/hfzApi";
     import Pill from "$lib/components/global/Pill.svelte";
     import {CalendarDays, CircleArrowLeft, CircleArrowRight} from "@lucide/svelte";
+    import thenby from 'thenby';
+    const { firstBy } = thenby;
+    import { page } from '$app/stores';
+    import moment from "moment";
 
     let {data}: { data: any } = $props();
     let searchString = $state("");
 
-    import { page } from '$app/stores';
-    import moment from "moment";
     moment.locale('de');
     
     let date = $derived($page.url.searchParams.get("date") ?? moment().format("YYYY-MM-DD"));
@@ -26,7 +28,7 @@
             (s.personName?.toLowerCase().includes(searchString.toLowerCase()) ||
             s.person?.dogNames?.toLowerCase().includes(searchString.toLowerCase())) &&
             isSaleOnDate(s)
-        );
+        ).sort(firstBy("personName"));
     }
     
     const isSaleOnDate = (sale: ISale) => 

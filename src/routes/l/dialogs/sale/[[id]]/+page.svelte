@@ -9,6 +9,7 @@
     import BackButton from "$lib/components/global/NavigationButtons/BackButton.svelte";
     import TextButton from "$lib/components/global/TextButton.svelte";
     import PersonOverview from "$lib/components/persons/PersonOverview.svelte";
+    import SaleArticles from "$lib/components/sales/SaleArticles.svelte";
 
     let id = $page.params.id;
 
@@ -28,7 +29,7 @@
         </Card>
 
         <Card className="max-w-xl m-auto">
-            articles
+           <SaleArticles {sale}></SaleArticles> 
         </Card>
 
         <PlaceAtBottom>

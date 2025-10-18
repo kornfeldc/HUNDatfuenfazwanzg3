@@ -2,6 +2,7 @@
     import type {ISale} from "$lib/data/hfzApi";
     import {Util} from "$lib/util";
     import Card from "$lib/components/global/Card.svelte";
+    import moment from "moment";
 
     interface IProps {
         sale: ISale;
@@ -19,7 +20,9 @@
             {/if}
             <div class={(sale.payDate ? "text_ok text-emerald-500" : "text_warning text-amber-500")+ " w-full text-right"}>{Util.formatCurrency(sale.articleSum)}</div>
         </div>
-        <div>{Util.formatDate(sale.saleDate)}</div>
-        <div>{sale.saleArticles.map(sa => `${sa.amount}x ${sa.articleTitle}`).join(", ")}</div>
+        {#if !moment(sale.saleDate).isSame(moment(), 'day')}
+            <div>{Util.formatDate(sale.saleDate)}</div>
+        {/if}
+        <div class="text-sm">{sale.saleArticles.map(sa => `${sa.amount}x ${sa.articleTitle}`).join(", ")}</div>
     </Card>
 </a>
