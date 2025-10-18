@@ -1,4 +1,4 @@
-import type { IArticle, IHfzApi, IId, IPerson, IRobCourse, ISale} from "$lib/data/hfzApi";
+import type {IArticle, IHfzApi, IId, IPerson, IRobCourse, ISale} from "$lib/data/hfzApi";
 
 // In-memory mock data for development/testing only.
 // Generates ~10 persons, 10 articles, and 50 sales with dates from now and the last month.
@@ -195,7 +195,7 @@ const robCourses: IRobCourse[] = (() => {
     return list;
 })();
 
-export class HfzMockApi implements IHfzApi {
+class HfzMockApi implements IHfzApi {
     async getRobCourses(): Promise<Array<IRobCourse>> {
         return robCourses;
     }
@@ -209,29 +209,28 @@ export class HfzMockApi implements IHfzApi {
         return articles;
     }
 
-    async getArticle(id: IId): Promise<ISale> {
-        // Interface dictates ISale return. Return a sale by id to satisfy contract.
-        const found = sales.find(s => s.id === id.id) || sales[0];
-        return found;
+    async getArticle(id: IId): Promise<IArticle> {
+        return articles.find(s => s.id === id.id) || articles[0];
     }
 
     async getPersons(): Promise<Array<IPerson>> {
         return persons;
     }
 
-    async getPerson(id: IId): Promise<ISale> {
-        // Interface dictates ISale return. Return a sale by id to satisfy contract.
-        const found = sales.find(s => s.id === id.id) || sales[0];
-        return found;
+    async getPerson(id: IId): Promise<IPerson> {
+        console.log("getPerson", id);
+        console.log("persons", persons);
+        console.log("match", persons.find(s => s.id === id.id));
+        return persons.find(s => s.id === id.id) || persons[0];
     }
 
     async getSale(id: IId): Promise<ISale> {
-        const found = sales.find(s => s.id === id.id);
-        if (!found) throw new Error(`Sale with id ${id.id} not found`);
-        return found;
+        return sales.find(s => s.id === id.id);
     }
 
     async getSales(): Promise<Array<ISale>> {
         return sales;
     }
 }
+
+export default HfzMockApi

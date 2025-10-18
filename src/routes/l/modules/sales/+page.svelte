@@ -33,10 +33,12 @@
     loading ...
 {:then sales}
     <div class="flex w-full justify-center">
-        <Pill selected={false} className="flex items-center gap-2 p-2 px-4">
-            <CalendarDays/>
-            {formattedDate}
-        </Pill>
+        <a href="/l/modules/calendar">
+            <Pill selected={false} className="flex items-center gap-2 p-2 px-4">
+                <CalendarDays/>
+                {formattedDate}
+            </Pill>
+        </a>
     </div>
     <SalesGrid sales={filter(sales)}/>
 {/await}

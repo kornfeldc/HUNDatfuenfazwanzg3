@@ -18,9 +18,9 @@
     let {data}: { data: any; } = $props();
     let formPerson = $state({} as IPerson);
     let isConnected = $state(false);
-
-    $effect(() => {
-        const person = data.person;
+    
+    const loadPerson = async () => {
+        const person = await data.person;
         formPerson.id = person?.id;
         formPerson.lastName = person?.lastName ?? "";
         formPerson.firstName = person?.firstName ?? "";
@@ -30,10 +30,10 @@
         formPerson.isMember = person?.isMember ?? false;
         formPerson.isActive = person?.isActive ?? true;
         formPerson.personGroup = person?.personGroup ?? "";
-    });
+    }
 </script>
 
-{#await data.person}
+{#await loadPerson()}
     <Loading></Loading>
 {:then _}
     <form method="post" action="/l/dialogs/person/{id}/data">

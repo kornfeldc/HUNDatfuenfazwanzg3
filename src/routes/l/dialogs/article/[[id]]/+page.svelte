@@ -20,18 +20,18 @@
     let {data}: { data: any; } = $props();
     let formArticle = $state({} as IArticle);
 
-    $effect(() => {
-        const article = data.article;
+    const loadArticle = async () => {
+        const article = await data.article;
         formArticle.id = article?.id;
         formArticle.price = article?.price ?? 0;
         formArticle.title = article?.title ?? "Neuer Artikel";
         formArticle.type = article?.type ?? "other";
         formArticle.isFavorite = article?.isFavorite ?? false;
         formArticle.isActive = article?.isActive ?? true;
-    });
+    }
 </script>
 
-{#await data.article}
+{#await loadArticle()}
     <Loading></Loading>
 {:then _}
     <form method="post" action="/l/dialogs/article/{id}">

@@ -18,6 +18,9 @@
         const path = $page.url.pathname;
         return path === href || path.startsWith(href + '/');
     };
+    
+    const modulesWithoutNavigation = $state(["calendar"]);
+    const isModuleWithoutNavigation = $derived(!!modulesWithoutNavigation.find(m => $page.url.pathname.endsWith(m)));
 </script>
 
 {#snippet renderIcon(href)}
@@ -32,7 +35,7 @@
     {/if}
 {/snippet}
 
-{#if uiState.showNavBar}
+{#if uiState.showNavBar && !isModuleWithoutNavigation}
 <PlaceAtBottom>
     <GlassBar>
         {#each modules as module}

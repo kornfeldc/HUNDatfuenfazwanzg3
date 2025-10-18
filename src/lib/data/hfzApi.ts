@@ -1,4 +1,4 @@
-import {HfzMockApi} from "$lib/data/hfzMockApi";
+import HfzMockApi from "$lib/data/hfzMockApi";
 
 export interface IHfzApi {
     getArticles(): Promise<Array<IArticle>>;
