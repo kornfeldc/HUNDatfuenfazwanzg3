@@ -8,6 +8,7 @@
     import SaveButton from "$lib/components/global/NavigationButtons/SaveButton.svelte";
     import BackButton from "$lib/components/global/NavigationButtons/BackButton.svelte";
     import TextButton from "$lib/components/global/TextButton.svelte";
+    import PersonOverview from "$lib/components/persons/PersonOverview.svelte";
 
     let id = $page.params.id;
 
@@ -23,7 +24,7 @@
 {:then _}
     <form method="post" action="/l/dialogs/sale/{id}">
         <Card className="max-w-xl m-auto">
-            Person
+            <PersonOverview person={sale.person}></PersonOverview>
         </Card>
 
         <Card className="max-w-xl m-auto">

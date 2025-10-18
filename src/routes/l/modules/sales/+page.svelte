@@ -29,7 +29,9 @@
         );
     }
     
-    const isSaleOnDate = (sale: ISale) => moment(sale.saleDate).isSame(moment(date), "day"); 
+    const isSaleOnDate = (sale: ISale) => 
+        moment(sale.saleDate).isSame(moment(date), "day") ||
+        (moment(date).isSame(moment(),"day") && !sale.payDate);  
 </script>
 {#await data.sales}
     loading ...
