@@ -12,39 +12,35 @@
 
     let paidSales = $derived(sales.filter(s => s.payDate));
     let unpaidSales = $derived(sales.filter(s => !s.payDate));
-    
-    const paidSum = $derived(paidSales.map(s=> s.toPay ?? 0).reduce((a,b) => a + b, 0));
-    const unpaidSum = $derived(unpaidSales.map(s=> s.toPay ?? 0).reduce((a,b) => a + b, 0));
+
+    const paidSum = $derived(paidSales.map(s => s.toPay ?? 0).reduce((a, b) => a + b, 0));
+    const unpaidSum = $derived(unpaidSales.map(s => s.toPay ?? 0).reduce((a, b) => a + b, 0));
 
 </script>
 
+{#snippet header(text, color, sum)}
+    {#if sum}
+        <div class={"px-6 sm:px-8 flex text-lg sm:text-xl font-bold "+color}>
+            <div class="">{text}</div>
+            <div class="flex-grow"></div>
+            <div class="">{Util.formatCurrency(sum)}</div>
+        </div>
+    {/if}
+{/snippet}
+{#snippet grid(entries)}
+    <Grid minColumnWidth="16em">
+        {#each entries as entry}
+            <SalesGridEntry sale={entry}/>
+        {/each}
+    </Grid>
+    {/snippet} 
 
-{#if unpaidSum}
-    <div class="px-8 flex text-xl font-bold text-amber-500">
-        <div class="">Offen</div>
-        <div class="flex-grow"></div>
-        <div class="">{Util.formatCurrency(unpaidSum)}</div>
-    </div>
-{/if}
-<Grid minColumnWidth="16em">
-    {#each unpaidSales as sale}
-        <SalesGridEntry {sale}/>
-    {/each}
-</Grid>
+<div class="h-4"/>
+{@render header('Offen', 'text-amber-500', unpaidSum)}
+{@render grid(unpaidSales)}
 
 {#if paidSum && unpaidSum}
     <div class="h-8"/>
 {/if}
-
-{#if paidSum}
-    <div class="px-8 flex text-xl font-bold text-ok">
-        <div class="">Bezahlt</div>
-        <div class="flex-grow"></div>
-        <div class="">{Util.formatCurrency(paidSum)}</div>
-    </div>
-{/if}
-<Grid minColumnWidth="16em">
-    {#each paidSales as sale}
-        <SalesGridEntry {sale}/>
-    {/each}
-</Grid>
+{@render header('Bezahlt', 'text-ok', paidSum)}
+{@render grid(paidSales)}

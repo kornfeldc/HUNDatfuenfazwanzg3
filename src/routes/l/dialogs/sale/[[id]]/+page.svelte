@@ -3,24 +3,45 @@
     import type {ISale} from "$lib/data/hfzApi";
     import Loading from "$lib/components/global/Loading.svelte";
     import Card from "$lib/components/global/Card.svelte";
+    import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
+    import NavigationActions from "$lib/components/global/NavigationActions.svelte";
+    import SaveButton from "$lib/components/global/NavigationButtons/SaveButton.svelte";
+    import BackButton from "$lib/components/global/NavigationButtons/BackButton.svelte";
+    import TextButton from "$lib/components/global/TextButton.svelte";
 
     let id = $page.params.id;
 
     let {data}: { data: any; } = $props();
-    let formSale = $state({} as ISale);
+    let sale = $state({} as ISale);
 
     const loadSale = async () => {
-        const sale = await data.sale;
-        formSale.id = sale?.id;
-        // ...
+        sale = await data.sale;
     }
 </script>
 {#await loadSale()}
     <Loading></Loading>
 {:then _}
-    <form method="post" action="/l/dialogs/article/{id}">
+    <form method="post" action="/l/dialogs/sale/{id}">
         <Card className="max-w-xl m-auto">
-            test
+            Person
         </Card>
+
+        <Card className="max-w-xl m-auto">
+            articles
+        </Card>
+
+        <PlaceAtBottom>
+            <BackButton></BackButton>
+        </PlaceAtBottom>
+        <NavigationActions>
+            <div slot="actions">
+                <button type="submit">
+                    <TextButton>Bezahlen</TextButton>
+                </button>
+                <button type="submit">
+                    <TextButton color="ok">Speichern</TextButton>
+                </button>
+            </div>
+        </NavigationActions>
     </form>
 {/await}

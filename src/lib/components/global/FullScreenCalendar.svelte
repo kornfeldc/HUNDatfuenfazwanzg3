@@ -88,7 +88,7 @@
             <div class={Util.mapClass(
                 "border-[1px] rounded-lg w-full grid grid-cols-1 sm:grid-cols-2 p-2 min-h-20",
                 day.isToday, 
-                "border-primary shadow-primary shadow-md",
+                "border-primary shadow-primary shadow-md bg-primary/10", 
             )}>
                 <div class={Util.mapClass(
                     "text-xs sm:col-span-2", 
@@ -97,7 +97,7 @@
                     Util.mapClass(
                         "", 
                         day.isToday, 
-                        "text-primary font-bold"
+                        "text-primary font-bold "
                         ))}>{day.formattedDate}</div>
                 <div class={"text-xs text-right sm:text-left self-end " + day.bottomLeftClassName}>{day.bottomLeftText}</div>
                 <div class={"text-xs text-right self-end "+day.bottomRightClassName}>{day.bottomRightText}</div>
