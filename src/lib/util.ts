@@ -5,23 +5,20 @@ export class Util {
         return moment(date).format('DD.MM.YYYY');
     }
     
-    static formatCurrency(val: string|number, addCurrency: boolean = true) {
+    static formatCurrency(val: string|number, addCurrency: boolean = true, decimals = 2) {
         if(val === null || val === undefined) 
             return "";
         
-        const minimumFractionDigits = 2;
-        const maximumFractionDigits = 2;
+        const minimumFractionDigits = decimals;
+        const maximumFractionDigits = decimals;
         const locale = "de-DE";
         
-        const format = (val: number) => 
-           val.toLocaleString(locale, {minimumFractionDigits, maximumFractionDigits});
-        
-        if(typeof val === "string") 
-           return "€ "+format(parseFloat(val)); 
-        return "€ "+format(val);
+        const format = (val: number) =>
+            `${addCurrency ? "€ " : ""}${val.toLocaleString(locale, {minimumFractionDigits, maximumFractionDigits})}`;
+        return typeof val === "string" ? format(parseFloat(val)) : format(val);
     }
     
-    static mapClass(baseClass: string, expression:boolean, trueClass:string, falseClass:string) {
+    static mapClass(baseClass: string, expression:boolean, trueClass:string, falseClass = "") {
         return `${baseClass} ${expression ? trueClass : falseClass}`;
     }
 

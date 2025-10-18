@@ -5,13 +5,15 @@
     import SearchButton from "$lib/components/global/NavigationButtons/SearchButton.svelte";
     import type {ISale} from "$lib/data/hfzApi";
     import Pill from "$lib/components/global/Pill.svelte";
-    import {CalendarDays} from "@lucide/svelte";
+    import {CalendarDays, CircleArrowLeft, CircleArrowRight} from "@lucide/svelte";
 
     let {data}: { data: any } = $props();
     let searchString = $state("");
 
     import { page } from '$app/stores';
     import moment from "moment";
+    moment.locale('de');
+    
     let date = $derived($page.url.searchParams.get("date") ?? moment().format("YYYY-MM-DD"));
     let formattedDate = $derived(moment(date).format("dddd, DD.MM.YYYY"));
     
@@ -32,12 +34,18 @@
 {#await data.sales}
     loading ...
 {:then sales}
-    <div class="flex w-full justify-center">
-        <a href="/l/modules/calendar">
-            <Pill selected={false} className="flex items-center gap-2 p-2 px-4">
+    <div class="flex w-full items-center justify-center">
+        <a href={"/l/modules/sales?date="+moment(date).subtract(1, "days").format("YYYY-MM-DD")}>
+            <CircleArrowLeft class="text-slate-400" />
+        </a>
+        <a href={"/l/modules/calendar?date="+date}>
+            <Pill selected={false} className="flex items-center justify-center gap-2 p-2 px-4 w-56 mx-4">
                 <CalendarDays/>
                 {formattedDate}
             </Pill>
+        </a>
+        <a href={"/l/modules/sales?date="+moment(date).add(1, "days").format("YYYY-MM-DD")}>
+            <CircleArrowRight class="text-slate-400"/>
         </a>
     </div>
     <SalesGrid sales={filter(sales)}/>

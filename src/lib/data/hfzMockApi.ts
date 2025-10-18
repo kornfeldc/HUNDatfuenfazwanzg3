@@ -141,8 +141,10 @@ for (let idx = 0; idx < 50; idx++) {
     const toReturn = Math.max(0, given - inclTip);
 
     // sometimes pay later the same day or next day
-    const payDate = new Date(saleDate.getTime());
+    let payDate = new Date(saleDate.getTime());
     payDate.setHours(payDate.getHours() + randomInt(0, 36));
+    if (Math.random() < 0.2)
+        payDate = null;
 
     // finalize sale
     partialSale.additionalCredit = Math.random() < 0.1 ? randomInt(5, 50) : 0;
