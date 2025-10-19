@@ -7,7 +7,8 @@ export async function load({cookies, params, url}) {
     if (!id) return {title: 'Neuer Artikel'};
     const api = HfzApi.create();
     return {
-        sale: api.getSale({id: parseInt(id)})
+        sale: api.getSale({id: parseInt(id)}),
+        articles: api.getArticles()
     };
 }
 

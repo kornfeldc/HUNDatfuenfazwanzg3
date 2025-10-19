@@ -41,7 +41,7 @@
 {#await data.robCourses}
     <Loading></Loading>
 {:then robCourses}
-    <FilterBar items={filterItems} selected={type} parameterName="type"></FilterBar>
+    <FilterBar className="px-3" items={filterItems} selected={type} parameterName="type"></FilterBar>
     <RobGrid robCourses={filter(robCourses)}/>
 {/await}
 

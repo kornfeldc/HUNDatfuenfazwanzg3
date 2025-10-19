@@ -38,7 +38,7 @@
 {#await data.articles}
     <Loading></Loading>
 {:then articles}
-    <FilterBar items={filterItems} selected={type} parameterName="type"></FilterBar>
+    <FilterBar className="px-3" items={filterItems} selected={type} parameterName="type"></FilterBar>
     <ArticlesGrid articles={filter(articles)}/>
 {/await}
 

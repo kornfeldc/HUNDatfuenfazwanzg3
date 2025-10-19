@@ -3,7 +3,8 @@ import {HfzApi} from "$lib/data/hfzApi";
 export async function load({ cookies, params, url }) {
     const api = HfzApi.create();
     return {
-        sales: api.getSales() 
+        sales: api.getSales(),
+        articles: api.getArticles()
     };
     // const { id } = params; // Extract the `id` parameter from the `params` object
     // const companyId = url.searchParams.get('companyId');
