@@ -1,58 +1,53 @@
 <script lang="ts">
     import Loading from "$lib/components/global/Loading.svelte";
-    import PersonsGrid from "$lib/components/persons/PersonsGrid.svelte";
-    import AddButton from "$lib/components/global/NavigationButtons/AddButton.svelte";
-    import SearchButton from "$lib/components/global/NavigationButtons/SearchButton.svelte";
     import NavigationActions from "$lib/components/global/NavigationActions.svelte";
-    import {ArticleTypes, type IPerson, type ISale} from "$lib/data/hfzApi";
-    let {data}: { data: any } = $props();
+    import {type ISale} from "$lib/data/hfzApi";
     import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
     import BackButton from "$lib/components/global/NavigationButtons/BackButton.svelte";
-    import FullScreenCalendar, {
-        type ICalendarDayItem,
-        type ICalendarItem
-    } from "$lib/components/global/FullScreenCalendar.svelte";
-    import { page } from '$app/stores';
+    import FullScreenCalendar, {type ICalendarItem} from "$lib/components/global/FullScreenCalendar.svelte";
+    import {page} from '$app/stores';
     import moment from "moment";
     import {Util} from "$lib/util";
+    import TextButton from "$lib/components/global/TextButton.svelte";
+
+    let {data}: { data: any } = $props();
 
     let date = $derived($page.url.searchParams.get("date") ?? moment().format("YYYY-MM-DD"));
-    
+
     let sales = $state([] as Array<ISale>);
-    const loadSales = async() => {
+    const loadSales = async () => {
         sales = await data.sales;
-    } 
-    
+    }
+
     let calendarItems = $derived.by(() => {
-        let calculatedResults = [] as Array<{ day: Date, toPay: number, paid: number}>;
+        let calculatedResults = [] as Array<{ day: Date, toPay: number, paid: number }>;
         sales.forEach(sale => {
             const relevantDay = moment(sale.saleDate).startOf('day');
             const entry = calculatedResults.find((r: any) => moment(r.day).isSame(relevantDay, "day"));
-            if(!entry) {
+            if (!entry) {
                 calculatedResults.push({
                     day: relevantDay.toDate(),
                     toPay: sale.payDate ? 0 : sale.toPay,
                     paid: sale.payDate ? sale.toPay : 0
                 });
-            } 
-            else {
+            } else {
                 entry.toPay += sale.payDate ? 0 : sale.toPay;
                 entry.paid += sale.payDate ? sale.toPay : 0;
             }
         });
-        
+
         return calculatedResults.map(r => {
-           return {
-               day: r.day,
-               bottomLeft: {
-                   text: r.toPay ? Util.formatCurrency(r.toPay, false, 0) : "",
-                   className: "text-amber-500"
-               },
-               bottomRight: {
-                   text: r.paid ? Util.formatCurrency(r.paid, false, 0) : "",
-                   className: "text-ok"
-               }
-           } as ICalendarItem; 
+            return {
+                day: r.day,
+                bottomLeft: {
+                    text: r.toPay ? Util.formatCurrency(r.toPay, false, 0) : "",
+                    className: "text-amber-500"
+                },
+                bottomRight: {
+                    text: r.paid ? Util.formatCurrency(r.paid, false, 0) : "",
+                    className: "text-ok"
+                }
+            } as ICalendarItem;
         });
     });
 </script>
@@ -60,9 +55,9 @@
     <Loading></Loading>
 {:then _}
     <div class="px-2 sm:px-4 md:px-8 h-full">
-        <FullScreenCalendar 
-                day={moment(date).toDate()} 
-                items={calendarItems} 
+        <FullScreenCalendar
+                day={moment(date).toDate()}
+                items={calendarItems}
                 monthHref="/l/modules/calendar?date=%date%"
                 dayHref="/l/modules/sales?date=%date%"></FullScreenCalendar>
     </div>
@@ -71,3 +66,9 @@
 <PlaceAtBottom>
     <BackButton></BackButton>
 </PlaceAtBottom>
+
+<NavigationActions>
+    <div slot="actions">
+        <TextButton color="primary" href={"/l/modules/sales?date="+moment().format('YYYY-MM-DD')}>Heute</TextButton>
+    </div>
+</NavigationActions>

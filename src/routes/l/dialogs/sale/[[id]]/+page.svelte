@@ -30,7 +30,7 @@
 {#await loadData()}
     <Loading></Loading>
 {:then _}
-    <form method="post" action="/l/dialogs/sale/{id}">
+    <form method="post" action={`/l/dialogs/sale/${id ?? ''}`}>
         <Card className="max-w-xl m-auto">
             <PersonOverview person={sale.person}></PersonOverview>
         </Card>
@@ -46,10 +46,10 @@
             <NavigationActions>
                 <div slot="actions">
                     {#if !sale.payDate}
-                        <button type="submit">
+                        <button type="submit" name="redirectTo" value={`/l/dialogs/sale/${id}/pay`}>
                             <TextButton>Bezahlen</TextButton>
                         </button>
-                        <button type="submit">
+                        <button type="submit" name="redirectTo" value="/l/modules/sales">
                             <TextButton color="ok">Speichern</TextButton>
                         </button>
                     {/if}

@@ -17,7 +17,7 @@ export const actions = {
         const {id} = params; // Extract the `id` parameter from the `params` object
         const formData = await request.formData();
 
-        const redirectTo = formData.get('redirectTo')?.toString() ?? "/l/modules/articles";
+        const redirectTo = formData.get('redirectTo')?.toString() ?? "/l/modules/sales";
         formData.delete('redirectTo');
 
         let data = Util.parseFormData(formData, [
