@@ -1,15 +1,16 @@
 import HfzMockApi from "$lib/data/hfzMockApi";
+import {HfzSupabaseApi} from "$lib/data/hfzSupabaseApi";
 
 export interface IHfzApi {
     getArticles(): Promise<Array<IArticle>>;
 
-    getArticle(id: IId): Promise<ISale>;
+    getArticle(id: IId): Promise<IArticle>;
 
     getPersons(): Promise<Array<IPerson>>;
 
-    getPerson(id: IId): Promise<ISale>;
+    getPerson(id: IId): Promise<IPerson>;
 
-    getSales(): Promise<Array<ISale>>;
+    getSales(dateFrom: string, dateTo?: string): Promise<Array<ISale>>;
 
     getSale(id: IId): Promise<ISale>;
 
@@ -20,7 +21,7 @@ export interface IHfzApi {
 
 export class HfzApi {
     static create(): IHfzApi {
-        return new HfzMockApi();
+        return new HfzSupabaseApi();
     }
 }
 
@@ -68,7 +69,7 @@ export interface IPerson extends IId {
     lastName: string;
     isActive: boolean;
     isMember: boolean;
-    mainPerson: IPerson;
+    mainPerson?: IPerson;
     personGroup: string;
     phone: string;
     saleCount: number;

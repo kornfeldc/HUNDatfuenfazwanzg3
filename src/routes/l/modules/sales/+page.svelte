@@ -13,6 +13,7 @@
 
     let {data}: { data: any } = $props();
     let searchString = $state("");
+    let sales = $state([] as Array<ISale>);
 
     moment.locale('de');
     
@@ -34,10 +35,14 @@
     const isSaleOnDate = (sale: ISale) => 
         moment(sale.saleDate).isSame(moment(date), "day") ||
         (moment(date).isSame(moment(),"day") && !sale.payDate);  
+    
+    const loadSales = async () => {
+        sales = await data.sales; 
+    }
 </script>
-{#await data.sales}
+{#await loadSales()}
     loading ...
-{:then sales}
+{:then _}
     <div class="flex w-full items-center justify-center">
         <a href={"/l/modules/sales?date="+moment(date).subtract(1, "days").format("YYYY-MM-DD")}>
             <CircleArrowLeft class="text-slate-400" />
