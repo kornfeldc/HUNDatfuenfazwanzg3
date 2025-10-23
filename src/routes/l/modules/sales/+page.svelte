@@ -38,6 +38,7 @@
     
     const loadSales = async () => {
         sales = await data.sales; 
+        console.log("sales", sales);    
     }
 </script>
 {#await loadSales()}

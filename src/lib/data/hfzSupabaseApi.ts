@@ -89,19 +89,20 @@ export class HfzSupabaseApi implements IHfzApi {
         const supabase = HfzSupabaseApi.getClient();
         const { data, error } = await supabase
             .from('sale')
-            .select('*')
+            .select('*, person(*), sale_article(*, article(*))')
             .eq("og",this.og)
             .eq('id', id.id)
             .single();
 
-        const ret = HfzSupabaseApi.mapDates(data);
-        return ret as ISale;
+        if (error) throw error;
+        return HfzSupabaseApi.mapSales(data) as ISale;
     }
 
     async getSales(dateFrom: string, dateTo?: string): Promise<Array<ISale>> {
         const supabase = HfzSupabaseApi.getClient();
+        
         let query = supabase.from('sale')
-            .select('*')
+            .select('*, person(*), sale_article(*, article(*))')
             .eq("og",this.og);
         
         if (dateFrom && dateTo) {
@@ -110,18 +111,30 @@ export class HfzSupabaseApi implements IHfzApi {
         }
         else if (dateFrom)
             query = query.or("saleDate.eq."+dateFrom+",payDate.is.null");
-            //query = query.eq('saleDate', dateFrom);
         
-        console.log("getSales query", {dateFrom,dateTo});
         const { data, error } = await query; 
+        if (error) throw error;
         
-        let ret = HfzSupabaseApi.mapDates(data);
-        ret.forEach(r=> r.saleArticles = []);
-        console.log("getSales count", ret.length);
-        return ret as Array<ISale>;
+        return HfzSupabaseApi.mapSales(data) as Array<ISale>;
+    }
+    
+    static mapSales(data: any): any {
+        return HfzSupabaseApi.parseData(data, [
+            ["sale_article", "saleArticles"]
+        ]);
+    }
+    
+    static parseData(data: any, propertiesToRename = undefined as undefined|Array<[string,string]>): any {
+        if(!data) return data;
+        data = HfzSupabaseApi.mapDates(data);
+        propertiesToRename?.forEach(([oldName, newName]) => {
+            data = HfzSupabaseApi.renameProperty(data, oldName, newName);
+        });
+        return data;
     }
     
     static mapDates(data: any): any {
+        if(!data) return data;
         if(Array.isArray(data))
             return data.map(HfzSupabaseApi.mapDates);
         
@@ -130,6 +143,18 @@ export class HfzSupabaseApi implements IHfzApi {
             if(data[col]) {
                 data[col] = new Date(data[col]);
             }
+        }
+        return data;
+    }
+    
+    static renameProperty(data: any, oldName: string, newName: string): any {
+        if(!data) return data;
+        if(Array.isArray(data))
+            return data.map(x => HfzSupabaseApi.renameProperty(x, oldName, newName));
+        
+        if(data[oldName]) {
+            data[newName] = data[oldName];
+            delete data[oldName];
         }
         return data;
     }
