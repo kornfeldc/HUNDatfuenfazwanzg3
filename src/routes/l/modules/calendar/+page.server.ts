@@ -8,8 +8,6 @@ export async function load({ cookies, params, url }) {
     const dateFrom = moment(date).startOf('month').add(-1, 'months').format("YYYY-MM-DD");
     const dateTo = moment(date).endOf('month').add(1, 'months').format("YYYY-MM-DD");
     
-    console.log("date", {dateFrom, dateTo});
-    
     return {
         sales: api.getSales(dateFrom, dateTo) 
     };

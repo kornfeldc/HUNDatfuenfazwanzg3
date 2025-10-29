@@ -125,7 +125,7 @@ export const ArticleTypes = {
     "alcoholic": "Alkoholisch",
     "nonalcoholic": "Antialkoholisch",
     "snack": "Snacks",
-    "sweets": "Süßes",
+    "sweet": "Süßes",
     "meal": "Mahlzeit",
     "other": "Sonstiges",
 };
