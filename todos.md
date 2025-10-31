@@ -14,8 +14,7 @@
 - [ ] Personen Grids korrekt sortieren 
 - [ ] Checkbox zugehörige funktioniert nicht 
 - [ ] Tabs Kurs und Verkäufe implementieren 
-- [ ] Neuanlage
-- [ ] Editieren 
+- [x] Persistieren 
 - [ ] Guthaben aufbuchen 
 - [ ] Kurs aufbuchen
 - [ ] Kurs abbuchen (auch ins Minus soll möglich sein) 

@@ -13,6 +13,7 @@
     import {Button} from "$lib/components/shadcn/ui/button";
     import {Checkbox} from "$lib/components/shadcn/ui/checkbox";
     import CardTitleBig from "$lib/components/global/CardTitleBig.svelte";
+    import {Util} from "$lib/util";
 
     let id = $page.params.id;
     let {data}: { data: any; } = $props();
@@ -30,13 +31,20 @@
         formPerson.isMember = person?.isMember ?? false;
         formPerson.isActive = person?.isActive ?? true;
         formPerson.personGroup = person?.personGroup ?? "";
+        isConnected = !!formPerson.personGroup;
+    }
+    
+    const swapName = () => {
+        const temp = formPerson.firstName;
+        formPerson.firstName = formPerson.lastName;
+        formPerson.lastName = temp;
     }
 </script>
 
 {#await loadPerson()}
     <Loading></Loading>
 {:then _}
-    <form method="post" action="/l/dialogs/person/{id}/data">
+    <form method="post" action={id ? `/l/dialogs/person/${id}/data` : `/l/dialogs/person/data`}>
         <Card className="max-w-xl m-auto">
             <CardTitleBig className="hidden sm:block pb-2">{formPerson.id ? (formPerson.lastName + " " + formPerson.firstName) : "Neue Person"}</CardTitleBig>
             <div class="grid grid-cols-12 gap-6">
@@ -56,7 +64,7 @@
                     </InputGroup.Root>
                 </div>
                 <div class="col-span-2 flex items-end justify-end">
-                    <Button variant="outline" class="font-light text-muted-foreground">
+                    <Button variant="outline" class="font-light text-muted-foreground" onclick={() => swapName() }>
                         <ArrowUpDown class="h-4 w-4"></ArrowUpDown>
                     </Button>
                 </div>
@@ -88,30 +96,30 @@
 
                 <div class="col-span-6 flex flex-col gap-2">
                     <Label for="member-{id}" class="whitespace-nowrap">Ist Mitglied</Label>
-                    <Checkbox name="isMember" id="member-{id}" bind:checked={formPerson.isMember} />
+                    <input type="hidden" name="isMember" value={formPerson.isMember ? 'on' : ''}/>
+                    <Checkbox id="member-{id}" bind:checked={formPerson.isMember} />
                 </div>
 
                 <div class="col-span-6 flex flex-col gap-2">
                     <Label for="active-{id}" class="whitespace-nowrap">Ist Aktiv</Label>
-                    <Checkbox name="isActive" id="active-{id}" bind:checked={formPerson.isActive} />
+                    <input type="hidden" name="isActive" value={formPerson.isActive ? 'on' : ''}/>
+                    <Checkbox id="active-{id}" bind:checked={formPerson.isActive} />
                 </div>
 
                 <div class="col-span-6 flex flex-col gap-2">
                     <Label for="connected-{id}" class="whitespace-nowrap">Zusammenhängend</Label>
-                    <Checkbox name="isConnected" id="connected-{id}" bind:checked={isConnected} />
+                    <input type="hidden" name="isConnected" value={isConnected ? 'on' : ''}/>
+                    <Checkbox id="connected-{id}" bind:checked={isConnected} />
                 </div>
 
-                <div class="col-span-6 flex flex-col gap-2">
-                    {#if isConnected}
+                <div class={Util.mapClass("col-span-6 flex flex-col gap-2", isConnected, "", "hidden")}>
                     <Label for="personGroup-{id}" class="whitespace-nowrap">Personengruppe</Label>
                     <InputGroup.Root>
                         <InputGroup.Input 
                                 name="personGroup" 
-                                id="personGroup-{id}-{id}"
-                                required 
+                                id="personGroup-{id}"
                                 bind:value={formPerson.personGroup}></InputGroup.Input>
                     </InputGroup.Root>
-                    {/if}
                 </div>
 
             </div>

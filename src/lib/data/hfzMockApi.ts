@@ -249,6 +249,42 @@ class HfzMockApi implements IHfzApi {
         return persons.find(s => s.id === id.id) || persons[0];
     }
 
+    async createPerson(person: Partial<IPerson>): Promise<IPerson> {
+        const newId = persons.length ? Math.max(...persons.map(p => p.id)) + 1 : 1;
+        const created: IPerson = {
+            id: newId,
+            courseCount: person.courseCount ?? 0,
+            credit: person.credit ?? 0,
+            dogNames: person.dogNames ?? "",
+            email: person.email ?? "",
+            extId: person.extId ?? `P-${1000 + newId}`,
+            firstName: person.firstName ?? "",
+            lastName: person.lastName ?? "",
+            isActive: person.isActive ?? true,
+            isMember: person.isMember ?? false,
+            mainPerson: undefined as unknown as IPerson,
+            personGroup: person.personGroup ?? "",
+            phone: person.phone ?? "",
+            saleCount: person.saleCount ?? 0,
+            saleCountActive: person.saleCountActive ?? 0,
+            saleSum: person.saleSum ?? 0,
+        } as IPerson;
+        created.mainPerson = created; // self-reference
+        persons.push(created);
+        return created;
+    }
+
+    async updatePerson(person: IPerson): Promise<IPerson> {
+        const idx = persons.findIndex(p => p.id === person.id);
+        if (idx === -1) throw new Error(`Person with id ${person.id} not found`);
+        const existing = persons[idx];
+        // preserve mainPerson unless explicitly provided
+        const updated = { ...existing, ...person } as IPerson;
+        updated.mainPerson = existing.mainPerson ?? updated;
+        persons[idx] = updated;
+        return persons[idx];
+    }
+
     async getSale(id: IId): Promise<ISale> {
         return sales.find(s => s.id === id.id);
     }

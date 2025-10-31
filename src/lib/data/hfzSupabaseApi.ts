@@ -13,6 +13,45 @@ export class HfzSupabaseApi implements IHfzApi {
         return createClient(this.supabaseUrl, this.supabaseKey);
     }
 
+    async createPerson(person: Partial<IPerson>): Promise<IPerson> {
+        const supabase = HfzSupabaseApi.getClient();
+        const payload = { 
+            ...person, 
+            credit: 0,
+            saleCount: 0,
+            saleSum: 0,
+            og: this.og } as any;
+        const { data, error } = await supabase
+            .from('person')
+            .insert(payload)
+            .select('*')
+            .single();
+        if (error) throw error;
+        return HfzSupabaseApi.mapDates(data) as IPerson;
+    }
+
+    async updatePerson(person: IPerson): Promise<IPerson> {
+        const supabase = HfzSupabaseApi.getClient();
+        const { data, error } = await supabase
+            .from('person')
+            .update({
+                firstName: person.firstName,
+                lastName: person.lastName,
+                dogNames: person.dogNames,
+                phone: person.phone,
+                email: person.email,
+                isMember: person.isMember,
+                isActive: person.isActive,
+                personGroup: person.personGroup,
+            })
+            .eq('og', this.og)
+            .eq('id', person.id)
+            .select('*')
+            .single();
+        if (error) throw error;
+        return HfzSupabaseApi.mapDates(data) as IPerson;
+    }
+
     async createArticle(article: Partial<IArticle>): Promise<IArticle> {
         const supabase = HfzSupabaseApi.getClient();
         const payload = { ...article, og: this.og } as any;

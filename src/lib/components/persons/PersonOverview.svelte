@@ -13,7 +13,7 @@
         {label}: <span class="text-primary text-lg text-bold">{Util.formatCurrency(amount, currency, decimals)}</span>
     {/if}
 {/snippet}
-<a href="/l/dialogs/person/{person.id}">
+<a href={`/l/dialogs/person/${person.id}`}>
     <div class="grid grid-cols-2 gap-1">
         <div class="text-xl text-bold">
             {person.lastName} {person.firstName}

@@ -14,6 +14,10 @@ export interface IHfzApi {
 
     getPerson(id: IId): Promise<IPerson>;
 
+    createPerson(person: Partial<IPerson>): Promise<IPerson>;
+
+    updatePerson(person: IPerson): Promise<IPerson>;
+
     getSales(dateFrom: string, dateTo?: string): Promise<Array<ISale>>;
 
     getSale(id: IId): Promise<ISale>;

@@ -10,7 +10,7 @@
 
     let {person}: IProps = $props();
 </script>
-<a href="/l/dialogs/person/{person.id}">
+<a href={`/l/dialogs/person/${person.id}`}>
     <Card>
         <div class="flex">
             <div class="font-bold text-lg w-full">

@@ -29,13 +29,18 @@ export const actions = {
             data.id = parseInt(id);
         
         if(!data.isConnected && data.personGroup)
-            data.personGroup = null;
+            data.personGroup = "";
+        data.personGroup = data.personGroup ?? "";
         
+        delete data.isConnected;
         console.log("parsed data", data);
 
         try {
-            // todo - save data via api
+            const api = HfzApi.create();
+            if (id) await api.updatePerson(data as any);
+            else await api.createPerson(data as any);
         } catch (e: any) {
+            console.log("error", e);
             return fail(422, {
                 error: e.message
             });
