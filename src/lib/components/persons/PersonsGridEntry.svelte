@@ -29,7 +29,11 @@
                 {/if}
             </div>
             <div class="whitespace-nowrap text-sm text-ok">
-                {Util.formatCurrency(person.credit)}
+                {#if person.credit}
+                    {Util.formatCurrency(person.credit)}
+                {:else}
+                    &nbsp;
+                {/if}
             </div>
         </div>
     </Card>

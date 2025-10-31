@@ -1,6 +1,5 @@
 <script lang="ts">
     import Pill from "$lib/components/global/Pill.svelte";
-
     interface IFilterItem {
         id: string;
         label: string;
@@ -19,8 +18,7 @@
         parameterName = "type",
         selected = "",
         className = "",
-        onSelected = () => {
-        }
+        onSelected 
     }: IProps = $props();
 </script>
 

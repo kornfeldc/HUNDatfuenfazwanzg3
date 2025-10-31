@@ -5,12 +5,13 @@
 - [ ] Bezahlen 
 
 # Artikel
-- [ ] Gruppe korrekt anzeigen
-- [ ] Filter funktionieren nicht 
+- [x] Gruppe korrekt anzeigen
+- [x] Filter funktionieren nicht 
 - [ ] Persistieren 
 
 # Personen
-- [ ] Filter funktionieren nicht
+- [x] Filter funktionieren nicht
+- [ ] Personen Grids korrekt sortieren 
 - [ ] Checkbox zugehörige funktioniert nicht 
 - [ ] Tabs Kurs und Verkäufe implementieren 
 - [ ] Neuanlage
