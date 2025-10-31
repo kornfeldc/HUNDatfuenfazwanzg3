@@ -12,7 +12,7 @@
 # Personen
 - [x] Filter funktionieren nicht
 - [ ] Personen Grids korrekt sortieren 
-- [ ] Checkbox zugehörige funktioniert nicht 
+- [x] Checkbox zugehörige funktioniert nicht 
 - [ ] Tabs Kurs und Verkäufe implementieren 
 - [x] Persistieren 
 - [ ] Guthaben aufbuchen 
@@ -25,3 +25,6 @@
 
 # Global
 - [x] Suchzeile Autofokus und Blur bei Enter 
+
+# Hosting
+- [ ] Vercel einrichten
