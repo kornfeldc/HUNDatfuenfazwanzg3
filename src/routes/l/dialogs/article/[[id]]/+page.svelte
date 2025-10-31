@@ -34,7 +34,7 @@
 {#await loadArticle()}
     <Loading></Loading>
 {:then _}
-    <form method="post" action="/l/dialogs/article/{id}">
+    <form method="post" action={id ? `/l/dialogs/article/${id}` : `/l/dialogs/article`}>
         <Card className="max-w-xl m-auto">
             <CardTitleBig className="hidden sm:block pb-2">{formArticle.id ? formArticle.title : "Neuer Artikel"}</CardTitleBig>
             <div class="grid grid-cols-12 gap-6">
@@ -72,12 +72,14 @@
 
                 <div class="col-span-6 flex flex-col gap-2">
                     <Label for="favorite-{id}" class="whitespace-nowrap">Ist Favorit</Label>
-                    <Checkbox name="isFavorite" id="favorite-{id}" bind:checked={formArticle.isFavorite}/>
+                    <input type="hidden" name="isFavorite" value={formArticle.isFavorite ? 'on' : ''}/>
+                    <Checkbox id="favorite-{id}" bind:checked={formArticle.isFavorite}/>
                 </div>
 
                 <div class="col-span-6 flex flex-col gap-2">
                     <Label for="active-{id}" class="whitespace-nowrap">Ist Aktiv</Label>
-                    <Checkbox name="isActive" id="active-{id}" bind:checked={formArticle.isActive}/>
+                    <input type="hidden" name="isActive" value={formArticle.isActive ? 'on' : ''}/>
+                    <Checkbox id="active-{id}" bind:checked={formArticle.isActive}/>
                 </div>
             </div>
         </Card>

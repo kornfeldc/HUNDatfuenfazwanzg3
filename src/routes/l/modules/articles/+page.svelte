@@ -23,7 +23,7 @@
             (
                 !type || 
                 (type === "favorite" && a.isFavorite && a.isActive) ||
-                (type === "inActive" && !a.isActive) ||
+                (type === "inactive" && !a.isActive) ||
                 a.type === type
             )
         );

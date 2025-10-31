@@ -13,6 +13,37 @@ export class HfzSupabaseApi implements IHfzApi {
         return createClient(this.supabaseUrl, this.supabaseKey);
     }
 
+    async createArticle(article: Partial<IArticle>): Promise<IArticle> {
+        const supabase = HfzSupabaseApi.getClient();
+        const payload = { ...article, og: this.og } as any;
+        const { data, error } = await supabase
+            .from('article')
+            .insert(payload)
+            .select('*')
+            .single();
+        if (error) throw error;
+        return HfzSupabaseApi.mapDates(data) as IArticle;
+    }
+
+    async updateArticle(article: IArticle): Promise<IArticle> {
+        const supabase = HfzSupabaseApi.getClient();
+        const { data, error } = await supabase
+            .from('article')
+            .update({
+                title: article.title,
+                type: (article as any).type, // ensure type is passed through
+                price: article.price,
+                isFavorite: article.isFavorite,
+                isActive: article.isActive,
+            })
+            .eq('og', this.og)
+            .eq('id', article.id)
+            .select('*')
+            .single();
+        if (error) throw error;
+        return HfzSupabaseApi.mapDates(data) as IArticle;
+    }
+
     async getArticle(id: IId): Promise<IArticle> {
         const supabase = HfzSupabaseApi.getClient();
         const { data, error } = await supabase

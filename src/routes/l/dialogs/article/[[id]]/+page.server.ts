@@ -34,7 +34,9 @@ export const actions = {
         console.log("parsed data", data);
 
         try {
-            // todo - save data via api
+            const api = HfzApi.create();
+            if (id) await api.updateArticle(data as any);
+            else await api.createArticle(data as any);
         } catch (e: any) {
             return fail(422, {
                 error: e.message

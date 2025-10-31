@@ -6,6 +6,10 @@ export interface IHfzApi {
 
     getArticle(id: IId): Promise<IArticle>;
 
+    createArticle(article: Partial<IArticle>): Promise<IArticle>;
+
+    updateArticle(article: IArticle): Promise<IArticle>;
+
     getPersons(): Promise<Array<IPerson>>;
 
     getPerson(id: IId): Promise<IPerson>;

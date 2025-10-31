@@ -215,6 +215,29 @@ class HfzMockApi implements IHfzApi {
         return articles.find(s => s.id === id.id) || articles[0];
     }
 
+    async createArticle(article: Partial<IArticle>): Promise<IArticle> {
+        const newId = articles.length ? Math.max(...articles.map(a => a.id)) + 1 : 1;
+        const created: IArticle = {
+            id: newId,
+            extId: article.extId ?? `A-${2000 + newId}`,
+            isActive: article.isActive ?? true,
+            isFavorite: article.isFavorite ?? false,
+            price: article.price ?? 0,
+            title: article.title ?? "Neuer Artikel",
+            // @ts-ignore
+            type: article.type ?? "other"
+        } as IArticle;
+        articles.push(created);
+        return created;
+    }
+
+    async updateArticle(article: IArticle): Promise<IArticle> {
+        const idx = articles.findIndex(a => a.id === article.id);
+        if (idx === -1) throw new Error(`Article with id ${article.id} not found`);
+        articles[idx] = { ...articles[idx], ...article };
+        return articles[idx];
+    }
+
     async getPersons(): Promise<Array<IPerson>> {
         return persons;
     }

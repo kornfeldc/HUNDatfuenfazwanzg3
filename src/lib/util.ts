@@ -45,7 +45,8 @@ export class Util {
         let ret = {};
         formData.forEach((value, key) => {
             let val = formData.get(key);
-            if (!val) return;
+            // Do not drop empty strings; only skip if the key is truly absent
+            if (val === null) return;
             convertes?.forEach((converter) => {
                 if (converter.properties?.includes(key)) val = converter.method(val);
             });

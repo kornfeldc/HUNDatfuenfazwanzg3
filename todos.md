@@ -7,7 +7,7 @@
 # Artikel
 - [x] Gruppe korrekt anzeigen
 - [x] Filter funktionieren nicht 
-- [ ] Persistieren 
+- [x] Persistieren 
 
 # Personen
 - [x] Filter funktionieren nicht
