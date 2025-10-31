@@ -23,3 +23,6 @@
 
 # Rob
 - [ ] Komplette Implementierung 
+
+# Global
+- [x] Suchzeile Autofokus und Blur bei Enter 

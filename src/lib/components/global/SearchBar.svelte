@@ -1,6 +1,7 @@
 <script lang="ts">
     import {CircleX} from "@lucide/svelte";
     import GlassBar from "$lib/components/global/GlassBar.svelte";
+    import { onMount, tick } from "svelte";
     
     interface IProps {
         value?: any;
@@ -10,25 +11,45 @@
         value = $bindable("")
     }: IProps = $props();
 
+    let inputEl: HTMLInputElement | null = null;
+
     const clearSearch = (event) => {
         event.stopPropagation();
         event.preventDefault();
         startSearch("");
+        // Keep focus so the user can immediately type again
+        inputEl?.focus();
         return false;
     }
     const startSearch = (val: string) => {
         value = val;
     }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            inputEl?.blur();
+        }
+    }
+
+    onMount(async () => {
+        // Wait for the DOM to flush, then focus/select the input
+        await tick();
+        inputEl?.focus();
+        inputEl?.select?.();
+    });
 </script>
 
 <GlassBar>
     <input
+            bind:this={inputEl}
             style="width: calc(100vw - 9em)"
             class="border-0 m-0 p-1.5 bg-transparent rounded-full mr-1 text-white placeholder-gray-200"
             type="text"
             placeholder="Suche"
             bind:value={value}
-            oninput={(e) => startSearch(e.currentTarget.value)}/>
+            oninput={(e) => startSearch(e.currentTarget.value)}
+            onkeydown={(e) => handleKeyDown(e)} />
     <button onclick={(event) => clearSearch(event)} class="pr-2 text-gray-200">
         <CircleX/>
     </button>
