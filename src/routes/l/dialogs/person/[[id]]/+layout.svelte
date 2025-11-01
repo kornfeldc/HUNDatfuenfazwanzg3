@@ -15,8 +15,7 @@
 
     const filterItems = [
         {id: "data", label: "Stammdaten"},
-        {id: "courses", label: "Kurs"},
-        {id: "sales", label: "Verkäufe/Guthaben"},
+        {id: "history", label: "Historie"}
     ];
     
     onMount(() => {

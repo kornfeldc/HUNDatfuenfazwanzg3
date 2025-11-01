@@ -7,8 +7,9 @@
 
     const filterItems = [
         {id: "all", label: "Alles"},
-        {id: "credit", label: "Guthaben aufgeladen"},
         {id: "sale", label: "Verkauf"},
+        {id: "course", label: "Kurs"},
+        {id: "credit", label: "Guthaben aufgeladen"},
     ];
 </script>
 <FilterBar items={filterItems} selected={type} parameterName="type" className="p-0! mt-2"></FilterBar>
