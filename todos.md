@@ -13,7 +13,7 @@
 - [x] Filter funktionieren nicht
 - [ ] Personen Grids korrekt sortieren 
 - [x] Checkbox zugehörige funktioniert nicht 
-- [ ] Tabs Kurs und Verkäufe implementieren 
+- [x] Ansicht Kurs und Verkäufe implementieren 
 - [x] Persistieren 
 - [ ] Guthaben aufbuchen 
 - [ ] Kurs aufbuchen
@@ -26,6 +26,7 @@
 # Global
 - [ ] Authentifizierung 
 - [x] Suchzeile Autofokus und Blur bei Enter 
+- [ ] Zurück Button "intelligenter"
 
 # Hosting
 - [ ] Vercel einrichten

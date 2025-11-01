@@ -3,27 +3,23 @@ import {HfzSupabaseApi} from "$lib/data/hfzSupabaseApi";
 
 export interface IHfzApi {
     getArticles(): Promise<Array<IArticle>>;
-
     getArticle(id: IId): Promise<IArticle>;
-
     createArticle(article: Partial<IArticle>): Promise<IArticle>;
-
     updateArticle(article: IArticle): Promise<IArticle>;
 
     getPersons(): Promise<Array<IPerson>>;
-
     getPerson(id: IId): Promise<IPerson>;
-
+    getPersonCreditHistory(id: IId): Promise<Array<ICreditHistory>>;
+    getPersonCourseHistory(id: IId): Promise<Array<ICourseHistory>>;
+    getPersonSaleHistory(id: IId): Promise<Array<ISale>>;
+    getPersonMergedHistory(id: IId): Promise<Array<IMergedPersonHistory>>;
     createPerson(person: Partial<IPerson>): Promise<IPerson>;
-
     updatePerson(person: IPerson): Promise<IPerson>;
 
     getSales(dateFrom: string, dateTo?: string): Promise<Array<ISale>>;
-
     getSale(id: IId): Promise<ISale>;
 
     getRobCourses(): Promise<Array<IRobCourse>>;
-
     getRobCourse(id: IId): Promise<IRobCourse>;
 }
 
@@ -102,12 +98,24 @@ export interface ICourseHistory extends IId {
 }
 
 export interface ICreditHistory extends IId {
-    credits: number;
+    credit: number;
     date: Date;
     person: IPerson;
     isBought: boolean;
     sale: ISale;
 }
+
+export interface IMergedPersonHistory {
+    date: Date;
+    creditBought: number; 
+    creditUsed: number;
+    coursesBought: number;
+    coursesUsed: number;
+    saleSum: number;
+    creditHistory: Array<ICreditHistory>;
+    courseHistory: Array<ICourseHistory>;
+    saleHistory: Array<ISale>;
+} 
 
 export interface IPersonArticleUsage extends IId {
     article: IArticle;

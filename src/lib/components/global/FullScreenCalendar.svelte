@@ -3,6 +3,7 @@
     import {Util} from "$lib/util";
     import Pill from "$lib/components/global/Pill.svelte";
     import {CalendarDays, CircleArrowLeft, CircleArrowRight} from "@lucide/svelte";
+    import {onMount} from "svelte";
 
     export interface ICalendarDayItem {
         text: string;
