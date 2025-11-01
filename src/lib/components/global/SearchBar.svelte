@@ -13,12 +13,18 @@
 
     let inputEl: HTMLInputElement | null = null;
 
-    const clearSearch = (event) => {
+    // Detect desktop-like environments (precise pointer + hover)
+    const isDesktopLike = () =>
+        typeof window !== 'undefined' &&
+        typeof window.matchMedia === 'function' &&
+        window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    const clearSearch = (event: Event) => {
         event.stopPropagation();
         event.preventDefault();
         startSearch("");
-        // Keep focus so the user can immediately type again
-        inputEl?.focus();
+        // Only refocus on desktop to avoid popping the virtual keyboard
+        if (isDesktopLike()) inputEl?.focus();
         return false;
     }
     const startSearch = (val: string) => {
@@ -33,10 +39,12 @@
     }
 
     onMount(async () => {
-        // Wait for the DOM to flush, then focus/select the input
+        // Wait for the DOM to flush; focus/select only on desktop-like devices
         await tick();
-        inputEl?.focus();
-        inputEl?.select?.();
+        if (isDesktopLike()) {
+            inputEl?.focus();
+            inputEl?.select?.();
+        }
     });
 </script>
 
