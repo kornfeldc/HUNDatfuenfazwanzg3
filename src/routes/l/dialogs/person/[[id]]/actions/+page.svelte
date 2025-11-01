@@ -5,6 +5,7 @@
     import {Button} from "$lib/components/shadcn/ui/button";
     import {Input} from "$lib/components/shadcn/ui/input";
     import type {IPerson} from "$lib/data/hfzApi";
+    import moment from "moment";
 
     let {data}: { data: any; } = $props();
     let person = $state({} as IPerson);
@@ -12,20 +13,22 @@
     let actionData = $state({
         coursesToRemove: 1,
         coursesToAdd: 10,
-        creditToAdd: 0
+        creditToAdd: 0,
+        perDate: moment().format("YYYY-MM-DD"),
+        today: moment().format("YYYY-MM-DD")
     } as any);
 
     const loadPerson = async () => {
         person = await data.person;
     }
     
-    const removeCourses = async () => await modifyCourses(-actionData.coursesToRemove);
-    const addCourses = async () => await modifyCourses(actionData.coursesToAdd);
-    const modifyCourses = async (count: number) => {
+    const removeCourses = async () => await modifyCourses(-actionData.coursesToRemove, actionData.perDate);
+    const addCourses = async () => await modifyCourses(actionData.coursesToAdd, actionData.today);
+    const modifyCourses = async (count: number, perDate: string) => {
         // todo
     }
-    const addCredit = async () => await modifyCredit(actionData.creditToAdd);
-    const modifyCredit = async (amount: number) => {
+    const addCredit = async () => await modifyCredit(actionData.creditToAdd, actionData.today);
+    const modifyCredit = async (amount: number, perDate: string) => {
         // todo
     }
 </script>
@@ -38,15 +41,24 @@
     </Card>
 
     <Card className="max-w-xl m-auto">
-        <div class="grid grid-cols-[auto_1fr] grid-col-t gap-4 pt-4">
+        
+        <div class="grid grid-cols-[6em_1fr] gap-4 pt-4">
             <Input type="number" placeholder="Anzahl" bind:value={actionData.coursesToRemove}></Input>
-            <Button onclick={()=> removeCourses()}>Kurseinheit abziehen</Button>
+            <div>
+                <Input type="date" placeholder="Datum" bind:value={actionData.perDate}/>
+            </div>
+            <Button variant="outline" class="col-span-2 border-destructive text-destructive hover:bg-destructive/10" onclick={()=> removeCourses()}>Kurseinheit abziehen</Button>
+        </div>
+        
+        <div class="border-[1px] border-border mt-4"></div>
+        
+        <div class="grid grid-cols-[6em_1fr] gap-4 pt-4">
 
-            <Input type="number" placeholder="Anzahl" bind:value={actionData.coursesToAdd}></Input>
-            <Button onclick={()=> addCourses()}>Kurse aufbuchen</Button>
+            <Input type="number" class="text-right" placeholder="Anzahl" bind:value={actionData.coursesToAdd}></Input>
+            <Button variant="outline" class="border-ok text-ok hover:bg-ok/10" onclick={()=> addCourses()}>Kurse aufbuchen</Button>
 
-            <Input type="number" placeholder="Anzahl" bind:value={actionData.creditToAdd}></Input>
-            <Button onclick={()=> addCredit()}>Guthaben aufbuchen</Button>
+            <Input type="number" class="text-right" placeholder="Anzahl" bind:value={actionData.creditToAdd}></Input>
+            <Button variant="outline" class="border-primary text-primary hover:bg-primary/10" onclick={()=> addCredit()}>Guthaben aufbuchen</Button>
         </div>
     </Card>
 {/await}

@@ -26,7 +26,8 @@
 # Global
 - [ ] Authentifizierung 
 - [x] Suchzeile Autofokus und Blur bei Enter 
-- [ ] Zurück Button "intelligenter"
+- [ ] Zurück-Button "intelligenter"
+- [ ] Dark Mode
 
 # Hosting
 - [ ] Vercel einrichten
