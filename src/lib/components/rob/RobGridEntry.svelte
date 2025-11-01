@@ -1,7 +1,7 @@
 <script lang="ts">
     import type {IRobCourse} from "$lib/data/hfzApi";
     import Card from "$lib/components/global/Card.svelte";
-    import {Util} from "$lib/util";
+    import {Util, rememberOrigin} from "$lib/util";
 
     interface IProps {
         robCourse: IRobCourse;
@@ -9,7 +9,7 @@
 
     let {robCourse}: IProps = $props();
 </script>
-<a href="/l/dialogs/rob/{robCourse.id}">
+<a use:rememberOrigin href="/l/dialogs/rob/{robCourse.id}">
     <Card>
         <div class="flex">
             <div class="font-bold text-lg w-full">

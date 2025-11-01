@@ -1,6 +1,6 @@
 <script lang="ts">
     import type {IPerson} from "$lib/data/hfzApi";
-    import {Util} from "$lib/util";
+    import {Util, rememberOrigin} from "$lib/util";
 
     interface IProps {
         person: IPerson;
@@ -13,7 +13,7 @@
         {label}: <span class="text-primary text-lg text-bold">{Util.formatCurrency(amount, currency, decimals)}</span>
     {/if}
 {/snippet}
-<a href={`/l/dialogs/person/${person.id}`}>
+<a use:rememberOrigin href={`/l/dialogs/person/${person.id}`}>
     <div class="grid grid-cols-2 gap-1">
         <div class="text-xl text-bold">
             {person.lastName} {person.firstName}

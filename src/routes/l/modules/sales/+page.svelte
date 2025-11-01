@@ -10,6 +10,7 @@
     const { firstBy } = thenby;
     import { page } from '$app/stores';
     import moment from "moment";
+    import Loading from "$lib/components/global/Loading.svelte";
 
     let {data}: { data: any } = $props();
     let searchString = $state("");
@@ -42,7 +43,7 @@
     }
 </script>
 {#await loadSales()}
-    loading ...
+    <Loading/>
 {:then _}
     <div class="flex w-full items-center justify-center">
         <a href={"/l/modules/sales?date="+moment(date).subtract(1, "days").format("YYYY-MM-DD")}>

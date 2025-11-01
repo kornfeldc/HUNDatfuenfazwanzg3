@@ -15,6 +15,7 @@
     import Loading from "$lib/components/global/Loading.svelte";
     import {ArticleTypes, type IArticle} from "$lib/data/hfzApi";
     import {Checkbox} from "$lib/components/shadcn/ui/checkbox";
+    import {onMount} from "svelte";
 
     let id = $page.params.id;
     let {data}: { data: any; } = $props();
