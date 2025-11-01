@@ -24,6 +24,7 @@
 - [ ] Komplette Implementierung 
 
 # Global
+- [ ] Authentifizierung 
 - [x] Suchzeile Autofokus und Blur bei Enter 
 
 # Hosting
