@@ -4,7 +4,7 @@
     import NavigationActions from "$lib/components/global/NavigationActions.svelte";
     import Card from "$lib/components/global/Card.svelte";
     import Loading from "$lib/components/global/Loading.svelte";
-    import {ArrowUpDown} from "@lucide/svelte";
+    import {ArrowUpDown, Diff} from "@lucide/svelte";
     import type {IPerson} from "$lib/data/hfzApi";
     import {Label} from "$lib/components/shadcn/ui/label";
 
@@ -14,6 +14,7 @@
     import {Checkbox} from "$lib/components/shadcn/ui/checkbox";
     import CardTitleBig from "$lib/components/global/CardTitleBig.svelte";
     import {Util} from "$lib/util";
+    import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
 
     let id = $page.params.id;
     let {data}: { data: any; } = $props();
@@ -127,9 +128,16 @@
         </Card>
 
         <NavigationActions>
-            <button type="submit" slot="actions">
-                <SaveButton></SaveButton>
-            </button>
+            <div class="flex gap-2" slot="actions">
+                <GlassCircleLink
+                        className={" bg-primary/90! border-0 drop-shadow-primary/90 drop-shadow-xl "}
+                        href={`/l/dialogs/person/${id}/actions`}>
+                    <Diff class="text-primary-foreground"/>
+                </GlassCircleLink>
+                <button type="submit">
+                    <SaveButton></SaveButton>
+                </button>
+            </div>
         </NavigationActions>
     </form>
 {/await}

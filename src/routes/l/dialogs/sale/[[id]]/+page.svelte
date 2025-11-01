@@ -47,7 +47,7 @@
                 <div slot="actions">
                     {#if !sale.payDate}
                         <button type="submit" name="redirectTo" value={`/l/dialogs/sale/${id}/pay`}>
-                            <TextButton>Bezahlen</TextButton>
+                            <TextButton className={"bg-primary!"}>Bezahlen</TextButton>
                         </button>
                         <button type="submit" name="redirectTo" value="/l/modules/sales">
                             <TextButton color="ok">Speichern</TextButton>

@@ -40,22 +40,24 @@
 
 </script>
 
-<Card className="max-w-xl m-auto">
-    <PersonOverview person={person}></PersonOverview>
-</Card>
-
-<FilterBar className="p-0! mt-2" items={filterItems} parameterName="type" selected={type}></FilterBar>
 
 {#await loadHistory()}
     <Loading></Loading>
 {:then _}
+    <Card className="max-w-xl m-auto">
+        <PersonOverview person={person}></PersonOverview>
+    </Card>
+
+    <FilterBar className="p-0! mt-2" items={filterItems} parameterName="type" selected={type}></FilterBar>
     <div style="margin-left: -0.6em;margin-right: -0.6em;">
         <PersonHistoryGrid history={filteredHistory} {type}></PersonHistoryGrid>
     </div>
 
     <NavigationActions>
         <button slot="actions">
-            <GlassCircleLink className={" bg-primary/90! border-0 drop-shadow-primary/90 drop-shadow-xl " }>
+            <GlassCircleLink
+                    className={" bg-primary/90! border-0 drop-shadow-primary/90 drop-shadow-xl "}
+                    href={"/l/dialogs/person/" + person.id + "/actions"}>
                 <Diff class="text-primary-foreground"/>
             </GlassCircleLink>
         </button>
