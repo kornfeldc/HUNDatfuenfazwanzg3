@@ -24,6 +24,59 @@ export class HfzSupabaseApi implements IHfzApi {
         return createClient(this.supabaseUrl, this.supabaseKey);
     }
 
+    async addPersonCredit(personId: IId, amount: number, date: Date): Promise<void> {
+        const supabase = HfzSupabaseApi.getClient();
+        const payload: any = {
+            personId: personId.id,
+            credit: amount,
+            date: date,
+            isBought: amount > 0,
+        };
+        const { error } = await supabase
+            .from('credit_history')
+            .insert(payload);
+        if (error) throw error;
+
+        // update person
+        const person = await this.getPerson(personId);
+        const newCredit = (person.credit ?? 0) + amount;
+        const {_, persError} = await supabase
+            .from('person')
+            .update({credit: newCredit})
+            .eq('og', this.og)
+            .eq('id', personId.id)
+            .select('*')
+            .single();
+
+        if (persError) throw persError;
+    }
+
+    async addPersonCourse(personId: IId, amount: number, date: Date): Promise<void> {
+        const supabase = HfzSupabaseApi.getClient();
+        const payload: any = {
+            personId: personId.id,
+            courses: amount,
+            date: date
+        };
+        const { error } = await supabase
+            .from('course_history')
+            .insert(payload);
+        if (error) throw error;
+        
+        // update person
+        const person = await this.getPerson(personId);
+        const newCourseCount = (person.courseCount ?? 0) + amount;
+        const {_, persError} = await supabase
+            .from('person')
+            .update({courseCount: newCourseCount})
+            .eq('og', this.og)
+            .eq('id', personId.id)
+            .select('*')
+            .single();
+
+        if (persError) throw persError;
+    }
+
     static mapSales(data: any): any {
         return HfzSupabaseApi.parseData(data, [
             ["sale_article", "saleArticles"]

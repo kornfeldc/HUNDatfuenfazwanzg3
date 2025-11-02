@@ -6,9 +6,11 @@
     import {Input} from "$lib/components/shadcn/ui/input";
     import type {IPerson} from "$lib/data/hfzApi";
     import moment from "moment";
+    import {invalidateAll} from "$app/navigation";
 
     let {data}: { data: any; } = $props();
     let person = $state({} as IPerson);
+    let loading = $state(false);
     
     let actionData = $state({
         coursesToRemove: 1,
@@ -25,13 +27,43 @@
     const removeCourses = async () => await modifyCourses(-actionData.coursesToRemove, actionData.perDate);
     const addCourses = async () => await modifyCourses(actionData.coursesToAdd, actionData.today);
     const modifyCourses = async (count: number, perDate: string) => {
-        // todo
+        const fd = new FormData();
+        fd.set('count', String(count));
+        fd.set('date', perDate);
+        
+        loading = true;
+        const res = await fetch('?/modifyCourses', { method: 'POST', body: fd });
+        loading = false;
+        
+        if (!res.ok) {
+            console.error('modifyCourses failed', await res.text());
+            alert('Fehler beim Aktualisieren der Kurse.');
+            return;
+        }
+        await invalidateAll();
     }
     const addCredit = async () => await modifyCredit(actionData.creditToAdd, actionData.today);
     const modifyCredit = async (amount: number, perDate: string) => {
-        // todo
+        const fd = new FormData();
+        fd.set('amount', String(amount));
+        fd.set('date', perDate);
+        
+        loading = true;
+        const res = await fetch('?/modifyCredit', { method: 'POST', body: fd });
+        loading = false;
+        
+        if (!res.ok) {
+            console.error('modifyCredit failed', await res.text());
+            alert('Fehler beim Aufbuchen des Guthabens.');
+            return;
+        }
+        await invalidateAll();
     }
 </script>
+
+{#if loading}
+    <Loading></Loading>
+{/if}
 
 {#await loadPerson()}
     <Loading></Loading>

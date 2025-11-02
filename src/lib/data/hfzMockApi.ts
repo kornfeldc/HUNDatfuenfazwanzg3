@@ -1,4 +1,4 @@
-import type {IArticle, IHfzApi, IId, IPerson, IRobCourse, ISale} from "$lib/data/hfzApi";
+import type {IArticle, ICourseHistory, ICreditHistory, IHfzApi, IId, IPerson, IRobCourse, ISale} from "$lib/data/hfzApi";
 
 // In-memory mock data for development/testing only.
 // Generates ~10 persons, 10 articles, and 50 sales with dates from now and the last month.
@@ -197,6 +197,9 @@ const robCourses: IRobCourse[] = (() => {
     return list;
 })();
 
+const creditHistory: ICreditHistory[] = [];
+const courseHistory: ICourseHistory[] = [];
+
 class HfzMockApi implements IHfzApi {
     async getRobCourses(): Promise<Array<IRobCourse>> {
         return robCourses;
@@ -283,6 +286,35 @@ class HfzMockApi implements IHfzApi {
         updated.mainPerson = existing.mainPerson ?? updated;
         persons[idx] = updated;
         return persons[idx];
+    }
+
+    async addPersonCredit(personId: IId, amount: number, date: Date): Promise<void> {
+        const person = persons.find(p => p.id === personId.id);
+        if (!person) throw new Error(`Person with id ${personId.id} not found`);
+        person.credit = (person.credit ?? 0) + amount;
+        const newId = creditHistory.length ? Math.max(...creditHistory.map(c => c.id)) + 1 : 1;
+        creditHistory.push({
+            id: newId,
+            credit: amount,
+            date: date,
+            person: person,
+            isBought: amount > 0,
+            // @ts-ignore: mock without sale context
+            sale: undefined
+        } as ICreditHistory);
+    }
+
+    async addPersonCourse(personId: IId, amount: number, date: Date): Promise<void> {
+        const person = persons.find(p => p.id === personId.id);
+        if (!person) throw new Error(`Person with id ${personId.id} not found`);
+        person.courseCount = (person.courseCount ?? 0) + amount;
+        const newId = courseHistory.length ? Math.max(...courseHistory.map(c => c.id)) + 1 : 1;
+        courseHistory.push({
+            id: newId,
+            courses: amount,
+            date: date,
+            person: person
+        } as ICourseHistory);
     }
 
     async getSale(id: IId): Promise<ISale> {

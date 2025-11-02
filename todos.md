@@ -15,9 +15,9 @@
 - [x] Checkbox zugehörige funktioniert nicht 
 - [x] Ansicht Kurs und Verkäufe implementieren 
 - [x] Persistieren 
-- [ ] Guthaben aufbuchen 
-- [ ] Kurs aufbuchen
-- [ ] Kurs abbuchen (auch ins Minus soll möglich sein) 
+- [x] Guthaben aufbuchen 
+- [x] Kurs aufbuchen
+- [x] Kurs abbuchen (auch ins Minus soll möglich sein) 
 - [ ] Info Feld 
 
 # Rob

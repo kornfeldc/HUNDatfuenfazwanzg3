@@ -9,7 +9,7 @@
     const {person}: IProps = $props();
 </script>
 {#snippet amount(amount, currency, decimals, label)}
-    {#if amount > 0}
+    {#if amount}
         {label}: <span class="text-primary text-lg text-bold">{Util.formatCurrency(amount, currency, decimals)}</span>
     {/if}
 {/snippet}
