@@ -26,7 +26,7 @@
 # Global
 - [ ] Authentifizierung 
 - [x] Suchzeile Autofokus und Blur bei Enter 
-- [ ] Zurück-Button "intelligenter"
+- [x] Zurück-Button "intelligenter"
 - [ ] Dark Mode
 
 # Hosting

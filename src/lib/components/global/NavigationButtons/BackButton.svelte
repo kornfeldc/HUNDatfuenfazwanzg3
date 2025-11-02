@@ -1,17 +1,22 @@
 <script lang="ts">
     import {ArrowLeft} from "@lucide/svelte";
     import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
+    import {uiState} from "$lib/stores/uiState.svelte";
+    import {goto} from "$app/navigation";
 
     let {href = "", className = ""} = $props();
 
     const onclick = (event: any) => {
         event.stopPropagation();
         event.preventDefault();
-        const returnTo = sessionStorage.getItem("returnTo");
-        if(returnTo) 
-            window.location.href = returnTo;
-        else 
-            history.back();
+        
+        const lastModule = uiState.getLastRouteSmart();
+        console.log("lastModule", lastModule);
+        if(lastModule) {
+            goto(lastModule);
+            return false;
+        }
+        // history.back();
         return false;
     }
 </script>

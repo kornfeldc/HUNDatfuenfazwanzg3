@@ -79,13 +79,3 @@ export class Util {
         return formData;
     }
 }
-
-export function rememberOrigin(node: HTMLAnchorElement) {
-    const onClick = (e: MouseEvent) => {
-        // Modifier-/Middle-Click ignorieren
-        if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
-        sessionStorage.setItem("returnTo", location.href);
-    };
-    node.addEventListener("click", onClick);
-    return { destroy: () => node.removeEventListener("click", onClick) };
-}

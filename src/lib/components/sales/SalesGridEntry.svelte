@@ -1,6 +1,6 @@
 <script lang="ts">
     import type {ISale} from "$lib/data/hfzApi";
-    import {Util, rememberOrigin} from "$lib/util";
+    import {Util} from "$lib/util";
     import Card from "$lib/components/global/Card.svelte";
     import moment from "moment";
 
@@ -11,7 +11,7 @@
     let {sale}: IProps = $props();
 </script>
 
-<a use:rememberOrigin href="/l/dialogs/sale/{sale.id}">
+<a href="/l/dialogs/sale/{sale.id}">
     <Card>
         <div class="grid grid-cols-[1fr_auto_auto] gap-0 items-center">
             <div class="col-span-2 font-bold text-lg flex items-center">

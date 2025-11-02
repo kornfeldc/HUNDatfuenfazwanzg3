@@ -1,7 +1,7 @@
 <script lang="ts">
     import Card from "$lib/components/global/Card.svelte";
     import {Heart} from "@lucide/svelte";
-    import {Util, rememberOrigin} from "$lib/util";
+    import {Util} from "$lib/util";
     import {ArticleTypes, type IArticle} from "$lib/data/hfzApi";
 
     interface IProps {
@@ -10,7 +10,7 @@
 
     let {article}: IProps = $props();
 </script>
-<a use:rememberOrigin href={`/l/dialogs/article/${article.id}`}>
+<a href={`/l/dialogs/article/${article.id}`}>
     <Card>
         <div class="flex">
             <div class="font-bold text-lg w-full">

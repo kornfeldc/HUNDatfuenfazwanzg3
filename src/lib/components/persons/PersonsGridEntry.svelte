@@ -2,7 +2,7 @@
     import type {IPerson} from "$lib/data/hfzApi";
     import Card from "$lib/components/global/Card.svelte";
     import {Bone, Star} from "@lucide/svelte";
-    import {Util, rememberOrigin} from "$lib/util";
+    import {Util} from "$lib/util";
 
     interface IProps {
         person: IPerson;
@@ -10,7 +10,7 @@
 
     let {person}: IProps = $props();
 </script>
-<a use:rememberOrigin href={`/l/dialogs/person/${person.id}`}>
+<a href={`/l/dialogs/person/${person.id}`}>
     <Card>
         <div class="flex">
             <div class="font-bold text-lg w-full">
