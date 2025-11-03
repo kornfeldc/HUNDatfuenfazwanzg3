@@ -51,7 +51,7 @@
 <GlassBar>
     <input
             bind:this={inputEl}
-            style="width: calc(100vw - 9em)"
+            style="width: calc(100vw - 9em); font-size: 16px"
             class="border-0 m-0 p-1.5 bg-transparent rounded-full mr-1 text-white placeholder-gray-200"
             type="text"
             placeholder="Suche"

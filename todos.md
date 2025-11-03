@@ -29,6 +29,7 @@
 - [x] Zurück-Button "intelligenter"
 - [ ] Dark Mode
 - [x] Scrollen nach ganz unten
+- [ ] Suchzeile am Handy zoomt bei fokus
 
 # Hosting
 - [x] Vercel einrichten
