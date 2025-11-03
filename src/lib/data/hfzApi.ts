@@ -82,6 +82,7 @@ export interface IPerson extends IId {
     saleCount: number;
     saleCountActive: number;
     saleSum: number;
+    info: string;
 }
 
 export interface IArticle extends IId {

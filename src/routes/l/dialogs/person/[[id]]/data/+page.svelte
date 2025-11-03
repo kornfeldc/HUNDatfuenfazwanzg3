@@ -15,6 +15,7 @@
     import CardTitleBig from "$lib/components/global/CardTitleBig.svelte";
     import {Util} from "$lib/util";
     import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
+    import {uiState} from "$lib/stores/uiState.svelte";
 
     let id = $page.params.id;
     let {data}: { data: any; } = $props();
@@ -32,6 +33,7 @@
         formPerson.isMember = person?.isMember ?? false;
         formPerson.isActive = person?.isActive ?? true;
         formPerson.personGroup = person?.personGroup ?? "";
+        formPerson.info = person?.info ?? "";
         isConnected = !!formPerson.personGroup;
     }
     
@@ -46,6 +48,7 @@
     <Loading></Loading>
 {:then _}
     <form method="post" action={id ? `/l/dialogs/person/${id}/data` : `/l/dialogs/person/data`}>
+        <input type="hidden" name="redirectTo" value={uiState.getLastRouteSmart()}>
         <Card className="max-w-xl m-auto">
             <CardTitleBig className="hidden sm:block pb-2">{formPerson.id ? (formPerson.lastName + " " + formPerson.firstName) : "Neue Person"}</CardTitleBig>
             <div class="grid grid-cols-12 gap-6">
@@ -120,6 +123,14 @@
                                 name="personGroup" 
                                 id="personGroup-{id}"
                                 bind:value={formPerson.personGroup}></InputGroup.Input>
+                    </InputGroup.Root>
+                </div>
+
+                <div class="col-span-12 flex flex-col gap-2">
+                    <Label for="info-{id}">Sonstige Infos</Label>
+                    <InputGroup.Root>
+                        <InputGroup.Textarea name="info" id="info-{id}"
+                                          bind:value={formPerson.info}></InputGroup.Textarea>
                     </InputGroup.Root>
                 </div>
 

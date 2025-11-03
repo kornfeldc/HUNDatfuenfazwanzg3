@@ -15,7 +15,7 @@
     import Loading from "$lib/components/global/Loading.svelte";
     import {ArticleTypes, type IArticle} from "$lib/data/hfzApi";
     import {Checkbox} from "$lib/components/shadcn/ui/checkbox";
-    import {onMount} from "svelte";
+    import {uiState} from "$lib/stores/uiState.svelte";
 
     let id = $page.params.id;
     let {data}: { data: any; } = $props();
@@ -36,6 +36,7 @@
     <Loading></Loading>
 {:then _}
     <form method="post" action={id ? `/l/dialogs/article/${id}` : `/l/dialogs/article`}>
+        <input type="hidden" name="redirectTo" value={uiState.getLastRouteSmart()}>
         <Card className="max-w-xl m-auto">
             <CardTitleBig className="hidden sm:block pb-2">{formArticle.id ? formArticle.title : "Neuer Artikel"}</CardTitleBig>
             <div class="grid grid-cols-12 gap-6">

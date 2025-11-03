@@ -18,7 +18,7 @@
 - [x] Guthaben aufbuchen 
 - [x] Kurs aufbuchen
 - [x] Kurs abbuchen (auch ins Minus soll möglich sein) 
-- [ ] Info Feld 
+- [x] Info Feld 
 
 # Rob
 - [ ] Komplette Implementierung 
@@ -28,6 +28,7 @@
 - [x] Suchzeile Autofokus und Blur bei Enter 
 - [x] Zurück-Button "intelligenter"
 - [ ] Dark Mode
+- [x] Scrollen nach ganz unten
 
 # Hosting
-- [ ] Vercel einrichten
+- [x] Vercel einrichten

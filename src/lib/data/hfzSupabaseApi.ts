@@ -149,6 +149,7 @@ export class HfzSupabaseApi implements IHfzApi {
                 isMember: person.isMember,
                 isActive: person.isActive,
                 personGroup: person.personGroup,
+                info: person.info
             })
             .eq('og', this.og)
             .eq('id', person.id)
