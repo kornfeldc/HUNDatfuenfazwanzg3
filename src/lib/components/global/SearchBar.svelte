@@ -53,9 +53,9 @@
 
     onMount(async () => {
         await tick();
+        inputFocused();
         inputEl?.focus();
         inputEl?.select?.();
-        inputFocused();
     });
 
     onDestroy(() => {
