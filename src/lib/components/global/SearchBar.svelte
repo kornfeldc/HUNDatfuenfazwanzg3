@@ -1,8 +1,9 @@
 <script lang="ts">
     import {CircleX} from "@lucide/svelte";
     import GlassBar from "$lib/components/global/GlassBar.svelte";
-    import { onMount, tick } from "svelte";
-    
+    import { onMount, onDestroy, tick } from "svelte";
+    import {uiState} from "$lib/stores/uiState.svelte";
+
     interface IProps {
         value?: any;
         fullWidth?: boolean;
@@ -41,6 +42,16 @@
             inputEl?.blur();
         }
     }
+    
+    const inputFocused = () => {
+       uiState.isSearchInputFocusedMobile = !isDesktopLike(); 
+       console.log("inputFocused", uiState.isSearchInputFocusedMobile);
+    }
+
+    const inputBlurred = () => {
+        uiState.isSearchInputFocusedMobile = false;
+        console.log("inputFocused", uiState.isSearchInputFocusedMobile);
+    }
 
     onMount(async () => {
         // Wait for the DOM to flush; focus/select only on desktop-like devices
@@ -48,7 +59,12 @@
         if (isDesktopLike()) {
             inputEl?.focus();
             inputEl?.select?.();
+            inputFocused();
         }
+    });
+    
+    onDestroy(() => {
+        uiState.isSearchInputFocusedMobile = false;
     });
 </script>
 
@@ -60,6 +76,8 @@
             type="text"
             placeholder="Suche"
             bind:value={value}
+            onfocus={(event) => inputFocused()}
+            onblur={(event) => inputBlurred()}
             oninput={(e) => startSearch(e.currentTarget.value)}
             onkeydown={(e) => handleKeyDown(e)} />
     <button onclick={(event) => clearSearch(event)} class="pr-2 text-gray-200">

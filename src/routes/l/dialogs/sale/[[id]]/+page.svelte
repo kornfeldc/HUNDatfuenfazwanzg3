@@ -20,13 +20,8 @@
 
     const loadData = async () => {
         articles = await data.articles;
-        console.log("load "+id);
-        if(id) { 
+        if(id)  
             sale = await data.sale;
-            person = sale.person;
-
-            console.log("person ",person);
-        }
         else {
             const person = await data.person;
             sale = {

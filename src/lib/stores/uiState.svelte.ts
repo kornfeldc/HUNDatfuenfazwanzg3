@@ -2,6 +2,7 @@ export type UiState = {
     showNavBar: boolean;
     showActions: boolean;
     showSearchBar: boolean;
+    isSearchInputFocusedMobile: boolean;
     routes: string[];
     pushRoute: (path: string) => void;
     getLastRoute: (fragment: string) => string | undefined;
@@ -12,6 +13,7 @@ export const uiState = $state<UiState>({
     showNavBar: true,
     showActions: true,
     showSearchBar: false,
+    isSearchInputFocusedMobile: false,
     routes: [] as string[],
     pushRoute(path: string) {
         if (!path) return;
@@ -47,7 +49,7 @@ export const uiState = $state<UiState>({
             }
         }
         
-        if (currentRoute.includes("modules/calendar"))
+        if (currentRoute.includes("modules/calendar") || currentRoute.includes("modules/personChooser"))
             redirectTo = this.getLastRoute("modules/sale");
         
         if(!redirectTo)
