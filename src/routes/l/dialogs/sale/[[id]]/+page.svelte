@@ -20,27 +20,7 @@
 
     const loadData = async () => {
         articles = await data.articles;
-        if(id)  
-            sale = await data.sale;
-        else {
-            const person = await data.person;
-            sale = {
-                id: 0,
-                saleArticles: [],
-                saleDate: new Date(),
-                person,
-                articleSum: 0,
-                given: 0,
-                additionalCredit: 0,
-                extId: "",
-                inclTip: 0,
-                personName: person.lastName + " " + person.firstName, 
-                payDate: undefined,
-                toPay: 0,
-                toReturn: 0,
-                usedCredit: false
-            } as ISale;
-        }
+        sale = await data.sale;
     }
 
     const toggleSearch = (isVisible: boolean) => {

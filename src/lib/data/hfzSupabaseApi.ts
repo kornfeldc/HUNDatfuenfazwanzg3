@@ -338,6 +338,39 @@ export class HfzSupabaseApi implements IHfzApi {
         return HfzSupabaseApi.mapSales(data) as ISale;
     }
 
+
+    async getNewSaleForPerson(personId: IId): Promise<ISale> {
+        const supabase = HfzSupabaseApi.getClient();
+        const {data, error} = await supabase
+            .from('sale')
+            .select('*, person(*), sale_article(*, article(*))')
+            .eq("og", this.og)
+            .eq("personId", personId.id)
+            .is("payDate", null)
+            .single();
+
+        if (error && error.code === 'PGRST116') {
+            // No unpaid sale found, return empty sale with person
+            return {
+                id: 0,
+                additionalCredit: 0,
+                articleSum: 0,
+                extId: '',
+                given: 0,
+                inclTip: 0,
+                personName: '',
+                saleDate: new Date(),
+                toPay: 0,
+                toReturn: 0,
+                usedCredit: false,
+                saleArticles: [],
+                person: await this.getPerson(personId)
+            } as ISale;
+        }
+
+        if (error) throw error;
+        return HfzSupabaseApi.mapSales(data) as ISale;
+    }
     async getSales(dateFrom: string, dateTo?: string): Promise<Array<ISale>> {
         const supabase = HfzSupabaseApi.getClient();
 

@@ -21,6 +21,7 @@ export interface IHfzApi {
 
     getSales(dateFrom: string, dateTo?: string): Promise<Array<ISale>>;
     getSale(id: IId): Promise<ISale>;
+    getNewSaleForPerson(personId: IId): Promise<ISale>;
 
     getRobCourses(): Promise<Array<IRobCourse>>;
     getRobCourse(id: IId): Promise<IRobCourse>;

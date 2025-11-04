@@ -6,11 +6,11 @@ export async function load({cookies, params, url}) {
     const {id} = params;
     const api = HfzApi.create();
     if (!id) {
-        console.log("new sale");
         const personId = url.searchParams.get('personId');
-        console.log("personId", personId);
+        if(!personId) return fail(404, "No personId");
+        
         return {
-            person: api.getPerson({id: parseInt(personId ?? "")}),
+            sale: api.getNewSaleForPerson({id: parseInt(personId)}),
             articles: api.getArticles()
         };
     }

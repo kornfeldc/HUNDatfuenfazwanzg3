@@ -20,15 +20,22 @@
 </script>
 <a href={linkTo}>
     <Card>
-        <div class="flex">
-            <div class="font-bold text-lg w-full">
+        <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 font-bold text-lg w-full">
                 {person.lastName} {person.firstName}
+                {#if person.isMember}
+                    <div>
+                        <Star size="16" class="text-accent"></Star>
+                    </div>
+                {/if}
             </div>
-            {#if person.isMember}
-                <div>
-                    <Star size="16" class="text-accent"></Star>
-                </div>
-            {/if}
+            <div class="whitespace-nowrap text-base text-ok">
+                {#if person.credit}
+                    {Util.formatCurrency(person.credit)}
+                {:else}
+                    &nbsp;
+                {/if}
+            </div>
         </div>
         <div class="flex items-center">
             <div class="text-muted-foreground text-md flex items-center w-full">
@@ -36,9 +43,10 @@
                     <Bone size="16"></Bone>&nbsp;{person.dogNames}
                 {/if}
             </div>
-            <div class="whitespace-nowrap text-sm text-ok">
-                {#if person.credit}
-                    {Util.formatCurrency(person.credit)}
+            <div class="whitespace-nowrap text-sm">
+                {#if person.courseCount}
+                    Einheit(en) frei: 
+                    <span class="text-primary text-lg">{Util.formatCurrency(person.courseCount, false, 0)}</span>
                 {:else}
                     &nbsp;
                 {/if}
