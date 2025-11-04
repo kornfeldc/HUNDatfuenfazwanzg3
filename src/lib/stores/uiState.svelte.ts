@@ -31,19 +31,30 @@ export const uiState = $state<UiState>({
     },
     getLastRouteSmart() {
         const currentRoute = uiState.routes[uiState.routes.length - 1];
+        let redirectTo = null;
+        
         if (currentRoute.includes("dialogs/person")) {
             console.log("i am in a person dialog", uiState.routes);
             // check if the last module was sales or persons 
             const lastModule = this.getLastRoute("modules");
             console.log("lastModule", lastModule);
             if (lastModule?.includes("modules/persons"))
-                return lastModule;
+                redirectTo = lastModule;
             if (lastModule?.includes("modules/sales")) {
                 // routing was sales > personOverview => return to sale 
                 console.log("return to sale", this.getLastRoute("dialogs/sale/"));
-                return this.getLastRoute("dialogs/sale/");
+                redirectTo = this.getLastRoute("dialogs/sale/");
             }
         }
-        return this.getLastRoute("modules");
+        
+        if (currentRoute.includes("modules/calendar"))
+            redirectTo = this.getLastRoute("modules/sale");
+        
+        if(!redirectTo)
+            redirectTo = this.getLastRoute("modules");
+        
+        if(redirectTo === currentRoute)
+            return null;
+        return redirectTo;
     }
 });

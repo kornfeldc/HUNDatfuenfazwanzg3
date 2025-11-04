@@ -7,6 +7,9 @@
     import {ArticleTypes, type IArticle} from "$lib/data/hfzApi";
     import FilterBar from "$lib/components/global/FilterBar.svelte";
 
+    import thenby from 'thenby';
+    const {firstBy} = thenby;
+
     let {data}: { data: any } = $props();
     let searchString = $state("");
 
@@ -26,7 +29,7 @@
                 (type === "inactive" && !a.isActive) ||
                 a.type === type
             )
-        );
+        ).sort(firstBy("title"));
     }
     
     const filterItems = [

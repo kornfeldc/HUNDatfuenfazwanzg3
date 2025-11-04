@@ -5,13 +5,17 @@
     
     interface IProps {
         value?: any;
+        fullWidth?: boolean;
     }
     
     let {
-        value = $bindable("")
+        value = $bindable(""),
+        fullWidth = false,
     }: IProps = $props();
 
     let inputEl: HTMLInputElement | null = null;
+    
+    let calcWidth = $derived(fullWidth ? "calc(100vw - 4.5em)" : "calc(100vw - 9em)");
 
     // Detect desktop-like environments (precise pointer + hover)
     const isDesktopLike = () =>
@@ -51,7 +55,7 @@
 <GlassBar>
     <input
             bind:this={inputEl}
-            style="width: calc(100vw - 9em);"
+            style={"width: "+calcWidth}
             class="border-0 m-0 p-1.5 bg-transparent rounded-full mr-1 text-white placeholder-gray-200 text-base"
             type="text"
             placeholder="Suche"

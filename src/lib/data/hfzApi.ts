@@ -42,7 +42,7 @@ export interface ISale extends IId {
     extId: string;
     given: number;
     inclTip: number;
-    payDate: Date;
+    payDate?: Date;
     person: IPerson;
     personName: string;
     saleDate: Date;

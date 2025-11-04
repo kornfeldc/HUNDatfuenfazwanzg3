@@ -13,8 +13,8 @@
     let paidSales = $derived(sales.filter(s => s.payDate));
     let unpaidSales = $derived(sales.filter(s => !s.payDate));
 
-    const paidSum = $derived(paidSales.map(s => s.toPay ?? 0).reduce((a, b) => a + b, 0));
-    const unpaidSum = $derived(unpaidSales.map(s => s.toPay ?? 0).reduce((a, b) => a + b, 0));
+    const paidSum = $derived(paidSales.map(s => s.articleSum ?? 0).reduce((a, b) => a + b, 0));
+    const unpaidSum = $derived(unpaidSales.map(s => s.articleSum ?? 0).reduce((a, b) => a + b, 0));
 
 </script>
 

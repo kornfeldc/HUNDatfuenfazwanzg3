@@ -11,12 +11,12 @@
         event.preventDefault();
         
         const lastModule = uiState.getLastRouteSmart();
-        console.log("lastModule", lastModule);
         if(lastModule) {
             goto(lastModule);
             return false;
         }
-        // history.back();
+        
+        history.back();
         return false;
     }
 </script>

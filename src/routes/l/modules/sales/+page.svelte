@@ -39,7 +39,6 @@
     
     const loadSales = async () => {
         sales = await data.sales; 
-        console.log("sales", sales);    
     }
 </script>
 {#await loadSales()}
@@ -64,5 +63,5 @@
 
 <NavigationActions>
     <SearchButton slot="persistent" {onSearch}></SearchButton>
-    <AddButton slot="actions" href="/l/dialogs/sale"></AddButton>
+    <AddButton slot="actions" href="/l/modules/personChooser"></AddButton>
 </NavigationActions>

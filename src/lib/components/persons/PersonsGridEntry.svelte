@@ -6,11 +6,19 @@
 
     interface IProps {
         person: IPerson;
+        href?: string;
     }
 
-    let {person}: IProps = $props();
+    let {person,href = ""}: IProps = $props();
+    
+    let linkTo = $derived.by(() => {
+       if(href)
+           return `${href}?personId=${person.id}`;
+       return "/l/dialogs/person/"+person.id;
+    });
+    
 </script>
-<a href={`/l/dialogs/person/${person.id}`}>
+<a href={linkTo}>
     <Card>
         <div class="flex">
             <div class="font-bold text-lg w-full">

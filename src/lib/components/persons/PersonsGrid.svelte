@@ -5,12 +5,13 @@
 
     interface IProps {
         persons: Array<IPerson>;
+        href?: string;
     }
 
-    let {persons}: IProps = $props();
+    let {persons, href = ""}: IProps = $props();
 </script>
 <Grid>
     {#each persons as person}
-        <PersonsGridEntry {person}/>
+        <PersonsGridEntry {person} {href}/>
     {/each}
 </Grid>

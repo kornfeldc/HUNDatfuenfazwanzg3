@@ -1,6 +1,6 @@
 <script lang="ts">
     import {page} from '$app/stores';
-    import type {IArticle, ISale} from "$lib/data/hfzApi";
+    import type {IArticle, IPerson, ISale} from "$lib/data/hfzApi";
     import Loading from "$lib/components/global/Loading.svelte";
     import Card from "$lib/components/global/Card.svelte";
     import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
@@ -19,8 +19,33 @@
     let isSearchVisible = $state(false);
 
     const loadData = async () => {
-        sale = await data.sale;
         articles = await data.articles;
+        console.log("load "+id);
+        if(id) { 
+            sale = await data.sale;
+            person = sale.person;
+
+            console.log("person ",person);
+        }
+        else {
+            const person = await data.person;
+            sale = {
+                id: 0,
+                saleArticles: [],
+                saleDate: new Date(),
+                person,
+                articleSum: 0,
+                given: 0,
+                additionalCredit: 0,
+                extId: "",
+                inclTip: 0,
+                personName: person.lastName + " " + person.firstName, 
+                payDate: undefined,
+                toPay: 0,
+                toReturn: 0,
+                usedCredit: false
+            } as ISale;
+        }
     }
 
     const toggleSearch = (isVisible: boolean) => {

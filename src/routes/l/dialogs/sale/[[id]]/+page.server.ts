@@ -4,8 +4,16 @@ import {Util} from "$lib/util";
 
 export async function load({cookies, params, url}) {
     const {id} = params;
-    if (!id) return {title: 'Neuer Artikel'};
     const api = HfzApi.create();
+    if (!id) {
+        console.log("new sale");
+        const personId = url.searchParams.get('personId');
+        console.log("personId", personId);
+        return {
+            person: api.getPerson({id: parseInt(personId ?? "")}),
+            articles: api.getArticles()
+        };
+    }
     return {
         sale: api.getSale({id: parseInt(id)}),
         articles: api.getArticles()
@@ -20,9 +28,8 @@ export const actions = {
         const redirectTo = formData.get('redirectTo')?.toString() ?? "/l/modules/sales";
         formData.delete('redirectTo');
 
-        let data = Util.parseFormData(formData, [
-            ]);
-        if(id)
+        let data = Util.parseFormData(formData, []);
+        if (id)
             data.id = parseInt(id);
         console.log("parsed data", data);
 
