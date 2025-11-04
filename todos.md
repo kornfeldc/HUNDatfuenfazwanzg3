@@ -36,7 +36,7 @@
 - [x] Zurück-Button "intelligenter"
 - [ ] Dark Mode
 - [x] Scrollen nach ganz unten
-- [ ] Suchzeile am Handy zoomt bei fokus
+- [x] Suchzeile am Handy zoomt bei fokus
 - [ ] Englische Strings von moment obwohl de locale verwendet wird
 
 # Hosting
