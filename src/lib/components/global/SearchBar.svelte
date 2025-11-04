@@ -54,6 +54,8 @@
     onMount(async () => {
         await tick();
         inputFocused();
+        if(!isDesktopLike()) 
+            await tick();
         inputEl?.focus();
         inputEl?.select?.();
     });
