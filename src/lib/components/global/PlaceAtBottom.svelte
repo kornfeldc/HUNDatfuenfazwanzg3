@@ -4,7 +4,7 @@
     
     let bottomClass = $derived.by(()=> {
         if(uiState.isSearchInputFocusedMobile) 
-            return "fixed bottom-50";
+            return "fixed top-0";
         return "fixed bottom-0";
     });
 
