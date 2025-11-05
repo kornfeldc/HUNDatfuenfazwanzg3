@@ -1,11 +1,13 @@
 <script lang="ts">
-    import {Search, X, CircleX} from "@lucide/svelte";
+    import {Search, X, CircleX, Check} from "@lucide/svelte";
     import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
     import SearchBar from "$lib/components/global/SearchBar.svelte";
     import type {IPerson} from "$lib/data/hfzApi";
     import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
     import {uiState} from "$lib/stores/uiState.svelte";
     import GlassBar from "$lib/components/global/GlassBar.svelte";
+    import SearchBarNavigationWrapper from "$lib/components/global/SearchBarNavigationWrapper.svelte";
+    import GlassCircle from "$lib/components/global/GlassCircle.svelte";
 
     let searchString = $state("");
 
@@ -16,9 +18,15 @@
     let {onSearch}: IProps = $props();
 
     const openSearch = (open = true) => {
-        uiState.showSearchBar = open;
-        uiState.showNavBar = !open;
-        uiState.showActions = !open;
+        uiState.setNavSearch(open);
+    }
+    
+    const onEnter = () => {
+       openSearch(false); 
+    }
+
+    const onClear = () => {
+        //openSearch(false);
     }
     
     $effect(() => {
@@ -33,13 +41,14 @@
     </button>
 {:else}
     <PlaceAtBottom>
-        <SearchBar bind:value={searchString}></SearchBar>
+        <SearchBarNavigationWrapper bind:value={searchString} {onEnter} {onClear}></SearchBarNavigationWrapper>
     </PlaceAtBottom>
     <PlaceAtBottom at="right">
         <button onclick={() => openSearch(false)}>
-            <GlassCircleLink>
-                <X></X>
-            </GlassCircleLink>
+            <GlassCircle
+                    className="bg-primary/70! text-primary-foreground! border-primary! drop-shadow-primary/40 drop-shadow-lg">
+                <Check></Check>
+            </GlassCircle>
         </button>
     </PlaceAtBottom>
 {/if}

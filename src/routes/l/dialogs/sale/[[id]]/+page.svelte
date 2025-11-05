@@ -9,6 +9,7 @@
     import TextButton from "$lib/components/global/TextButton.svelte";
     import PersonOverview from "$lib/components/persons/PersonOverview.svelte";
     import SaleArticles from "$lib/components/sales/SaleArticles.svelte";
+    import {uiState} from "$lib/stores/uiState.svelte";
 
     let id = $page.params.id;
 

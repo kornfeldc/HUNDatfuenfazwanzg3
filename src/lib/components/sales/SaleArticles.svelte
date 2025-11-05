@@ -87,6 +87,15 @@
                 (type === "inactive" && !a.article.isActive))
             .filter(a => !searchString || a.articleTitle.toLowerCase().indexOf(searchString.toLowerCase()) >= 0);
     });
+    
+    const closeSearch = (event: any) => {
+        event.stopPropagation(); 
+        event.preventDefault(); 
+        searchString = "";
+        showAllArticles = false; 
+        toggleSearch(false); 
+        return false;
+    }
 </script>
 
 <div class="grid [grid-template-columns:1fr_auto_auto_auto_auto] gap-2 items-center h-full">
@@ -137,12 +146,12 @@
 </div>
 
 {#if showAllArticles}
-    <PlaceAtBottom>
-        <SearchBar bind:value={searchString}/>
+    <PlaceAtBottom top={true}>
+        <SearchBar bind:value={searchString}  />
     </PlaceAtBottom>
 
-    <PlaceAtBottom at="right">
-        <button onclick={(event) => {showAllArticles = false; toggleSearch(false); event.stopPropagation(); event.preventDefault(); return false;}}>
+    <PlaceAtBottom at="right" top={true}>
+        <button onclick={closeSearch}>
             <GlassCircle
                     className="bg-primary/70! text-primary-foreground! border-primary! drop-shadow-primary/40 drop-shadow-lg">
                 <Check></Check>
