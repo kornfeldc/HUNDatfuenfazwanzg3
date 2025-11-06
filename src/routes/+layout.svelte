@@ -17,6 +17,11 @@
     onMount(() => {
         uiState.isMobileDevice = !isDesktopLike();
         uiState.pushRoute($page.url.pathname);
+
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        const systemDark = mq.matches;
+        // if(systemDark)
+        //     document.body.parentElement!.classList.add('dark');
     });
 
     // Track every client-side route change
