@@ -48,6 +48,7 @@
         event.stopPropagation();
         event.preventDefault();
         value = "";
+        inputEl?.focus();
         if(onClear) 
             onClear();
         return false;
