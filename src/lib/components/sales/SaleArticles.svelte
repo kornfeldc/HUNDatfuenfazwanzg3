@@ -7,6 +7,7 @@
     import SearchBar from "$lib/components/global/SearchBar.svelte";
     import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
     import FilterBar from "$lib/components/global/FilterBar.svelte";
+    import {onMount} from "svelte";
 
     interface IProps {
         sale: ISale;
@@ -54,8 +55,8 @@
     const setShowAllArticles = (event: any) => {
         showAllArticles = true;
         if (toggleSearch) toggleSearch(true);
-        event.stopPropagation();
-        event.preventDefault();
+        event?.stopPropagation();
+        event?.preventDefault();
         return false;
     }
 
@@ -97,6 +98,12 @@
         toggleSearch(false);
         return false;
     }
+
+
+    onMount(() => {
+        if (sale.id) return;
+        setShowAllArticles(null);
+    });
 </script>
 
 <div class="grid [grid-template-columns:1fr_auto_auto_auto_auto] gap-2 items-center h-full">
