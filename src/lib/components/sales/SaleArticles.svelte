@@ -12,9 +12,10 @@
         sale: ISale;
         articles: IArticle[];
         toggleSearch: (isVisible: boolean) => void;
+        showTopLine?: boolean;
     }
 
-    let {sale, articles, toggleSearch}: IProps = $props();
+    let {sale, articles, toggleSearch, showTopLine = true}: IProps = $props();
     let showAllArticles = $state(false);
     let searchString = $state("");
     let type = $state("top");
@@ -87,34 +88,36 @@
                 (type === "inactive" && !a.article.isActive))
             .filter(a => !searchString || a.articleTitle.toLowerCase().indexOf(searchString.toLowerCase()) >= 0);
     });
-    
+
     const closeSearch = (event: any) => {
-        event.stopPropagation(); 
-        event.preventDefault(); 
+        event.stopPropagation();
+        event.preventDefault();
         searchString = "";
-        showAllArticles = false; 
-        toggleSearch(false); 
+        showAllArticles = false;
+        toggleSearch(false);
         return false;
     }
 </script>
 
 <div class="grid [grid-template-columns:1fr_auto_auto_auto_auto] gap-2 items-center h-full">
-    {#if !sale.payDate}
-        <button class="col-span-2" onclick={(event) => setShowAllArticles(event)}>
-            <GlassCircle
-                    className="ml-[-0.5em] mt-2 h-8! px-4! bg-transparent! text-primary border-[1px] border-primary drop-shadow-primary/40 drop-shadow-lg whitespace-nowrap w-min">
-                Artikel hinzufügen
-            </GlassCircle>
-        </button>
-    {:else}
-        <div class="col-span-2 text-lg pt-2">
-            {moment(sale.saleDate).format('DD.MM.YYYY')}
+    {#if showTopLine}
+        {#if !sale.payDate}
+            <button class="col-span-2" onclick={(event) => setShowAllArticles(event)}>
+                <GlassCircle
+                        className="ml-[-0.5em] mt-2 h-8! px-4! bg-transparent! text-primary border-[1px] border-primary drop-shadow-primary/40 drop-shadow-lg whitespace-nowrap w-min">
+                    Artikel hinzufügen
+                </GlassCircle>
+            </button>
+        {:else}
+            <div class="col-span-2 text-lg pt-2">
+                {moment(sale.saleDate).format('DD.MM.YYYY')}
+            </div>
+        {/if}
+        <div class="mt-2 col-span-3 text-xl text-right font-bold">
+            {Util.formatCurrency(sum)}
         </div>
+        <div class="col-span-5 border-b-[1px] border-b-muted pt-1 mb-1 "></div>
     {/if}
-    <div class="mt-2 col-span-3 text-xl text-right font-bold">
-        {Util.formatCurrency(sum)}
-    </div>
-    <div class="col-span-5 border-b-[1px] border-b-muted pt-1 mb-1 "></div>
 
     {#if showAllArticles}
         <div class="col-span-5">
@@ -147,7 +150,7 @@
 
 {#if showAllArticles}
     <PlaceAtBottom top={true}>
-        <SearchBar bind:value={searchString}  />
+        <SearchBar bind:value={searchString}/>
     </PlaceAtBottom>
 
     <PlaceAtBottom at="right" top={true}>

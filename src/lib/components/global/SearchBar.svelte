@@ -61,73 +61,6 @@
     });
 
     let calcWidth = $derived(fullWidth ? "calc(100vw - 4.5em)" : "calc(100vw - 7em)");
-    // let clearClicked = $state(false);
-    //
-    // // Detect desktop-like environments (precise pointer + hover)
-    // const isDesktopLike = () =>
-    //     typeof window !== 'undefined' &&
-    //     typeof window.matchMedia === 'function' &&
-    //     window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    //
-    // const clearSearch = (event: Event) => {
-    //     event.stopPropagation();
-    //     event.preventDefault();
-    //     clearClicked = true;
-    //     value = "";
-    //     setTimeout(() => {
-    //         clearClicked = false;
-    //         inputEl?.focus();
-    //         inputEl?.select?.();
-    //     }, 200);
-    //     return false;
-    // }
-    // const startSearch = (val: string) => {
-    //     value = val;
-    // }
-    //
-    //
-    // const inputFocused = () => {
-    //     clearClicked = false;
-    //     uiState.isSearchInputFocusedMobile = !isDesktopLike();
-    // }
-    //
-    // const inputBlurred = (event: any) => {
-    //     event.stopPropagation();
-    //     event.preventDefault();
-    //     setTimeout(() => {
-    //         if (clearClicked) {
-    //             clearClicked = false;
-    //             return;
-    //         }
-    //
-    //         if (onSearchOrBlur)
-    //             onSearchOrBlur(event);
-    //         if (stayOpenedOnBlur)
-    //             return;
-    //
-    //         uiState.isSearchInputFocusedMobile = false;
-    //         if (!isDesktopLike()) {
-    //             uiState.showSearchBar = false;
-    //             uiState.showActions = true;
-    //             uiState.showNavBar = true;
-    //         }
-    //     }, 100);
-    //     return false;
-    // }
-    //
-    // onMount(async () => {
-    //     clearClicked = false;
-    //     await tick();
-    //     inputFocused();
-    //     if (!isDesktopLike())
-    //         await tick();
-    //     inputEl?.focus();
-    //     inputEl?.select?.();
-    // });
-    //
-    // onDestroy(() => {
-    //     uiState.isSearchInputFocusedMobile = false;
-    // });
 </script>
 
 <GlassBar className="w-full">
@@ -146,25 +79,5 @@
                 onclick={(event) => clearSearch(event)}>
             <CircleX/>
         </button>
-
-        <!--    <input-->
-        <!--            bind:this={inputEl}-->
-        <!--            bind:value={value}-->
-        <!--            class={Util.mapClass("border-0 m-0 p-1.5 bg-transparent rounded-full text-white placeholder-gray-200 text-base", stayOpenedOnBlur, "mr-12", "mr-1")}-->
-        <!--            onblur={(event) => inputBlurred(event)}-->
-        <!--            onfocus={() => inputFocused()}-->
-        <!--            oninput={(e) => startSearch(e.currentTarget.value)}-->
-        <!--            onkeydown={(e) => handleKeyDown(e)}-->
-        <!--            placeholder="Suche"-->
-        <!--            style={`width: ${calcWidth}`}-->
-        <!--            type="text"/>-->
-        <!--    {#if !stayOpenedOnBlur}-->
-        <!--        <button class="pr-2 text-gray-200"-->
-        <!--                ontouchstart={(event) => clearSearch(event)}-->
-        <!--                onmousedown={(event) => clearSearch(event)}>-->
-        <!--            <CircleX/>-->
-        <!--        </button>-->
-        <!--    {/if}-->
-
     </div>
 </GlassBar>

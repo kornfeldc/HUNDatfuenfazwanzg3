@@ -32,12 +32,14 @@
     <Loading></Loading>
 {:then _}
     <form method="post" action={`/l/dialogs/sale/${id ?? ''}`}>
+        {#if !isSearchVisible || !uiState.isMobileDevice}
         <Card className="max-w-xl m-auto">
             <PersonOverview person={sale.person}></PersonOverview>
         </Card>
+        {/if}
 
         <Card className="max-w-xl m-auto">
-            <SaleArticles {sale} {articles} {toggleSearch}></SaleArticles>
+            <SaleArticles {sale} {articles} {toggleSearch} showTopLine={!isSearchVisible || !uiState.isMobileDevice}></SaleArticles>
         </Card>
 
         {#if !isSearchVisible}
