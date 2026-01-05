@@ -5,14 +5,22 @@ import pkg from '../../../../../package.json';
 
 export async function load({cookies, params, url, locals}) {
     const api = HfzApi.create(locals.supabase, locals.og!);
+    const hfzUser = await api.getUser();
+    
+    let unassignedUsers: any[] = [];
+    if (hfzUser.admin) {
+        unassignedUsers = await api.getUnassignedUsers();
+    }
+    
     return {
-        hfzUser: await api.getUser(),
+        hfzUser,
+        unassignedUsers,
         version: pkg.version
     };
 }
 
 export const actions = {
-    default: async ({request, locals}) => {
+    updateTheme: async ({request, locals}) => {
         const formData = await request.formData();
         const theme = formData.get('theme')?.toString();
         const redirectTo = formData.get('redirectTo')?.toString() ?? "/l/dialogs/user";
@@ -36,5 +44,33 @@ export const actions = {
         }
 
         throw redirect(303, redirectTo);
+    },
+    
+    assignOg: async ({request, locals}) => {
+        const formData = await request.formData();
+        const email = formData.get('email')?.toString();
+
+        if (!email) {
+            return fail(400, { error: 'Email is required' });
+        }
+
+        const api = HfzApi.create(locals.supabase, locals.og!);
+        const currentUser = await api.getUser();
+
+        if (!currentUser.admin) {
+            return fail(403, { error: 'Forbidden' });
+        }
+
+        if (!locals.og) {
+            return fail(400, { error: 'Admin has no OG' });
+        }
+
+        try {
+            await api.assignUserToOg(email, locals.og);
+        } catch (e: any) {
+            return fail(500, { error: e.message });
+        }
+
+        return { success: true };
     }
 };

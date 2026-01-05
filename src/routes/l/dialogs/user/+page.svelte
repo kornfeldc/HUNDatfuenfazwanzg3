@@ -17,7 +17,7 @@
     import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
     import {Dog} from "@lucide/svelte";
 
-    let {data}: { data: any; } = $props();
+    let {data, form}: { data: any, form: any } = $props();
     let formUser = $state({} as IUser);
 
     const loadUser = async () => {
@@ -27,6 +27,7 @@
         formUser.name = user?.name;
         formUser.avatarUrl = user?.avatarUrl;
         formUser.lastLogin = user?.lastLogin;
+        formUser.admin = user?.admin;
     }
 
     function submitForm() {
@@ -39,7 +40,7 @@
 {#await loadUser()}
     <Loading></Loading>
 {:then _}
-    <form method="post" action={`/l/dialogs/user`} id="userForm">
+    <form method="post" action="?/updateTheme" id="userForm">
         <input type="hidden" name="redirectTo" value={uiState.getLastRouteSmart()}>
         <Card className="max-w-xl m-auto">
             <div class="flex flex-col items-center gap-4 p-4">
@@ -83,22 +84,46 @@
                 </div>
             </div>
         </Card>
+    </form>
 
-        <PlaceAtBottom>
-            <BackButton></BackButton>
-        </PlaceAtBottom>
-        <NavigationActions>
-            <div slot="actions">
-                <button type="button" onclick={() => goto('/logout')}>
-                    <GlassCircleLink className={" bg-destructive! border-0 w-30 text-destructive-foreground drop-shadow-destructive/60 drop-shadow-xl "}>
-                        Ausloggen 
-                    </GlassCircleLink>
-                </button>
+    {#if formUser.admin && data.unassignedUsers?.length >= 0}
+        <Card className="max-w-xl m-auto mt-4">
+             <div class="flex flex-col gap-4 p-4">
+                 <h3 class="font-bold text-lg">Benutzer freischalten</h3>
+                 {#if form?.error}
+                     <div class="bg-destructive/15 text-destructive p-3 rounded-md text-sm font-medium">
+                         {form.error}
+                     </div>
+                 {/if}
+                 {#each data.unassignedUsers as user}
+                     <div class="flex justify-between items-center border-b pb-2 last:border-0 last:pb-0">
+                         <div class="flex flex-col">
+                             <span class="font-medium">{user.email}</span>
+                         </div>
+                         <form method="post" action="?/assignOg">
+                             <input type="hidden" name="email" value={user.email} />
+                             <Button type="submit" size="sm" variant="secondary">Freischalten</Button>
+                         </form>
+                     </div>
+                 {/each}
+             </div>
+        </Card>
+    {/if}
+
+    <PlaceAtBottom>
+        <BackButton></BackButton>
+    </PlaceAtBottom>
+    <NavigationActions>
+        <div slot="actions">
+            <button type="button" onclick={() => goto('/logout')}>
+                <GlassCircleLink className={" bg-destructive! border-0 w-30 text-destructive-foreground drop-shadow-destructive/60 drop-shadow-xl "}>
+                    Ausloggen 
+                </GlassCircleLink>
+            </button>
 
 <!--                <button type="submit" >-->
 <!--                    <SaveButton></SaveButton>-->
 <!--                </button>-->
-            </div>
-        </NavigationActions>
-    </form>
+        </div>
+    </NavigationActions>
 {/await}

@@ -417,7 +417,8 @@ export class HfzSupabaseApi implements IHfzApi {
 
         const { data: userData, error } = await this.supabase
             .from('users')
-            .select('theme')
+            .select('theme, admin, og')
+            .eq('login', user.email)
             .maybeSingle();
         
         if (error) {
@@ -431,7 +432,38 @@ export class HfzSupabaseApi implements IHfzApi {
             email: user.email,
             name: user.user_metadata?.full_name,
             avatarUrl: user.user_metadata?.avatar_url,
-            lastLogin: user.last_sign_in_at ? new Date(user.last_sign_in_at) : undefined
+            lastLogin: user.last_sign_in_at ? new Date(user.last_sign_in_at) : undefined,
+            admin: userData?.admin,
+            og: userData?.og
         };
+    }
+
+    async getUnassignedUsers(): Promise<Array<IUser>> {
+        const {data, error} = await this.supabase
+            .from('users')
+            .select('*')
+            .is('og', null);
+
+        if (error) throw error;
+
+        return data.map((u: any) => ({
+            theme: u.theme,
+            email: u.login,
+            admin: u.admin,
+            og: u.og
+        }));
+    }
+
+    async assignUserToOg(email: string, og: number): Promise<void> {
+        console.log(`[HfzSupabaseApi] assignUserToOg called. Email: ${email}, OG: ${og}`);
+        const {error} = await this.supabase
+            .from('users')
+            .update({og: og})
+            .eq('login', email);
+
+        if (error) {
+            console.error("assignUserToOg error", error);
+            throw error;
+        }
     }
 }

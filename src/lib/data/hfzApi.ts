@@ -30,6 +30,9 @@ export interface IHfzApi {
 
     getRobCourses(): Promise<Array<IRobCourse>>;
     getRobCourse(id: IId): Promise<IRobCourse>;
+    
+    getUnassignedUsers(): Promise<Array<IUser>>;
+    assignUserToOg(email: string, og: number): Promise<void>;
 }
 
 export class HfzApi {
@@ -48,6 +51,8 @@ export interface IUser  {
    name?: string;
    avatarUrl?: string;
    lastLogin?: Date;
+   admin?: boolean;
+   og?: number;
 }
 
 export interface ISale extends IId {
