@@ -16,3 +16,16 @@ Ensure you have a `users` table in the `public` schema. **Note:** If you followe
 -- 1. Rename the table if you created it as "user"
 ALTER TABLE IF EXISTS public."user" RENAME TO users;
 ```
+
+#### 3. Supabase URL Configuration
+To support both **Production** and **Localhost** (debugging) using the same Supabase project:
+
+1.  Go to **Supabase Dashboard** -> **Authentication** -> **URL Configuration**.
+2.  Set **Site URL** to your **Production URL** (e.g., `https://your-app.com`).
+3.  Under **Redirect URLs**, add the following URLs to whitelist them:
+    *   `http://localhost:3000/**`
+    *   `http://localhost:5173/**` (if using default Vite port)
+    *   `https://your-production-app.com/**`
+4.  Click **Save**.
+
+This configuration tells Supabase to allow redirects to both your production domain and your local environment.
