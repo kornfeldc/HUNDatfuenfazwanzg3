@@ -2,6 +2,8 @@ import HfzMockApi from "$lib/data/hfzMockApi";
 import {HfzSupabaseApi} from "$lib/data/hfzSupabaseApi";
 
 export interface IHfzApi {
+    getUser(): Promise<IUser>;
+    
     getArticles(): Promise<Array<IArticle>>;
     getArticle(id: IId): Promise<IArticle>;
     createArticle(article: Partial<IArticle>): Promise<IArticle>;
@@ -35,6 +37,10 @@ export class HfzApi {
 
 export interface IId {
     id: number;
+}
+
+export interface IUser extends IId {
+   theme: "light" | "dark" | "system"; 
 }
 
 export interface ISale extends IId {

@@ -7,7 +7,8 @@ import type {
     IMergedPersonHistory,
     IPerson,
     IRobCourse,
-    ISale
+    ISale,
+    IUser
 } from "$lib/data/hfzApi";
 import {createClient} from '@supabase/supabase-js';
 import moment from "moment";
@@ -22,6 +23,12 @@ export class HfzSupabaseApi implements IHfzApi {
     // @ts-ignore
     static getClient(): SupabaseClient {
         return createClient(this.supabaseUrl, this.supabaseKey);
+    }
+
+    getUser(): Promise<IUser> {
+        return Promise.resolve({
+            theme: "system"
+        } as IUser);
     }
 
     async addPersonCredit(personId: IId, amount: number, date: Date): Promise<void> {

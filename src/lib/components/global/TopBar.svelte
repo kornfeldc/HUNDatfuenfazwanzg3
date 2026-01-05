@@ -10,5 +10,7 @@ import {Dog} from "@lucide/svelte";
     <a href="/l/modules" class="w-full text-center">
         <div class="text-primary text-xl sm:text-3xl font-mono"><b class="font-extrabold">HUND</b><i>atfuenfazwanzg</i></div>
     </a> 
-    <Dog class="text-primary/80" size="42"/>
+    <a href="/l/dialogs/user">
+        <Dog class="text-primary/80" size="42"/>
+    </a>
 </div>
