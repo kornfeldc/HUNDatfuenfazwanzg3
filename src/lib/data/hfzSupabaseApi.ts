@@ -398,21 +398,25 @@ export class HfzSupabaseApi implements IHfzApi {
 
     async getUser(): Promise<IUser> {
         const { data: { user } } = await this.supabase.auth.getUser();
+        console.log("getUser", user);
         if (!user) {
             return {
-                id: 0,
                 theme: "system"
             };
         }
 
-        const { data: userData } = await this.supabase
+        const { data: userData, error } = await this.supabase
             .from('users')
-            .select('id, theme')
-            .eq('login', user.email)
+            .select('theme')
             .maybeSingle();
+        
+        if (error) {
+            console.error("Error fetching user data", error);
+        }
+        
+        console.log("getUserData " + user.email, userData);
 
         return {
-            id: userData?.id ?? 0,
             theme: userData?.theme ?? "system",
             email: user.email,
             name: user.user_metadata?.full_name,

@@ -41,7 +41,7 @@ export interface IId {
     id: number;
 }
 
-export interface IUser extends IId {
+export interface IUser  {
    theme: "light" | "dark" | "system"; 
    email?: string;
    name?: string;
