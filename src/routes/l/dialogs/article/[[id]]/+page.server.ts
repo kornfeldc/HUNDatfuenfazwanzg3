@@ -2,17 +2,17 @@ import {HfzApi} from "$lib/data/hfzApi";
 import {fail, redirect} from "@sveltejs/kit";
 import {Util} from "$lib/util";
 
-export async function load({cookies, params, url}) {
+export async function load({cookies, params, url, locals}) {
     const {id} = params;
     if (!id) return {title: 'Neuer Artikel'};
-    const api = HfzApi.create();
+    const api = HfzApi.create(locals.supabase, locals.og!);
     return {
         article: api.getArticle({id: parseInt(id)})
     };
 }
 
 export const actions = {
-    default: async ({cookies, request, params}) => {
+    default: async ({cookies, request, params, locals}) => {
         const {id} = params; // Extract the `id` parameter from the `params` object
         const formData = await request.formData();
 
@@ -34,7 +34,7 @@ export const actions = {
         console.log("parsed data", data);
 
         try {
-            const api = HfzApi.create();
+            const api = HfzApi.create(locals.supabase, locals.og!);
             if (id) await api.updateArticle(data as any);
             else await api.createArticle(data as any);
         } catch (e: any) {

@@ -2,10 +2,10 @@ import {HfzApi} from "$lib/data/hfzApi";
 import {fail, redirect} from "@sveltejs/kit";
 import {Util} from "$lib/util";
 
-export async function load({cookies, params, url}) {
+export async function load({cookies, params, url, locals}) {
     const {id} = params;
     if (!id) return {title: 'Neuer Artikel'};
-    const api = HfzApi.create();
+    const api = HfzApi.create(locals.supabase, locals.og!);
     return {
         sale: api.getSale({id: parseInt(id)}),
     };

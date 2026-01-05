@@ -1,5 +1,6 @@
 import HfzMockApi from "$lib/data/hfzMockApi";
 import {HfzSupabaseApi} from "$lib/data/hfzSupabaseApi";
+import type {SupabaseClient} from "@supabase/supabase-js";
 
 export interface IHfzApi {
     getUser(): Promise<IUser>;
@@ -30,8 +31,8 @@ export interface IHfzApi {
 }
 
 export class HfzApi {
-    static create(): IHfzApi {
-        return new HfzSupabaseApi();
+    static create(supabase: SupabaseClient, og: number): IHfzApi {
+        return new HfzSupabaseApi(supabase, og);
     }
 }
 

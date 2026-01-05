@@ -2,17 +2,17 @@ import type { Actions } from './$types';
 import {fail, json, redirect} from '@sveltejs/kit';
 import { HfzApi } from '$lib/data/hfzApi';
 
-export async function load({cookies, params, url}) {
+export async function load({cookies, params, url, locals}) {
     const {id} = params;
     if(!id) return fail(404, "No id");
 
-    const api = HfzApi.create();
+    const api = HfzApi.create(locals.supabase, locals.og!);
     return {
         person: api.getPerson({id: parseInt(id)})
     };
 }
 export const actions: Actions = {
-    modifyCourses: async ({ url, request, params }) => {
+    modifyCourses: async ({ url, request, params, locals }) => {
         try {
             const form = await request.formData();
             const countRaw = form.get('count');
@@ -35,13 +35,13 @@ export const actions: Actions = {
                 return fail(400, { message: 'Invalid date' });
             }
 
-            const api = HfzApi.create();
+            const api = HfzApi.create(locals.supabase, locals.og!);
             await api.addPersonCourse({ id: Number(idParam) }, count, date);
         } catch (e: any) {
             console.error('modifyCourses error', e);
         }
     },
-    modifyCredit: async ({ url, request, params }) => {
+    modifyCredit: async ({ url, request, params, locals }) => {
         try {
             const form = await request.formData();
             const amountRaw = form.get('amount');
@@ -64,7 +64,7 @@ export const actions: Actions = {
                 return fail(400, { message: 'Invalid date' });
             }
 
-            const api = HfzApi.create();
+            const api = HfzApi.create(locals.supabase, locals.og!);
             await api.addPersonCredit({ id: Number(idParam) }, amount, date);
         } catch (e: any) {
             console.error('modifyCredit error', e);

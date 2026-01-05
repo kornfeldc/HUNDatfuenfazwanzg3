@@ -2,9 +2,9 @@ import {HfzApi} from "$lib/data/hfzApi";
 import {fail, redirect} from "@sveltejs/kit";
 import {Util} from "$lib/util";
 
-export async function load({cookies, params, url}) {
+export async function load({cookies, params, url, locals}) {
     const {id} = params;
-    const api = HfzApi.create();
+    const api = HfzApi.create(locals.supabase, locals.og!);
     if (!id) {
         const personId = url.searchParams.get('personId');
         if(!personId) return fail(404, "No personId");

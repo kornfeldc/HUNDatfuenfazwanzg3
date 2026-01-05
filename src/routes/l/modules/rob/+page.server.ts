@@ -1,7 +1,7 @@
 import {HfzApi} from "$lib/data/hfzApi";
 
-export async function load({ cookies, params, url }) {
-    const api = HfzApi.create();
+export async function load({ cookies, params, url, locals }) {
+    const api = HfzApi.create(locals.supabase, locals.og!);
     return {
         robCourses: api.getRobCourses() 
     };

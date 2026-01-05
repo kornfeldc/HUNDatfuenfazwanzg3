@@ -324,6 +324,13 @@ class HfzMockApi implements IHfzApi {
     async getSales(): Promise<Array<ISale>> {
         return sales;
     }
+
+    async getUser(): Promise<any> {
+        return {
+            id: 1,
+            theme: "system"
+        };
+    }
 }
 
 export default HfzMockApi

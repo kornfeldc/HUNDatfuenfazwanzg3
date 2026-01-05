@@ -10,29 +10,21 @@ import type {
     ISale,
     IUser
 } from "$lib/data/hfzApi";
-import {createClient} from '@supabase/supabase-js';
+import {createClient, type SupabaseClient} from '@supabase/supabase-js';
 import moment from "moment";
 
 export class HfzSupabaseApi implements IHfzApi {
 
-    static supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
-    static supabaseKey = import.meta.env.VITE_SUPABASE_KEY as string;
+    supabase: SupabaseClient;
+    og: number;
 
-    og = 125; // todo load via user
-
-    // @ts-ignore
-    static getClient(): SupabaseClient {
-        return createClient(this.supabaseUrl, this.supabaseKey);
-    }
-
-    getUser(): Promise<IUser> {
-        return Promise.resolve({
-            theme: "system"
-        } as IUser);
+    constructor(supabase: SupabaseClient, og: number) {
+        this.supabase = supabase;
+        this.og = og;
     }
 
     async addPersonCredit(personId: IId, amount: number, date: Date): Promise<void> {
-        const supabase = HfzSupabaseApi.getClient();
+        const supabase = this.supabase;
         const payload: any = {
             personId: personId.id,
             credit: amount,
@@ -59,7 +51,7 @@ export class HfzSupabaseApi implements IHfzApi {
     }
 
     async addPersonCourse(personId: IId, amount: number, date: Date): Promise<void> {
-        const supabase = HfzSupabaseApi.getClient();
+        const supabase = this.supabase;
         const payload: any = {
             personId: personId.id,
             courses: amount,
@@ -126,7 +118,7 @@ export class HfzSupabaseApi implements IHfzApi {
     }
 
     async createPerson(person: Partial<IPerson>): Promise<IPerson> {
-        const supabase = HfzSupabaseApi.getClient();
+        const supabase = this.supabase;
         const payload = {
             ...person,
             credit: 0,
@@ -144,7 +136,7 @@ export class HfzSupabaseApi implements IHfzApi {
     }
 
     async updatePerson(person: IPerson): Promise<IPerson> {
-        const supabase = HfzSupabaseApi.getClient();
+        const supabase = this.supabase;
         const {data, error} = await supabase
             .from('person')
             .update({
@@ -167,7 +159,7 @@ export class HfzSupabaseApi implements IHfzApi {
     }
 
     async createArticle(article: Partial<IArticle>): Promise<IArticle> {
-        const supabase = HfzSupabaseApi.getClient();
+        const supabase = this.supabase;
         const payload = {...article, og: this.og} as any;
         const {data, error} = await supabase
             .from('article')
@@ -179,7 +171,7 @@ export class HfzSupabaseApi implements IHfzApi {
     }
 
     async updateArticle(article: IArticle): Promise<IArticle> {
-        const supabase = HfzSupabaseApi.getClient();
+        const supabase = this.supabase;
         const {data, error} = await supabase
             .from('article')
             .update({
@@ -198,7 +190,7 @@ export class HfzSupabaseApi implements IHfzApi {
     }
 
     async getArticle(id: IId): Promise<IArticle> {
-        const supabase = HfzSupabaseApi.getClient();
+        const supabase = this.supabase;
         const {data, error} = await supabase
             .from('article')
             .select('*')
@@ -211,7 +203,7 @@ export class HfzSupabaseApi implements IHfzApi {
     }
 
     async getArticles(): Promise<Array<IArticle>> {
-        const supabase = HfzSupabaseApi.getClient();
+        const supabase = this.supabase;
         const {data, error} = await supabase
             .from('article')
             .select('*')
@@ -222,7 +214,7 @@ export class HfzSupabaseApi implements IHfzApi {
     }
 
     async getPerson(id: IId): Promise<IPerson> {
-        const supabase = HfzSupabaseApi.getClient();
+        const supabase = this.supabase;
         const {data, error} = await supabase
             .from('person')
             .select('*')
@@ -235,7 +227,7 @@ export class HfzSupabaseApi implements IHfzApi {
     }
 
     async getPersons(): Promise<Array<IPerson>> {
-        const supabase = HfzSupabaseApi.getClient();
+        const supabase = this.supabase;
         const {data, error} = await supabase
             .from('person')
             .select('*')
@@ -246,7 +238,7 @@ export class HfzSupabaseApi implements IHfzApi {
     }
 
     async getPersonCreditHistory(id: IId): Promise<Array<ICreditHistory>> {
-        const supabase = HfzSupabaseApi.getClient();
+        const supabase = this.supabase;
         const {data, error} = await supabase
             .from('credit_history')
             .select('*')
@@ -257,7 +249,7 @@ export class HfzSupabaseApi implements IHfzApi {
     }
 
     async getPersonCourseHistory(id: IId): Promise<Array<ICourseHistory>> {
-        const supabase = HfzSupabaseApi.getClient();
+        const supabase = this.supabase;
         const {data, error} = await supabase
             .from('course_history')
             .select('*')
@@ -268,7 +260,7 @@ export class HfzSupabaseApi implements IHfzApi {
     }
 
     async getPersonSaleHistory(id: IId): Promise<Array<ISale>> {
-        const supabase = HfzSupabaseApi.getClient();
+        const supabase = this.supabase;
         const {data, error} = await supabase
             .from('sale')
             .select('*')
@@ -309,7 +301,7 @@ export class HfzSupabaseApi implements IHfzApi {
     }
 
     async getRobCourse(id: IId): Promise<IRobCourse> {
-        const supabase = HfzSupabaseApi.getClient();
+        const supabase = this.supabase;
         const {data, error} = await supabase
             .from('rob_course')
             .select('*')
@@ -322,7 +314,7 @@ export class HfzSupabaseApi implements IHfzApi {
     }
 
     async getRobCourses(): Promise<Array<IRobCourse>> {
-        const supabase = HfzSupabaseApi.getClient();
+        const supabase = this.supabase;
         const {data, error} = await supabase
             .from('rob_course')
             .select('*')
@@ -333,7 +325,7 @@ export class HfzSupabaseApi implements IHfzApi {
     }
 
     async getSale(id: IId): Promise<ISale> {
-        const supabase = HfzSupabaseApi.getClient();
+        const supabase = this.supabase;
         const {data, error} = await supabase
             .from('sale')
             .select('*, person(*), sale_article(*, article(*))')
@@ -347,7 +339,7 @@ export class HfzSupabaseApi implements IHfzApi {
 
 
     async getNewSaleForPerson(personId: IId): Promise<ISale> {
-        const supabase = HfzSupabaseApi.getClient();
+        const supabase = this.supabase;
         const {data, error} = await supabase
             .from('sale')
             .select('*, person(*), sale_article(*, article(*))')
@@ -379,7 +371,9 @@ export class HfzSupabaseApi implements IHfzApi {
         return HfzSupabaseApi.mapSales(data) as ISale;
     }
     async getSales(dateFrom: string, dateTo?: string): Promise<Array<ISale>> {
-        const supabase = HfzSupabaseApi.getClient();
+        const supabase = this.supabase;
+        
+        console.log("getSales", this.og);
 
         let query = supabase.from('sale')
             .select('*, person(*), sale_article(*, article(*))')
@@ -395,5 +389,13 @@ export class HfzSupabaseApi implements IHfzApi {
         if (error) throw error;
 
         return HfzSupabaseApi.mapSales(data) as Array<ISale>;
+    }
+
+    async getUser(): Promise<IUser> {
+        // Return a default user since we don't have a settings table yet
+        return {
+            id: 1,
+            theme: "system"
+        };
     }
 }
