@@ -392,10 +392,27 @@ export class HfzSupabaseApi implements IHfzApi {
     }
 
     async getUser(): Promise<IUser> {
-        // Return a default user since we don't have a settings table yet
+        const { data: { user } } = await this.supabase.auth.getUser();
+        if (!user) {
+            return {
+                id: 0,
+                theme: "system"
+            };
+        }
+
+        const { data: userData } = await this.supabase
+            .from('users')
+            .select('id, theme')
+            .eq('login', user.email)
+            .maybeSingle();
+
         return {
-            id: 1,
-            theme: "system"
+            id: userData?.id ?? 0,
+            theme: userData?.theme ?? "system",
+            email: user.email,
+            name: user.user_metadata?.full_name,
+            avatarUrl: user.user_metadata?.avatar_url,
+            lastLogin: user.last_sign_in_at ? new Date(user.last_sign_in_at) : undefined
         };
     }
 }

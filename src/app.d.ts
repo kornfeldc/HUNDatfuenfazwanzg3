@@ -13,7 +13,8 @@ declare global {
 			og: number | null
 		}
 		interface PageData {
-			session: Session | null
+			session: Session | null;
+			hfzUser?: import('$lib/data/hfzApi').IUser;
 		}
 		// interface PageState {}
 		// interface Platform {}

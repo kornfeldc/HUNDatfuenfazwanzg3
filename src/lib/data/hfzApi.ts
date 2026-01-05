@@ -42,6 +42,10 @@ export interface IId {
 
 export interface IUser extends IId {
    theme: "light" | "dark" | "system"; 
+   email?: string;
+   name?: string;
+   avatarUrl?: string;
+   lastLogin?: Date;
 }
 
 export interface ISale extends IId {

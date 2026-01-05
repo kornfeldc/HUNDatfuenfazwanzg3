@@ -5,7 +5,7 @@ import {Util} from "$lib/util";
 export async function load({cookies, params, url, locals}) {
     const api = HfzApi.create(locals.supabase, locals.og!);
     return {
-        user: api.getUser()
+        hfzUser: await api.getUser()
     };
 }
 

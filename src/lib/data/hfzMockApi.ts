@@ -1,4 +1,4 @@
-import type {IArticle, ICourseHistory, ICreditHistory, IHfzApi, IId, IPerson, IRobCourse, ISale} from "$lib/data/hfzApi";
+import type {IArticle, ICourseHistory, ICreditHistory, IHfzApi, IId, IPerson, IRobCourse, ISale, IUser} from "$lib/data/hfzApi";
 
 // In-memory mock data for development/testing only.
 // Generates ~10 persons, 10 articles, and 50 sales with dates from now and the last month.
@@ -325,10 +325,14 @@ class HfzMockApi implements IHfzApi {
         return sales;
     }
 
-    async getUser(): Promise<any> {
+    async getUser(): Promise<IUser> {
         return {
             id: 1,
-            theme: "system"
+            theme: "system",
+            email: "admin@example.com",
+            name: "Admin User",
+            avatarUrl: undefined,
+            lastLogin: new Date()
         };
     }
 }
