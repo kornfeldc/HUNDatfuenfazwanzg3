@@ -76,6 +76,10 @@
                             <span class="font-medium">{new Date(formUser.lastLogin).toLocaleString('de-DE')}</span>
                         </div>
                     {/if}
+                    <div class="flex justify-between text-sm mt-2">
+                        <span class="text-muted-foreground">Version:</span>
+                        <span class="font-medium">v{data.version}</span>
+                    </div>
                 </div>
             </div>
         </Card>

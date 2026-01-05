@@ -1,11 +1,13 @@
 import {HfzApi} from "$lib/data/hfzApi";
 import {fail, redirect} from "@sveltejs/kit";
 import {Util} from "$lib/util";
+import pkg from '../../../../../package.json';
 
 export async function load({cookies, params, url, locals}) {
     const api = HfzApi.create(locals.supabase, locals.og!);
     return {
-        hfzUser: await api.getUser()
+        hfzUser: await api.getUser(),
+        version: pkg.version
     };
 }
 
