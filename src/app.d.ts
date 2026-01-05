@@ -11,9 +11,11 @@ declare global {
 			session: Session | null
 			user: User | null
 			og: number | null
+			theme: string
 		}
 		interface PageData {
 			session: Session | null;
+			theme: string;
 			hfzUser?: import('$lib/data/hfzApi').IUser;
 		}
 		// interface PageState {}

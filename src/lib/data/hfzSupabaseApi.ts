@@ -391,6 +391,11 @@ export class HfzSupabaseApi implements IHfzApi {
         return HfzSupabaseApi.mapSales(data) as Array<ISale>;
     }
 
+    async getTheme(): Promise<"light" | "dark" | "system"> {
+        const user = await this.getUser();
+        return user.theme;
+    }
+
     async getUser(): Promise<IUser> {
         const { data: { user } } = await this.supabase.auth.getUser();
         if (!user) {

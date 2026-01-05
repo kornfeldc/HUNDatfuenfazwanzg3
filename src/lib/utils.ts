@@ -11,3 +11,12 @@ export type WithoutChild<T> = T extends { child?: any } ? Omit<T, "child"> : T;
 export type WithoutChildren<T> = T extends { children?: any } ? Omit<T, "children"> : T;
 export type WithoutChildrenOrChild<T> = WithoutChildren<WithoutChild<T>>;
 export type WithElementRef<T, U extends HTMLElement = HTMLElement> = T & { ref?: U | null };
+
+/**
+ * Gets the current theme from the page data.
+ * @param data The page data object from SvelteKit.
+ * @returns 'light' | 'dark' | 'system'
+ */
+export function getTheme(data: App.PageData): 'light' | 'dark' | 'system' {
+    return (data?.theme as 'light' | 'dark' | 'system') || 'system';
+}

@@ -325,6 +325,10 @@ class HfzMockApi implements IHfzApi {
         return sales;
     }
 
+    async getTheme(): Promise<"light" | "dark" | "system"> {
+        return "system";
+    }
+
     async getUser(): Promise<IUser> {
         return {
             id: 1,

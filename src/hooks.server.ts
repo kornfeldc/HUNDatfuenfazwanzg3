@@ -51,53 +51,58 @@ const authGuard: Handle = async ({ event, resolve }) => {
   const { session, user } = await event.locals.safeGetSession()
   event.locals.session = session
   event.locals.user = user
+  
+  let theme = 'system'
 
-  if (event.url.pathname === '/l' || event.url.pathname.startsWith('/l/')) {
-    if (!session || !user) {
-      throw redirect(303, '/login')
-    }
-
-    // Check for tenant (og) in the users table
+  if (user) {
+    // Check for tenant (og) and theme in the users table
     const { data: userData, error: fetchError } = await event.locals.supabase
       .from('users')
-      .select('og')
+      .select('og, theme')
       .eq('login', user.email)
       .maybeSingle()
 
     if (fetchError) {
       console.log("------ geht nit ------ ");
       console.error(fetchError);
-      console.error('Error fetching user data from public.users:', {
-        message: fetchError.message,
-        code: fetchError.code,
-        details: fetchError.details,
-        hint: fetchError.hint,
-        userEmail: user.email
-      })
     }
 
-    if (!userData || userData.og === null) {
-      // If user doesn't exist in users table, create them
-      if (!userData && !fetchError) {
-        console.log('User not found in public.users, attempting auto-registration:', user.email)
-        const { error: insertError } = await event.locals.supabase.from('users').insert({
-          login: user.email,
-        })
-        if (insertError) {
-          console.error('Error creating user in public.users:', insertError)
+    if (userData) {
+      event.locals.og = userData.og
+      if (userData.theme) {
+        theme = userData.theme
+      }
+    }
+
+    if (!userData && !fetchError) {
+      console.log('User not found in public.users, attempting auto-registration:', user.email)
+      const { error: insertError } = await event.locals.supabase.from('users').insert({
+        login: user.email,
+      })
+      if (insertError) {
+        console.error('Error creating user in public.users:', insertError)
+      }
+    }
+
+    if (event.url.pathname === '/l' || event.url.pathname.startsWith('/l/')) {
+      if (!userData || userData.og === null) {
+        // If they have no 'og', redirect to no-tenant page
+        if (event.url.pathname !== '/no-tenant') {
+          throw redirect(303, '/no-tenant')
         }
       }
-
-      // If they have no 'og', redirect to no-tenant page
-      if (event.url.pathname !== '/no-tenant') {
-        throw redirect(303, '/no-tenant')
-      }
-    } else {
-      event.locals.og = userData.og
+    }
+  } else {
+    if (event.url.pathname === '/l' || event.url.pathname.startsWith('/l/')) {
+      throw redirect(303, '/login')
     }
   }
 
-  return resolve(event)
+  event.locals.theme = theme
+
+  return resolve(event, {
+    transformPageChunk: ({ html }) => html.replace('%theme%', theme)
+  })
 }
 
 export const handle: Handle = sequence(supabase, authGuard)
