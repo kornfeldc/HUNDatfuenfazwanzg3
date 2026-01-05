@@ -20,7 +20,7 @@
                     <div class="text-muted-foreground font-normal text-xs ml-2">({sale.person?.dogNames})</div>
                 {/if}
             </div>
-            <div class={(sale.payDate ? "text_ok text-emerald-500" : "text_warning text-amber-500")+ " text-right"}>{Util.formatCurrency(sale.articleSum)}</div>
+            <div class={(sale.payDate ? "text_ok" : "text-warning")+ " text-right"}>{Util.formatCurrency(sale.articleSum)}</div>
 
             {#if !moment(sale.saleDate).isSame(moment(), 'day')}
                 <div class="col-span-3">{Util.formatDate(sale.saleDate)}</div>

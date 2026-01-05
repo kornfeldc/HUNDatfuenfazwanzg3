@@ -13,10 +13,13 @@
     )
 
     async function signInWithGoogle() {
+        const redirectTo = `${window.location.origin}/auth/callback`;
+        console.log('[Auth] Redirecting to:', redirectTo);
+        
         const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: `${window.location.origin}/auth/callback`
+                redirectTo
             }
         })
         if (error) console.error('Error logging in:', error.message)
