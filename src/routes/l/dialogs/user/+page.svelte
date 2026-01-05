@@ -6,6 +6,7 @@
     // noinspection ES6UnusedImports
     import * as Select from "$lib/components/shadcn/ui/select/index.js";
 
+    import moment from "moment";
     import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
     import BackButton from "$lib/components/global/NavigationButtons/BackButton.svelte";
     import Card from "$lib/components/global/Card.svelte";
@@ -29,6 +30,12 @@
         formUser.lastLogin = user?.lastLogin;
         formUser.admin = user?.admin;
     }
+    
+    const themeLabels = {
+        "system": "Automatisch",
+        "light": "Hell",
+        "dark": "Dunkel"
+    };
 
     function submitForm() {
         setTimeout(()=> {
@@ -59,14 +66,14 @@
 
                 <div class="w-full border-t pt-4 mt-2">
                     <div class="flex justify-between items-center text-sm h-10">
-                        <span class="text-muted-foreground">Thema:</span>
+                        <span class="text-muted-foreground">Dunkel/Hell:</span>
                         <div class="w-32">
                              <Select.Root type="single" name="theme" bind:value={formUser.theme} onValueChange={submitForm}>
-                                <Select.Trigger class="w-full capitalize">{formUser.theme}</Select.Trigger>
+                                <Select.Trigger class="w-full capitalize">{themeLabels[formUser.theme]}</Select.Trigger>
                                 <Select.Content>
-                                    <Select.Item value="light">Light</Select.Item>
-                                    <Select.Item value="dark">Dark</Select.Item>
-                                    <Select.Item value="system">System</Select.Item>
+                                    {#each Object.keys(themeLabels) as theme}
+                                        <Select.Item value={theme}>{themeLabels[theme]}</Select.Item>
+                                        {/each} 
                                 </Select.Content>
                             </Select.Root>
                         </div>
@@ -74,7 +81,7 @@
                     {#if formUser.lastLogin}
                         <div class="flex justify-between text-sm mt-2">
                             <span class="text-muted-foreground">Letzter Login:</span>
-                            <span class="font-medium">{new Date(formUser.lastLogin).toLocaleString('de-DE')}</span>
+                            <span class="font-medium">{moment(new Date(formUser.lastLogin)).format('DD.MM.YYYY HH:mm')}</span>
                         </div>
                     {/if}
                     <div class="flex justify-between text-sm mt-2">
@@ -86,7 +93,7 @@
         </Card>
     </form>
 
-    {#if formUser.admin && data.unassignedUsers?.length >= 0}
+    {#if formUser.admin && data.unassignedUsers?.length > 0}
         <Card className="max-w-xl m-auto mt-4">
              <div class="flex flex-col gap-4 p-4">
                  <h3 class="font-bold text-lg">Benutzer freischalten</h3>
