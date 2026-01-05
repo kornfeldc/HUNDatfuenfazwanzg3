@@ -4,6 +4,7 @@ import type {SupabaseClient} from "@supabase/supabase-js";
 
 export interface IHfzApi {
     getUser(): Promise<IUser>;
+    updateUserTheme(email: string, theme: string): Promise<void>;
     getTheme(): Promise<"light" | "dark" | "system">;
     
     getArticles(): Promise<Array<IArticle>>;

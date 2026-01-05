@@ -9,54 +9,30 @@ export async function load({cookies, params, url, locals}) {
     };
 }
 
-// export const actions = {
-//     default: async ({cookies, request, params}) => {
-//         const {id} = params; // Extract the `id` parameter from the `params` object
-//         const formData = await request.formData();
-//
-//         const redirectTo = formData.get('redirectTo')?.toString() ?? "/l/modules/articles";
-//         formData.delete('redirectTo');
-//
-//         let data = Util.parseFormData(formData, [
-//                 {
-//                     properties: ["price"],
-//                     method: (value: any) => Util.parseLocalizedFloat(value)
-//                 },
-//                 {
-//                     properties: ["isFavorite", "isActive"],
-//                     method: (value: any) => value === 'true' || value === 'on'
-//                 }
-//             ]);
-//         if(id)
-//             data.id = parseInt(id);
-//         console.log("parsed data", data);
-//
-//         try {
-//             const api = HfzApi.create();
-//             if (id) await api.updateArticle(data as any);
-//             else await api.createArticle(data as any);
-//         } catch (e: any) {
-//             return fail(422, {
-//                 error: e.message
-//             });
-//         }
-//
-//         throw redirect(303, redirectTo);
-//
-//         // const redirectTo = formData.get('redirectTo')!.toString();
-//         // formData.delete('redirectTo');
-//         //
-//         // if (!formData.get('companyId')) formData.delete('companyId');
-//         //
-//         // try {
-//         //     const ngData = new NgData(cookies);
-//         //     if (id) await ngData.updatePerson(id, formData);
-//         //     else await ngData.createPerson(formData);
-//         // } catch (e: any) {
-//         //     return fail(422, {
-//         //         error: e.message
-//         //     });
-//         // }
-//         // throw redirect(303, redirectTo);
-//     }
-// };
+export const actions = {
+    default: async ({request, locals}) => {
+        const formData = await request.formData();
+        const theme = formData.get('theme')?.toString();
+        const redirectTo = formData.get('redirectTo')?.toString() ?? "/l/dialogs/user";
+        
+        console.log("formData theme", theme);
+
+        if (!theme) {
+            return fail(400, { error: 'Theme is required' });
+        }
+
+        const { data: { user } } = await locals.supabase.auth.getUser();
+        if (!user || !user.email) {
+            return fail(401, { error: 'Unauthorized' });
+        }
+
+        const api = HfzApi.create(locals.supabase, locals.og!);
+        try {
+            await api.updateUserTheme(user.email, theme);
+        } catch (e: any) {
+            return fail(500, { error: e.message });
+        }
+
+        throw redirect(303, redirectTo);
+    }
+};

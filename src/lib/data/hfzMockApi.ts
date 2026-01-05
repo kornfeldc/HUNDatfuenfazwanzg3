@@ -325,6 +325,10 @@ class HfzMockApi implements IHfzApi {
         return sales;
     }
 
+    async updateUserTheme(email: string, theme: string): Promise<void> {
+        return;
+    }
+
     async getTheme(): Promise<"light" | "dark" | "system"> {
         return "system";
     }

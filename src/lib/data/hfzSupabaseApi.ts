@@ -391,6 +391,17 @@ export class HfzSupabaseApi implements IHfzApi {
         return HfzSupabaseApi.mapSales(data) as Array<ISale>;
     }
 
+    async updateUserTheme(email: string, theme: string): Promise<void> {
+        const { error } = await this.supabase
+            .from('users')
+            .update({ theme: theme })
+            .eq('login', email);
+
+        console.log("updateUserTheme", {email, theme, error});
+        
+        if (error) throw error;
+    }
+
     async getTheme(): Promise<"light" | "dark" | "system"> {
         const user = await this.getUser();
         return user.theme;
@@ -398,7 +409,6 @@ export class HfzSupabaseApi implements IHfzApi {
 
     async getUser(): Promise<IUser> {
         const { data: { user } } = await this.supabase.auth.getUser();
-        console.log("getUser", user);
         if (!user) {
             return {
                 theme: "system"

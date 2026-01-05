@@ -22,19 +22,24 @@
 
     const loadUser = async () => {
         const user = await data.hfzUser;
-        formUser.id = user?.id;
         formUser.theme = user?.theme ?? "system";
         formUser.email = user?.email;
         formUser.name = user?.name;
         formUser.avatarUrl = user?.avatarUrl;
         formUser.lastLogin = user?.lastLogin;
     }
+
+    function submitForm() {
+        setTimeout(()=> {
+            (document.getElementById('userForm') as HTMLFormElement)?.requestSubmit();
+        }, 200);
+    }
 </script>
 
 {#await loadUser()}
     <Loading></Loading>
 {:then _}
-    <form method="post" action={`/l/dialogs/user`}>
+    <form method="post" action={`/l/dialogs/user`} id="userForm">
         <input type="hidden" name="redirectTo" value={uiState.getLastRouteSmart()}>
         <Card className="max-w-xl m-auto">
             <div class="flex flex-col items-center gap-4 p-4">
@@ -52,9 +57,18 @@
                 </div>
 
                 <div class="w-full border-t pt-4 mt-2">
-                    <div class="flex justify-between text-sm">
+                    <div class="flex justify-between items-center text-sm h-10">
                         <span class="text-muted-foreground">Thema:</span>
-                        <span class="font-medium capitalize">{formUser.theme}</span>
+                        <div class="w-32">
+                             <Select.Root type="single" name="theme" bind:value={formUser.theme} onValueChange={submitForm}>
+                                <Select.Trigger class="w-full capitalize">{formUser.theme}</Select.Trigger>
+                                <Select.Content>
+                                    <Select.Item value="light">Light</Select.Item>
+                                    <Select.Item value="dark">Dark</Select.Item>
+                                    <Select.Item value="system">System</Select.Item>
+                                </Select.Content>
+                            </Select.Root>
+                        </div>
                     </div>
                     {#if formUser.lastLogin}
                         <div class="flex justify-between text-sm mt-2">
