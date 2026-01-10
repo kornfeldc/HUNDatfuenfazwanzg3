@@ -26,7 +26,10 @@ export interface IHfzApi {
 
     getSales(dateFrom: string, dateTo?: string): Promise<Array<ISale>>;
     getSale(id: IId): Promise<ISale>;
-    getNewSaleForPerson(personId: IId): Promise<ISale>;
+    getNewSaleForPerson(personId?: IId): Promise<ISale>;
+    
+    getTopSoldArticles(personId?: IId, dateFrom?: Date): Promise<Array<ISoldArticleAggregate>>;
+    getTopSoldArticlesBySaleId(saleId?: IId, dateFrom?: Date): Promise<Array<ISoldArticleAggregate>>;
 
     getRobCourses(): Promise<Array<IRobCourse>>;
     getRobCourse(id: IId): Promise<IRobCourse>;
@@ -168,3 +171,8 @@ export const ArticleTypes = {
     "meal": "Mahlzeit",
     "other": "Sonstiges",
 };
+
+export interface ISoldArticleAggregate {
+    articleId: number;
+    count: number;
+}

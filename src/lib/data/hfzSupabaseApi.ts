@@ -8,7 +8,8 @@ import type {
     IPerson,
     IRobCourse,
     ISale,
-    IUser
+    IUser,
+    ISoldArticleAggregate
 } from "$lib/data/hfzApi";
 import {createClient, type SupabaseClient} from '@supabase/supabase-js';
 import moment from "moment";
@@ -338,13 +339,13 @@ export class HfzSupabaseApi implements IHfzApi {
     }
 
 
-    async getNewSaleForPerson(personId: IId): Promise<ISale> {
+    async getNewSaleForPerson(personId?: IId): Promise<ISale> {
         const supabase = this.supabase;
         const {data, error} = await supabase
             .from('sale')
             .select('*, person(*), sale_article(*, article(*))')
             .eq("og", this.og)
-            .eq("personId", personId.id)
+            .eq("personId", personId?.id ?? -1)
             .is("payDate", null)
             .single();
 
@@ -363,7 +364,7 @@ export class HfzSupabaseApi implements IHfzApi {
                 toReturn: 0,
                 usedCredit: false,
                 saleArticles: [],
-                person: personId.id == -1 ? null : await this.getPerson(personId)
+                person: personId ? await this.getPerson(personId) : null
             } as ISale;
         }
 
@@ -389,6 +390,53 @@ export class HfzSupabaseApi implements IHfzApi {
         if (error) throw error;
 
         return HfzSupabaseApi.mapSales(data) as Array<ISale>;
+    }
+
+    async getTopSoldArticlesBySaleId(saleId: IId, dateFrom?: Date): Promise<Array<ISoldArticleAggregate>> {
+        const supabase = this.supabase;
+        let query = supabase
+            .from('sale')
+            .select('personId')
+            .eq("id", saleId.id)
+            .single();
+        const {data, error} = await query;
+        if (error) throw error;
+        return await this.getTopSoldArticles({id: data.personId}, dateFrom);
+    }
+
+    async getTopSoldArticles(personId?: IId, dateFrom?: Date): Promise<Array<ISoldArticleAggregate>> {
+        const supabase = this.supabase;
+
+        console.log("getTopSoldArticles", this.og);
+
+        let query = supabase
+            .from('sale_article')
+            .select('amount, article(id), sale!inner(saleDate, personId, og)')
+            .eq("sale.og", this.og);
+
+        const fromDate = dateFrom ?? moment().subtract(365, 'days').toDate();
+        query = query.gte('sale.saleDate', fromDate.toISOString());
+
+        if (personId) {
+            query = query.eq('sale.personId', personId.id);
+        }
+
+        const {data, error} = await query;
+        if (error) throw error;
+
+        const map = new Map<number, number>();
+        (data as any[]).forEach((row: any) => {
+            const articleId = row.article?.id;
+            if (!articleId) return;
+
+            const amount = row.amount;
+            const current = map.get(articleId) || 0;
+            map.set(articleId, current + amount);
+        });
+
+        return Array.from(map.entries())
+            .map(([articleId, count]) => ({articleId, count}))
+            .sort((a, b) => b.count - a.count);
     }
 
     async updateUserTheme(email: string, theme: string): Promise<void> {
