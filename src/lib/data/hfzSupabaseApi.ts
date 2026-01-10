@@ -363,7 +363,7 @@ export class HfzSupabaseApi implements IHfzApi {
                 toReturn: 0,
                 usedCredit: false,
                 saleArticles: [],
-                person: await this.getPerson(personId)
+                person: personId.id == -1 ? null : await this.getPerson(personId)
             } as ISale;
         }
 
