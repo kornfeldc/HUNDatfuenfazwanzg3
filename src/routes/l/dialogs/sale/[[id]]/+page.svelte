@@ -1,6 +1,6 @@
 <script lang="ts">
     import {page} from '$app/stores';
-    import type {IArticle, IPerson, ISale} from "$lib/data/hfzApi";
+    import type {IArticle, ISale} from "$lib/data/hfzApi";
     import Loading from "$lib/components/global/Loading.svelte";
     import Card from "$lib/components/global/Card.svelte";
     import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
@@ -10,7 +10,6 @@
     import PersonOverview from "$lib/components/persons/PersonOverview.svelte";
     import SaleArticles from "$lib/components/sales/SaleArticles.svelte";
     import {uiState} from "$lib/stores/uiState.svelte";
-    import {onMount} from "svelte";
 
     let id = $page.params.id;
 
@@ -33,14 +32,15 @@
     <Loading></Loading>
 {:then _}
     <form method="post" action={`/l/dialogs/sale/${id ?? ''}`}>
-        {#if !isSearchVisible || !uiState.isMobileDevice}
-        <Card className="max-w-xl m-auto">
-            <PersonOverview person={sale.person}></PersonOverview>
-        </Card>
+        {#if (!isSearchVisible || !uiState.isMobileDevice) && sale.person}
+            <Card className="max-w-xl m-auto">
+                <PersonOverview person={sale.person}></PersonOverview>
+            </Card>
         {/if}
 
         <Card className="max-w-xl m-auto">
-            <SaleArticles {sale} {articles} {toggleSearch} showTopLine={!isSearchVisible || !uiState.isMobileDevice}></SaleArticles>
+            <SaleArticles {sale} {articles} {toggleSearch}
+                          showTopLine={!isSearchVisible || !uiState.isMobileDevice}></SaleArticles>
         </Card>
 
         {#if !isSearchVisible}
@@ -49,13 +49,15 @@
             </PlaceAtBottom>
             <NavigationActions>
                 <div slot="actions">
-                    {#if !sale.payDate}
+                    {#if !sale.payDate && sale.saleArticles.length > 0}
                         <button type="submit" name="redirectTo" value={`/l/dialogs/sale/${id}/pay`}>
                             <TextButton className={"bg-primary!"}>Bezahlen</TextButton>
                         </button>
-                        <button type="submit" name="redirectTo" value="/l/modules/sales">
-                            <TextButton color="ok">Speichern</TextButton>
-                        </button>
+                        {#if sale.person}
+                            <button type="submit" name="redirectTo" value="/l/modules/sales">
+                                <TextButton color="ok">Speichern</TextButton>
+                            </button>
+                        {/if}
                     {/if}
                 </div>
             </NavigationActions>
