@@ -1,7 +1,7 @@
 <script lang="ts">
     import Loading from "$lib/components/global/Loading.svelte";
     import PersonsGrid from "$lib/components/persons/PersonsGrid.svelte";
-    import {type IPerson} from "$lib/data/hfzApi";
+    import {type IPerson, type IPersonSaleAggregate} from "$lib/data/hfzApi";
     import {Euro} from "@lucide/svelte";
 
     import thenby from 'thenby';
@@ -18,25 +18,45 @@
 
     let {data}: { data: any } = $props();
     let searchString = $state("");
+    let persons = $state([] as Array<IPerson>);
+    let topPersons = $state([] as Array<IPersonSaleAggregate>);
 
     let type = $derived($page.url.searchParams.get("type") ?? "active");
 
     const onSearch = (value: string) => {
         searchString = value;
     }
+    
+    const loadData = async () => {
+        persons = await data.persons;
+        topPersons = await data.topPersons; 
+    }
 
     const filter = (persons: Array<IPerson>) => {
+        const topSortMethod = (a: IPerson, b: IPerson) => {
+            const topPersonA = topPersons.find(tp => tp.personId === a.id);
+            const topPersonB = topPersons.find(tp => tp.personId === b.id);
+            if (!topPersonA && !topPersonB) return 0;
+            if (!topPersonA) return 1;
+            if (!topPersonB) return -1;
+            return topPersonB.count - topPersonA.count;
+        };
+        
+        const sortMethod = type === "top" ? topSortMethod :
+            firstBy((person: IPerson) => person.lastName || '\uffff', { ignoreCase: true }) 
+                .thenBy((person: IPerson) => person.firstName || '\uffff', { ignoreCase: true });
+        
         return persons.filter((p: IPerson) =>
             (p.lastName?.toLowerCase().includes(searchString.toLowerCase()) ||
                 p.firstName?.toLowerCase().includes(searchString.toLowerCase()) ||
                 p.dogNames?.toLowerCase().includes(searchString.toLowerCase())) &&
             isTypeMatching(p)
-        ).sort(firstBy("lastName").thenBy("firstName"));
+        ).sort(sortMethod);
     }
 
     const isTypeMatching = (person: IPerson): boolean =>
         !type ||
-        (type === "top" && person.isActive) ||
+        (type === "top" && person.isActive && topPersons?.some(tp => tp.personId === person.id)) ||
         (type === "active" && person.isActive) ||
         (type === "member" && person.isActive && person.isMember) ||
         (type === "other" && person.isActive && !person.isMember) ||
@@ -58,9 +78,9 @@
         uiState.showNavBar = true;
     });
 </script>
-{#await data.persons}
+{#await loadData()}
     <Loading></Loading>
-{:then persons}
+{:then _}
     <a href="/l/dialogs/sale">
         <Card className="mx-3 mb-8">
             <div class="flex justify-center items-center font-bold text-2xl">

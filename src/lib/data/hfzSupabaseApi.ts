@@ -9,7 +9,8 @@ import type {
     IRobCourse,
     ISale,
     IUser,
-    ISoldArticleAggregate
+    ISoldArticleAggregate,
+    IPersonSaleAggregate
 } from "$lib/data/hfzApi";
 import {createClient, type SupabaseClient} from '@supabase/supabase-js';
 import moment from "moment";
@@ -374,8 +375,6 @@ export class HfzSupabaseApi implements IHfzApi {
     async getSales(dateFrom: string, dateTo?: string): Promise<Array<ISale>> {
         const supabase = this.supabase;
         
-        console.log("getSales", this.og);
-
         let query = supabase.from('sale')
             .select('*, person(*), sale_article(*, article(*))')
             .eq("og", this.og);
@@ -407,8 +406,6 @@ export class HfzSupabaseApi implements IHfzApi {
     async getTopSoldArticles(personId?: IId, dateFrom?: Date): Promise<Array<ISoldArticleAggregate>> {
         const supabase = this.supabase;
 
-        console.log("getTopSoldArticles", this.og);
-
         let query = supabase
             .from('sale_article')
             .select('amount, article(id), sale!inner(saleDate, personId, og)')
@@ -439,13 +436,38 @@ export class HfzSupabaseApi implements IHfzApi {
             .sort((a, b) => b.count - a.count);
     }
 
+    async getTopPersonsBySales(dateFrom?: Date): Promise<Array<IPersonSaleAggregate>> {
+        const supabase = this.supabase;
+
+        let query = supabase
+            .from('sale')
+            .select('personId, saleDate')
+            .eq("og", this.og);
+
+        const fromDate = dateFrom ?? moment().subtract(365, 'days').toDate();
+        query = query.gte('saleDate', fromDate.toISOString());
+
+        const {data, error} = await query;
+        if (error) throw error;
+
+        const map = new Map<number, number>();
+        (data as any[]).forEach((row: any) => {
+            const personId = row.personId;
+            if (!personId) return;
+            const current = map.get(personId) || 0;
+            map.set(personId, current + 1);
+        });
+
+        return Array.from(map.entries())
+            .map(([personId, count]) => ({personId, count}))
+            .sort((a, b) => b.count - a.count);
+    }
+
     async updateUserTheme(email: string, theme: string): Promise<void> {
         const { error } = await this.supabase
             .from('users')
             .update({ theme: theme })
             .eq('login', email);
-
-        console.log("updateUserTheme", {email, theme, error});
         
         if (error) throw error;
     }
@@ -473,8 +495,6 @@ export class HfzSupabaseApi implements IHfzApi {
             console.error("Error fetching user data", error);
         }
         
-        console.log("getUserData " + user.email, userData);
-
         return {
             theme: userData?.theme ?? "system",
             email: user.email,
@@ -503,7 +523,6 @@ export class HfzSupabaseApi implements IHfzApi {
     }
 
     async assignUserToOg(email: string, og: number): Promise<void> {
-        console.log(`[HfzSupabaseApi] assignUserToOg called. Email: ${email}, OG: ${og}`);
         const {error} = await this.supabase
             .from('users')
             .update({og: og})

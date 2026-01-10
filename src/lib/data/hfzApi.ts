@@ -30,6 +30,7 @@ export interface IHfzApi {
     
     getTopSoldArticles(personId?: IId, dateFrom?: Date): Promise<Array<ISoldArticleAggregate>>;
     getTopSoldArticlesBySaleId(saleId?: IId, dateFrom?: Date): Promise<Array<ISoldArticleAggregate>>;
+    getTopPersonsBySales(dateFrom?: Date): Promise<Array<IPersonSaleAggregate>>;
 
     getRobCourses(): Promise<Array<IRobCourse>>;
     getRobCourse(id: IId): Promise<IRobCourse>;
@@ -174,5 +175,10 @@ export const ArticleTypes = {
 
 export interface ISoldArticleAggregate {
     articleId: number;
+    count: number;
+}
+
+export interface IPersonSaleAggregate {
+    personId: number;
     count: number;
 }

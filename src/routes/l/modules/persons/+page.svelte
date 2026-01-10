@@ -26,7 +26,10 @@
             p.firstName?.toLowerCase().includes(searchString.toLowerCase()) ||
             p.dogNames?.toLowerCase().includes(searchString.toLowerCase())) &&
             isTypeMatching(p)
-        ).sort(firstBy("lastName").thenBy("firstName"));
+        ).sort(
+            firstBy((person: IPerson) => person.lastName || '\uffff', { ignoreCase: true })
+                .thenBy((person: IPerson) => person.firstName || '\uffff', { ignoreCase: true })
+        );
     }
     
     const isTypeMatching = (person: IPerson): boolean => 
