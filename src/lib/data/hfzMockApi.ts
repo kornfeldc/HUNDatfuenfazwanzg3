@@ -1,4 +1,4 @@
-import type {IArticle, ICourseHistory, ICreditHistory, IHfzApi, IId, IPerson, IRobCourse, ISale, IUser} from "$lib/data/hfzApi";
+import type {IArticle, ICourseHistory, ICreditHistory, IHfzApi, IId, IPerson, IRobCourse, ISale, IUser, ISoldArticleAggregate} from "$lib/data/hfzApi";
 
 // In-memory mock data for development/testing only.
 // Generates ~10 persons, 10 articles, and 50 sales with dates from now and the last month.
@@ -331,6 +331,37 @@ class HfzMockApi implements IHfzApi {
 
     async getTheme(): Promise<"light" | "dark" | "system"> {
         return "system";
+    }
+
+    async getTopSoldArticles(personId?: IId, dateFrom?: Date): Promise<Array<ISoldArticleAggregate>> {
+        let filtered = sales;
+        const fromDate = dateFrom ?? (() => {
+            const d = new Date();
+            d.setDate(d.getDate() - 365);
+            return d;
+        })();
+
+        filtered = filtered.filter(s => s.saleDate >= fromDate);
+
+        if (personId) {
+            filtered = filtered.filter(s => s.person.id === personId.id);
+        }
+
+        const map = new Map<number, number>();
+        filtered.forEach(s => {
+            s.saleArticles.forEach(sa => {
+                const current = map.get(sa.article.id) || 0;
+                map.set(sa.article.id, current + sa.amount);
+            });
+        });
+
+        return Array.from(map.entries())
+            .map(([articleId, count]) => ({articleId, count}))
+            .sort((a, b) => b.count - a.count);
+    }
+
+    async getNewSaleForPerson(personId: IId): Promise<ISale> {
+        return {} as ISale;
     }
 
     async getUser(): Promise<IUser> {

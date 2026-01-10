@@ -1,5 +1,11 @@
 <script lang="ts">
-    import {ArticleTypes, type IArticle, type ISale, type ISaleArticle} from "$lib/data/hfzApi";
+    import {
+        ArticleTypes,
+        type IArticle,
+        type ISale,
+        type ISaleArticle,
+        type ISoldArticleAggregate
+    } from "$lib/data/hfzApi";
     import {Util} from "$lib/util";
     import {Check, Minus, Plus} from "@lucide/svelte";
     import GlassCircle from "$lib/components/global/GlassCircle.svelte";
@@ -12,11 +18,12 @@
     interface IProps {
         sale: ISale;
         articles: IArticle[];
+        topSoldArticles?: ISoldArticleAggregate[];
         toggleSearch: (isVisible: boolean) => void;
         showTopLine?: boolean;
     }
 
-    let {sale, articles, toggleSearch, showTopLine = true}: IProps = $props();
+    let {sale, articles, topSoldArticles, toggleSearch, showTopLine = true}: IProps = $props();
     let showAllArticles = $state(false);
     let searchString = $state("");
     let type = $state("top");
@@ -65,7 +72,7 @@
     const articleList = $derived.by(() => {
         let ret = [...sale.saleArticles];
         if (showAllArticles) {
-            const virtualSaleArticles = articles
+            let virtualSaleArticles = articles
                 .filter(a => !sale.saleArticles.find(sa => sa.article.id === a.id))
                 .map(a => {
                     return {
@@ -73,9 +80,20 @@
                         articleTitle: a.title,
                         articlePrice: a.price,
                         amount: 0,
-                        sale: null
-                    } as ISaleArticle;
+                        sale: null,
+                        sold: topSoldArticles?.find(t => t.articleId === a.id)?.count ?? 0
+                    } as any;
                 });
+            
+            // sort virtual sale Articles
+            if(type === "top") {
+                if((topSoldArticles?.length ?? 0) > 0)  
+                   virtualSaleArticles = virtualSaleArticles.filter(sa => sa.sold > 0); 
+                virtualSaleArticles.sort((a, b) => b.sold - a.sold);
+            }
+            else
+                virtualSaleArticles.sort((a, b) => a.article.title.localeCompare(b.article.title));
+            
             ret = [...ret, ...virtualSaleArticles];
         }
 

@@ -1,6 +1,6 @@
 <script lang="ts">
     import {page} from '$app/stores';
-    import type {IArticle, ISale} from "$lib/data/hfzApi";
+    import type {IArticle, ISale, ISoldArticleAggregate} from "$lib/data/hfzApi";
     import Loading from "$lib/components/global/Loading.svelte";
     import Card from "$lib/components/global/Card.svelte";
     import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
@@ -16,12 +16,14 @@
     let {data}: { data: any; } = $props();
     let sale = $state({} as ISale);
     let articles = $state([] as IArticle[]);
+    let topSoldArticles = $state([] as ISoldArticleAggregate[]);
 
     let isSearchVisible = $state(false);
 
     const loadData = async () => {
         articles = await data.articles;
         sale = await data.sale;
+        topSoldArticles = await data.topSoldArticles;
     }
 
     const toggleSearch = (isVisible: boolean) => {
@@ -39,7 +41,7 @@
         {/if}
 
         <Card className="max-w-xl m-auto">
-            <SaleArticles {sale} {articles} {toggleSearch}
+            <SaleArticles {sale} {articles} {topSoldArticles} {toggleSearch}
                           showTopLine={!isSearchVisible || !uiState.isMobileDevice}></SaleArticles>
         </Card>
 

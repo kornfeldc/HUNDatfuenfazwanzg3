@@ -7,15 +7,16 @@ export async function load({cookies, params, url, locals}) {
     const api = HfzApi.create(locals.supabase, locals.og!);
     if (!id) {
         const personId = url.searchParams.get('personId');
-        const param = personId ? {id: parseInt(personId ?? -1)} : { id: -1};
-        
+        const param = personId ? {id: parseInt(personId ?? -1)} : undefined;
         return {
             sale: api.getNewSaleForPerson(param),
+            topSoldArticles: api.getTopSoldArticles(param),
             articles: api.getArticles()
         };
     }
     return {
         sale: api.getSale({id: parseInt(id)}),
+        topSoldArticles: api.getTopSoldArticlesBySaleId({id: parseInt(id)}),
         articles: api.getArticles()
     };
 }
