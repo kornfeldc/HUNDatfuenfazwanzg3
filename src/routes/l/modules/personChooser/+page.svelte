@@ -1,18 +1,18 @@
 <script lang="ts">
     import Loading from "$lib/components/global/Loading.svelte";
     import PersonsGrid from "$lib/components/persons/PersonsGrid.svelte";
-    import SearchButton from "$lib/components/global/NavigationButtons/SearchButton.svelte";
-    import NavigationActions from "$lib/components/global/NavigationActions.svelte";
     import {type IPerson} from "$lib/data/hfzApi";
+    import {Euro} from "@lucide/svelte";
 
     import thenby from 'thenby';
     import {page} from '$app/stores';
     import FilterBar from "$lib/components/global/FilterBar.svelte";
-    import {onMount, onDestroy} from "svelte";
+    import {onDestroy, onMount} from "svelte";
     import {uiState} from "$lib/stores/uiState.svelte";
     import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
     import SearchBar from "$lib/components/global/SearchBar.svelte";
     import BackButton from "$lib/components/global/NavigationButtons/BackButton.svelte";
+    import Card from "$lib/components/global/Card.svelte";
 
     const {firstBy} = thenby;
 
@@ -49,18 +49,26 @@
         {id: "other", label: "Andere"},
         {id: "inactive", label: "Inaktiv"},
     ];
-    
-    onMount(()=>  {
+
+    onMount(() => {
         uiState.showNavBar = false;
     });
-    
-    onDestroy(()=> {
+
+    onDestroy(() => {
         uiState.showNavBar = true;
     });
 </script>
 {#await data.persons}
     <Loading></Loading>
 {:then persons}
+    <a href="/l/dialogs/sale">
+        <Card className="mx-3 mb-8">
+            <div class="flex justify-center items-center font-bold text-2xl">
+                <Euro class="text-primary pr-2 h-10 w-10"/>
+                Barverkauf
+            </div>
+        </Card>
+    </a>
     <FilterBar className="px-3" items={filterItems} selected={type} parameterName="type"></FilterBar>
     <PersonsGrid persons={filter(persons)} href="/l/dialogs/sale"/>
 {/await}
