@@ -442,6 +442,13 @@ export class HfzSupabaseApi implements IHfzApi {
         return this.getSale({id: saleId});
     }
 
+    async deleteSale(id: IId): Promise<void> {
+        await this.supabase.from('sale_article').delete().eq('saleId', id.id);
+        await this.supabase.from('credit_history').delete().eq('saleId', id.id);
+        const {error} = await this.supabase.from('sale').delete().eq('id', id.id);
+        if (error) throw new Error(error.message);
+    }
+
     async getNewSaleForPerson(personId?: IId): Promise<ISale> {
         const supabase = this.supabase;
         const {data, error} = await supabase

@@ -5,8 +5,9 @@
 - [x] Artikel "smart" sortieren
 - [x] Artikel bearbeiten
 - [x] Persistieren
-- [ ] Löschen
+- [x] Löschen
 - [ ] Bezahlen
+- [ ] CreditHistory maintainen und auf person durchrechnen
 
 # Artikel
 - [x] Gruppe korrekt anzeigen

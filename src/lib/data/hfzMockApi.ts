@@ -325,6 +325,13 @@ class HfzMockApi implements IHfzApi {
         return sale;
     }
 
+    async deleteSale(id: IId): Promise<void> {
+        const index = sales.findIndex(s => s.id === id.id);
+        if (index > -1) {
+            sales.splice(index, 1);
+        }
+    }
+
     async getSales(): Promise<Array<ISale>> {
         return sales;
     }

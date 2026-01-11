@@ -27,6 +27,11 @@ export const actions = {
         const api = HfzApi.create(locals.supabase, locals.og!);
         const formData = await request.formData();
 
+        if (formData.get('deleteAction')) {
+            if (id) await api.deleteSale({id: parseInt(id)});
+            throw redirect(303, "/l/modules/sales");
+        }
+
         const redirectTo = formData.get('redirectTo')?.toString() ?? "/l/modules/sales";
         formData.delete('redirectTo');
 

@@ -1,6 +1,7 @@
 <script lang="ts">
     import {page} from '$app/stores';
     import type {IArticle, ISale, ISoldArticleAggregate} from "$lib/data/hfzApi";
+    import { Trash } from '@lucide/svelte';
     import Loading from "$lib/components/global/Loading.svelte";
     import Card from "$lib/components/global/Card.svelte";
     import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
@@ -10,6 +11,7 @@
     import PersonOverview from "$lib/components/persons/PersonOverview.svelte";
     import SaleArticles from "$lib/components/sales/SaleArticles.svelte";
     import {uiState} from "$lib/stores/uiState.svelte";
+    import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
 
     let id = $page.params.id;
 
@@ -56,7 +58,12 @@
                 <BackButton></BackButton>
             </PlaceAtBottom>
             <NavigationActions>
-                <div slot="actions">
+                <div slot="actions" class="justify-center items-center flex gap-2">
+                    <button type="submit" name="deleteAction" value="true">
+                        <GlassCircleLink className={"bg-destructive! text-destructive-foreground!"}>
+                            <Trash/>
+                        </GlassCircleLink>
+                    </button>
                     {#if !sale.payDate && sale.saleArticles.length > 0}
                         <button type="submit" name="redirectTo" value={`/l/dialogs/sale/${id}/pay`}>
                             <TextButton className={"bg-primary!"}>Bezahlen</TextButton>

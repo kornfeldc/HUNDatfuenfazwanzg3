@@ -27,6 +27,7 @@ export interface IHfzApi {
     getSales(dateFrom: string, dateTo?: string): Promise<Array<ISale>>;
     getSale(id: IId): Promise<ISale>;
     saveSale(sale: ISale): Promise<ISale>;
+    deleteSale(id: IId): Promise<void>;
     getNewSaleForPerson(personId?: IId): Promise<ISale>;
     
     getTopSoldArticles(personId?: IId, dateFrom?: Date): Promise<Array<ISoldArticleAggregate>>;
