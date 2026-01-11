@@ -17,6 +17,7 @@
     import {Button} from "$lib/components/shadcn/ui/button";
     import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
     import {Dog} from "@lucide/svelte";
+    import Avatar from "$lib/components/global/Avatar.svelte";
 
     let {data, form}: { data: any, form: any } = $props();
     let formUser = $state({} as IUser);
@@ -51,13 +52,7 @@
         <input type="hidden" name="redirectTo" value={uiState.getLastRouteSmart()}>
         <Card className="max-w-xl m-auto">
             <div class="flex flex-col items-center gap-4 p-4">
-                {#if formUser.avatarUrl}
-                    <img src={formUser.avatarUrl} alt="avatar" class="w-24 h-24 rounded-full border-4 border-primary/20 shadow-lg object-cover">
-                {:else}
-                    <div class="bg-muted p-6 rounded-full">
-                        <Dog class="text-primary/80" size={64}/>
-                    </div>
-                {/if}
+                <Avatar size={24}/>
 
                 <div class="text-center">
                     <h2 class="text-2xl font-bold">{formUser.name ?? 'Unbekannter Benutzer'}</h2>
