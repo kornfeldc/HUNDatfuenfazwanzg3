@@ -22,20 +22,31 @@ export async function load({cookies, params, url, locals}) {
 }
 
 export const actions = {
-    default: async ({cookies, request, params}) => {
+    default: async ({cookies, request, params, locals}) => {
         const {id} = params; // Extract the `id` parameter from the `params` object
+        const api = HfzApi.create(locals.supabase, locals.og!);
         const formData = await request.formData();
 
         const redirectTo = formData.get('redirectTo')?.toString() ?? "/l/modules/sales";
         formData.delete('redirectTo');
 
-        let data = Util.parseFormData(formData, []);
+        let data = Util.parseFormData(formData, [
+            {properties: ['saleArticles'], method: (val) => JSON.parse(val)},
+            {properties: ['saleSum'], method: (val) => parseFloat(val)},
+            {properties: ['personId'], method: (val) => parseInt(val)}
+        ]);
         if (id)
             data.id = parseInt(id);
         console.log("parsed data", data);
 
         try {
-            // todo - save data via api
+            const saleToSave = {
+                id: data.id ?? 0,
+                articleSum: data.articleSum,
+                saleArticles: data.saleArticles,
+                person: data.personId ? {id: data.personId} : undefined
+            } as any;
+            await api.saveSale(saleToSave);
         } catch (e: any) {
             return fail(422, {
                 error: e.message

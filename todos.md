@@ -3,8 +3,8 @@
 - [x] Barverkauf
 - [x] Neuer Verkauf 
 - [x] Artikel "smart" sortieren
-- [ ] Artikel bearbeiten
-- [ ] Persistieren
+- [x] Artikel bearbeiten
+- [x] Persistieren
 - [ ] Bezahlen
 
 # Artikel

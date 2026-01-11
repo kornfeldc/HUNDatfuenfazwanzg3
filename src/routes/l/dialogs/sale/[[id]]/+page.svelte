@@ -29,11 +29,17 @@
     const toggleSearch = (isVisible: boolean) => {
         isSearchVisible = isVisible;
     }
+
+    const articleSum = $derived(sale.saleArticles?.reduce((acc, sa) => acc + sa.amount * sa.articlePrice, 0) ?? 0);
 </script>
 {#await loadData()}
     <Loading></Loading>
 {:then _}
     <form method="post" action={`/l/dialogs/sale/${id ?? ''}`}>
+        <input type="hidden" name="saleArticles" value={JSON.stringify(sale.saleArticles, (key, value) => key === 'sale' ? undefined : value)} />
+        <input type="hidden" name="articleSum" value={articleSum} />
+        <input type="hidden" name="personId" value={sale.person?.id} />
+
         {#if (!isSearchVisible || !uiState.isMobileDevice) && sale.person}
             <Card className="max-w-xl m-auto">
                 <PersonOverview person={sale.person}></PersonOverview>

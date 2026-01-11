@@ -321,6 +321,10 @@ class HfzMockApi implements IHfzApi {
         return sales.find(s => s.id === id.id);
     }
 
+    async saveSale(sale: ISale): Promise<ISale> {
+        return sale;
+    }
+
     async getSales(): Promise<Array<ISale>> {
         return sales;
     }

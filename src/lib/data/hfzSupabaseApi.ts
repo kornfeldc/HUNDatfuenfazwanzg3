@@ -340,6 +340,90 @@ export class HfzSupabaseApi implements IHfzApi {
     }
 
 
+    async saveSale(sale: ISale): Promise<ISale> {
+        const supabase = this.supabase;
+        let saleId = sale.id;
+        
+        console.log("Saving sale", sale);
+
+        const salePayload: any = {
+            articleSum: sale.articleSum,
+            og: this.og
+        };
+        
+        if (sale.person) 
+            salePayload.personId = sale.person.id;
+
+        if (!saleId) {
+            salePayload.saleDate = new Date();
+            const {data, error} = await supabase.from('sale').insert(salePayload).select().single();
+            if (error) throw error;
+            saleId = data.id;
+        } else {
+            const {error} = await supabase.from('sale').update(salePayload).eq('id', saleId);
+            if (error) throw error;
+        }
+        
+        const {data: existingArticles, error: fetchError} = await supabase
+            .from('sale_article')
+            .select('id, articleId')
+            .eq('saleId', saleId);
+        
+        console.log("existing articles", existingArticles);
+
+        if (fetchError) throw fetchError;
+        
+        const existingMap = new Map<number, number>(); // articleId -> sale_article_id
+        existingArticles.forEach((row: any) => existingMap.set(row.articleId, row.id));
+        
+        const processedIds: number[] = [];
+
+        if (sale.saleArticles) {
+            for (const sa of sale.saleArticles) {
+                // Handle both object structure and potential flat articleId property
+                const articleId = (sa as any).articleId ?? sa.article?.id;
+                
+                if(!articleId) {
+                     console.warn("Skipping sale article without articleId", sa);
+                     continue;
+                }
+                
+                const articlePayload = {
+                    saleId: saleId,
+                    articleId: articleId,
+                    amount: sa.amount,
+                    articlePrice: sa.articlePrice,
+                    articleTitle: sa.articleTitle,
+                    og: this.og
+                };
+
+                const existingId = existingMap.get(articleId);
+
+                if (existingId) {
+                    const {data, error} = await supabase.from('sale_article').update(articlePayload).eq('id', existingId).select().single();
+                    console.log("Updated sale article", error);
+                    if (error) throw error;
+                    processedIds.push(data.id);
+                } else {
+                    const {data, error} = await supabase.from('sale_article').insert(articlePayload).select().single();
+                    console.log("insert sale article", error);
+                    if (error) throw error;
+                    processedIds.push(data.id);
+                }
+            }
+        }
+
+        const existingIds = existingArticles.map((x: any) => x.id);
+        const toDelete = existingIds.filter(id => !processedIds.includes(id));
+        
+        if (toDelete.length > 0) {
+            const {error} = await supabase.from('sale_article').delete().in('id', toDelete);
+            if (error) throw error;
+        }
+
+        return this.getSale({id: saleId});
+    }
+
     async getNewSaleForPerson(personId?: IId): Promise<ISale> {
         const supabase = this.supabase;
         const {data, error} = await supabase

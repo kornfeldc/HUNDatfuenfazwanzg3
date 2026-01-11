@@ -26,6 +26,7 @@ export interface IHfzApi {
 
     getSales(dateFrom: string, dateTo?: string): Promise<Array<ISale>>;
     getSale(id: IId): Promise<ISale>;
+    saveSale(sale: ISale): Promise<ISale>;
     getNewSaleForPerson(personId?: IId): Promise<ISale>;
     
     getTopSoldArticles(personId?: IId, dateFrom?: Date): Promise<Array<ISoldArticleAggregate>>;
@@ -79,7 +80,7 @@ export interface ISaleArticle extends IId {
     article: IArticle;
     amount: number;
     articlePrice: number;
-    articleTitle: number;
+    articleTitle: string;
     sale: ISale;
 }
 
