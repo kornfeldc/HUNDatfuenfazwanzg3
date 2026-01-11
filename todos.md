@@ -6,7 +6,9 @@
 - [x] Artikel bearbeiten
 - [x] Persistieren
 - [x] Löschen
-- [ ] Bezahlen
+- [ ] Barverkauf Sale öffnen und editieren
+- [ ] Barverkauf bezahlen
+- [ ] Normalen Sale bezahlen
 - [ ] CreditHistory maintainen und auf person durchrechnen
 
 # Artikel
@@ -41,3 +43,6 @@
 
 # Hosting
 - [x] Vercel einrichten
+
+# Überlegen
+- [ ] Tabellen "sale_day" und "person_article_usage" nicht mehr notwendig?
