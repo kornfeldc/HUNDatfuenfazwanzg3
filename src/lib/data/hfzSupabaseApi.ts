@@ -345,6 +345,7 @@ export class HfzSupabaseApi implements IHfzApi {
         let saleId = sale.id;
         const salePayload: any = {
             articleSum: sale.articleSum,
+            toPay: sale.articleSum,
             og: this.og
         };
         
@@ -360,7 +361,6 @@ export class HfzSupabaseApi implements IHfzApi {
 
         if (!saleId) {
             salePayload.saleDate = new Date();
-            salePayload.toPay = 0;
             salePayload.given = 0;
             salePayload.inclTip = 0;
             salePayload.toReturn = 0;
