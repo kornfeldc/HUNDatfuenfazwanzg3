@@ -343,35 +343,53 @@ export class HfzSupabaseApi implements IHfzApi {
     async saveSale(sale: ISale): Promise<ISale> {
         const supabase = this.supabase;
         let saleId = sale.id;
-        
-        console.log("Saving sale", sale);
-
         const salePayload: any = {
             articleSum: sale.articleSum,
             og: this.og
         };
         
-        if (sale.person) 
-            salePayload.personId = sale.person.id;
+        if (sale.person) {
+            const person = await this.getPerson(sale.person);
+            salePayload.personId = person.id;
+            salePayload.personName = (person.lastName + " " + person.firstName).trim();
+        }
+        else
+            salePayload.personName = "Barverkauf";
+        
+        console.log("Saving salePayload", salePayload);
 
         if (!saleId) {
             salePayload.saleDate = new Date();
+            salePayload.toPay = 0;
+            salePayload.given = 0;
+            salePayload.inclTip = 0;
+            salePayload.toReturn = 0;
+            salePayload.usedCredit = 0;
+            salePayload.addAdditionalCredit = 0;
+            
             const {data, error} = await supabase.from('sale').insert(salePayload).select().single();
-            if (error) throw error;
+            if (error){
+                console.error("Error inserting sale", error);
+                throw error;
+            }
             saleId = data.id;
         } else {
             const {error} = await supabase.from('sale').update(salePayload).eq('id', saleId);
-            if (error) throw error;
+            if (error) {
+                console.error("Error updating sale", error);
+                throw error;
+            }
         }
         
         const {data: existingArticles, error: fetchError} = await supabase
             .from('sale_article')
             .select('id, articleId')
             .eq('saleId', saleId);
-        
-        console.log("existing articles", existingArticles);
 
-        if (fetchError) throw fetchError;
+        if (fetchError) {
+            console.error("Error fetching existing sale articles", fetchError);
+            throw fetchError;
+        }
         
         const existingMap = new Map<number, number>(); // articleId -> sale_article_id
         existingArticles.forEach((row: any) => existingMap.set(row.articleId, row.id));

@@ -5,6 +5,7 @@
 - [x] Artikel "smart" sortieren
 - [x] Artikel bearbeiten
 - [x] Persistieren
+- [ ] Löschen
 - [ ] Bezahlen
 
 # Artikel
