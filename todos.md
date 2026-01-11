@@ -1,9 +1,9 @@
 # Sales
 - [x] Personenauswahl
-- [ ] Barverkauf
-- [ ] Neuer Verkauf 
-- [ ] Artikel bearbeiten
+- [x] Barverkauf
+- [x] Neuer Verkauf 
 - [x] Artikel "smart" sortieren
+- [ ] Artikel bearbeiten
 - [ ] Persistieren
 - [ ] Bezahlen
 
