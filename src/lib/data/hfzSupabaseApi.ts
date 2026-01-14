@@ -6,13 +6,13 @@ import type {
     IId,
     IMergedPersonHistory,
     IPerson,
+    IPersonSaleAggregate,
     IRobCourse,
     ISale,
-    IUser,
     ISoldArticleAggregate,
-    IPersonSaleAggregate
+    IUser
 } from "$lib/data/hfzApi";
-import {createClient, type SupabaseClient} from '@supabase/supabase-js';
+import {type SupabaseClient} from '@supabase/supabase-js';
 import moment from "moment";
 
 export class HfzSupabaseApi implements IHfzApi {
@@ -23,59 +23,6 @@ export class HfzSupabaseApi implements IHfzApi {
     constructor(supabase: SupabaseClient, og: number) {
         this.supabase = supabase;
         this.og = og;
-    }
-
-    async addPersonCredit(personId: IId, amount: number, date: Date): Promise<void> {
-        const supabase = this.supabase;
-        const payload: any = {
-            personId: personId.id,
-            credit: amount,
-            date: date,
-            isBought: amount > 0,
-        };
-        const { error } = await supabase
-            .from('credit_history')
-            .insert(payload);
-        if (error) throw error;
-
-        // update person
-        const person = await this.getPerson(personId);
-        const newCredit = (person.credit ?? 0) + amount;
-        const {_, persError} = await supabase
-            .from('person')
-            .update({credit: newCredit})
-            .eq('og', this.og)
-            .eq('id', personId.id)
-            .select('*')
-            .single();
-
-        if (persError) throw persError;
-    }
-
-    async addPersonCourse(personId: IId, amount: number, date: Date): Promise<void> {
-        const supabase = this.supabase;
-        const payload: any = {
-            personId: personId.id,
-            courses: amount,
-            date: date
-        };
-        const { error } = await supabase
-            .from('course_history')
-            .insert(payload);
-        if (error) throw error;
-        
-        // update person
-        const person = await this.getPerson(personId);
-        const newCourseCount = (person.courseCount ?? 0) + amount;
-        const {_, persError} = await supabase
-            .from('person')
-            .update({courseCount: newCourseCount})
-            .eq('og', this.og)
-            .eq('id', personId.id)
-            .select('*')
-            .single();
-
-        if (persError) throw persError;
     }
 
     static mapSales(data: any): any {
@@ -117,6 +64,59 @@ export class HfzSupabaseApi implements IHfzApi {
             delete data[oldName];
         }
         return data;
+    }
+
+    async addPersonCredit(personId: IId, amount: number, date: Date): Promise<void> {
+        const supabase = this.supabase;
+        const payload: any = {
+            personId: personId.id,
+            credit: amount,
+            date: date,
+            isBought: amount > 0,
+        };
+        const {error} = await supabase
+            .from('credit_history')
+            .insert(payload);
+        if (error) throw error;
+
+        // update person
+        const person = await this.getPerson(personId);
+        const newCredit = (person.credit ?? 0) + amount;
+        const {_, persError} = await supabase
+            .from('person')
+            .update({credit: newCredit})
+            .eq('og', this.og)
+            .eq('id', personId.id)
+            .select('*')
+            .single();
+
+        if (persError) throw persError;
+    }
+
+    async addPersonCourse(personId: IId, amount: number, date: Date): Promise<void> {
+        const supabase = this.supabase;
+        const payload: any = {
+            personId: personId.id,
+            courses: amount,
+            date: date
+        };
+        const {error} = await supabase
+            .from('course_history')
+            .insert(payload);
+        if (error) throw error;
+
+        // update person
+        const person = await this.getPerson(personId);
+        const newCourseCount = (person.courseCount ?? 0) + amount;
+        const {_, persError} = await supabase
+            .from('person')
+            .update({courseCount: newCourseCount})
+            .eq('og', this.og)
+            .eq('id', personId.id)
+            .select('*')
+            .single();
+
+        if (persError) throw persError;
     }
 
     async createPerson(person: Partial<IPerson>): Promise<IPerson> {
@@ -283,7 +283,7 @@ export class HfzSupabaseApi implements IHfzApi {
             ...new Set(saleHistory?.map(x => moment(x.saleDate).format('YYYY-MM-DD'))),
         ];
         const distinctDates = [...new Set(dates)];
-        
+
         return distinctDates.map(date => {
             const matchingCreditHistory = creditHistory.filter(x => moment(x.date).format("YYYY-MM-DD") === date);
             const matchingCourseHistory = courseHistory.filter(x => moment(x.date).format("YYYY-MM-DD") === date);
@@ -292,7 +292,7 @@ export class HfzSupabaseApi implements IHfzApi {
                 date: moment(date).toDate(),
                 creditBought: matchingCreditHistory?.filter(cr => cr.credit > 0).map(cr => cr.credit ?? 0).reduce((a, b) => a + b, 0) ?? 0,
                 creditUsed: matchingCreditHistory?.filter(cr => cr.credit < 0).map(cr => cr.credit ?? 0).reduce((a, b) => a + b, 0) ?? 0,
-                coursesBought: matchingCourseHistory?.filter(cr=> cr.courses > 0).map(cr => cr.courses ?? 0).reduce((a, b) => a + b, 0) ?? 0,
+                coursesBought: matchingCourseHistory?.filter(cr => cr.courses > 0).map(cr => cr.courses ?? 0).reduce((a, b) => a + b, 0) ?? 0,
                 coursesUsed: matchingCourseHistory?.filter(cr => cr.courses < 0).map(cr => cr.courses ?? 0).reduce((a, b) => a + b, 0) ?? 0,
                 saleSum: matchingSaleHistory?.filter(sh => sh.articleSum).map(sh => sh.articleSum ?? 0).reduce((a, b) => a + b, 0) ?? 0,
                 creditHistory: matchingCreditHistory,
@@ -348,15 +348,14 @@ export class HfzSupabaseApi implements IHfzApi {
             toPay: sale.articleSum,
             og: this.og
         };
-        
+
         if (sale.person) {
             const person = await this.getPerson(sale.person);
             salePayload.personId = person.id;
             salePayload.personName = (person.lastName + " " + person.firstName).trim();
-        }
-        else
+        } else
             salePayload.personName = "Barverkauf";
-        
+
         console.log("Saving salePayload", salePayload);
 
         if (!saleId) {
@@ -366,9 +365,9 @@ export class HfzSupabaseApi implements IHfzApi {
             salePayload.toReturn = 0;
             salePayload.usedCredit = 0;
             salePayload.addAdditionalCredit = 0;
-            
+
             const {data, error} = await supabase.from('sale').insert(salePayload).select().single();
-            if (error){
+            if (error) {
                 console.error("Error inserting sale", error);
                 throw error;
             }
@@ -380,7 +379,7 @@ export class HfzSupabaseApi implements IHfzApi {
                 throw error;
             }
         }
-        
+
         const {data: existingArticles, error: fetchError} = await supabase
             .from('sale_article')
             .select('id, articleId')
@@ -390,22 +389,22 @@ export class HfzSupabaseApi implements IHfzApi {
             console.error("Error fetching existing sale articles", fetchError);
             throw fetchError;
         }
-        
+
         const existingMap = new Map<number, number>(); // articleId -> sale_article_id
         existingArticles.forEach((row: any) => existingMap.set(row.articleId, row.id));
-        
+
         const processedIds: number[] = [];
 
         if (sale.saleArticles) {
             for (const sa of sale.saleArticles) {
                 // Handle both object structure and potential flat articleId property
                 const articleId = (sa as any).articleId ?? sa.article?.id;
-                
-                if(!articleId) {
-                     console.warn("Skipping sale article without articleId", sa);
-                     continue;
+
+                if (!articleId) {
+                    console.warn("Skipping sale article without articleId", sa);
+                    continue;
                 }
-                
+
                 const articlePayload = {
                     saleId: saleId,
                     articleId: articleId,
@@ -418,7 +417,10 @@ export class HfzSupabaseApi implements IHfzApi {
                 const existingId = existingMap.get(articleId);
 
                 if (existingId) {
-                    const {data, error} = await supabase.from('sale_article').update(articlePayload).eq('id', existingId).select().single();
+                    const {
+                        data,
+                        error
+                    } = await supabase.from('sale_article').update(articlePayload).eq('id', existingId).select().single();
                     console.log("Updated sale article", error);
                     if (error) throw error;
                     processedIds.push(data.id);
@@ -433,7 +435,7 @@ export class HfzSupabaseApi implements IHfzApi {
 
         const existingIds = existingArticles.map((x: any) => x.id);
         const toDelete = existingIds.filter(id => !processedIds.includes(id));
-        
+
         if (toDelete.length > 0) {
             const {error} = await supabase.from('sale_article').delete().in('id', toDelete);
             if (error) throw error;
@@ -481,9 +483,10 @@ export class HfzSupabaseApi implements IHfzApi {
         if (error) throw error;
         return HfzSupabaseApi.mapSales(data) as ISale;
     }
+
     async getSales(dateFrom: string, dateTo?: string): Promise<Array<ISale>> {
         const supabase = this.supabase;
-        
+
         let query = supabase.from('sale')
             .select('*, person(*), sale_article(*, article(*))')
             .eq("og", this.og);
@@ -509,6 +512,7 @@ export class HfzSupabaseApi implements IHfzApi {
             .single();
         const {data, error} = await query;
         if (error) throw error;
+        if (!data.personId) return [];
         return await this.getTopSoldArticles({id: data.personId}, dateFrom);
     }
 
@@ -523,9 +527,8 @@ export class HfzSupabaseApi implements IHfzApi {
         const fromDate = dateFrom ?? moment().subtract(365, 'days').toDate();
         query = query.gte('sale.saleDate', fromDate.toISOString());
 
-        if (personId) {
+        if (personId)
             query = query.eq('sale.personId', personId.id);
-        }
 
         const {data, error} = await query;
         if (error) throw error;
@@ -573,11 +576,11 @@ export class HfzSupabaseApi implements IHfzApi {
     }
 
     async updateUserTheme(email: string, theme: string): Promise<void> {
-        const { error } = await this.supabase
+        const {error} = await this.supabase
             .from('users')
-            .update({ theme: theme })
+            .update({theme: theme})
             .eq('login', email);
-        
+
         if (error) throw error;
     }
 
@@ -587,23 +590,23 @@ export class HfzSupabaseApi implements IHfzApi {
     }
 
     async getUser(): Promise<IUser> {
-        const { data: { user } } = await this.supabase.auth.getUser();
+        const {data: {user}} = await this.supabase.auth.getUser();
         if (!user) {
             return {
                 theme: "system"
             };
         }
 
-        const { data: userData, error } = await this.supabase
+        const {data: userData, error} = await this.supabase
             .from('users')
             .select('theme, admin, og')
             .eq('login', user.email)
             .maybeSingle();
-        
+
         if (error) {
             console.error("Error fetching user data", error);
         }
-        
+
         return {
             theme: userData?.theme ?? "system",
             email: user.email,

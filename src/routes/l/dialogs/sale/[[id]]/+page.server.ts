@@ -14,6 +14,16 @@ export async function load({cookies, params, url, locals}) {
             articles: api.getArticles()
         };
     }
+    
+    console.log("here", id);
+    
+    const sale = await api.getSale({id: parseInt(id)})
+    console.log("sale", sale);
+    const topSoldArticles = await api.getTopSoldArticlesBySaleId({id: parseInt(id)}) 
+    console.log("topSoldArticles", topSoldArticles);
+    const articles = await api.getArticles();
+    console.log("articles", articles);
+    
     return {
         sale: api.getSale({id: parseInt(id)}),
         topSoldArticles: api.getTopSoldArticlesBySaleId({id: parseInt(id)}),
