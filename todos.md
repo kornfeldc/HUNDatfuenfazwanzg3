@@ -6,10 +6,12 @@
 - [x] Artikel bearbeiten
 - [x] Persistieren
 - [x] Löschen
-- [ ] Barverkauf Sale öffnen und editieren
-- [ ] Barverkauf bezahlen
+- [x] Barverkauf Sale öffnen und editieren
+- [x] Barverkauf bezahlen
 - [ ] Normalen Sale bezahlen
 - [ ] CreditHistory maintainen und auf person durchrechnen
+- [ ] Liste: Anzeige pro Sale ob mit Guthaben bezahlt werden kann
+- [ ] Liste: Alle mit Guthaben abrechnen 
 
 # Artikel
 - [x] Gruppe korrekt anzeigen

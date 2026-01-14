@@ -346,6 +346,12 @@ export class HfzSupabaseApi implements IHfzApi {
         const salePayload: any = {
             articleSum: sale.articleSum,
             toPay: sale.articleSum,
+            given: sale.given ?? 0,
+            inclTip: sale.inclTip  ?? 0,
+            toReturn: sale.toReturn ?? 0,
+            addAdditionalCredit: sale.addAdditionalCredit ?? 0,
+            usedCredit: sale.usedCredit ?? false,
+            payDate: sale.payDate,
             og: this.og
         };
 
@@ -465,7 +471,7 @@ export class HfzSupabaseApi implements IHfzApi {
             // No unpaid sale found, return empty sale with person
             return {
                 id: 0,
-                additionalCredit: 0,
+                addAdditionalCredit: 0,
                 articleSum: 0,
                 extId: '',
                 given: 0,

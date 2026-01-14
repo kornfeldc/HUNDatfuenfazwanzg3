@@ -14,16 +14,7 @@ export async function load({cookies, params, url, locals}) {
             articles: api.getArticles()
         };
     }
-    
-    console.log("here", id);
-    
-    const sale = await api.getSale({id: parseInt(id)})
-    console.log("sale", sale);
-    const topSoldArticles = await api.getTopSoldArticlesBySaleId({id: parseInt(id)}) 
-    console.log("topSoldArticles", topSoldArticles);
-    const articles = await api.getArticles();
-    console.log("articles", articles);
-    
+
     return {
         sale: api.getSale({id: parseInt(id)}),
         topSoldArticles: api.getTopSoldArticlesBySaleId({id: parseInt(id)}),
@@ -42,7 +33,7 @@ export const actions = {
             throw redirect(303, "/l/modules/sales");
         }
 
-        const redirectTo = formData.get('redirectTo')?.toString() ?? "/l/modules/sales";
+        let redirectTo = formData.get('redirectTo')?.toString() ?? "/l/modules/sales";
         formData.delete('redirectTo');
 
         let data = Util.parseFormData(formData, [
@@ -50,8 +41,12 @@ export const actions = {
             {properties: ['saleSum'], method: (val) => parseFloat(val)},
             {properties: ['personId'], method: (val) => parseInt(val)}
         ]);
-        if (id)
+        
+        if (id) {
             data.id = parseInt(id);
+            redirectTo = redirectTo.replace("//", `/${id}/`);
+        }
+        
         console.log("parsed data", data);
 
         try {
@@ -61,7 +56,8 @@ export const actions = {
                 saleArticles: data.saleArticles,
                 person: data.personId ? {id: data.personId} : undefined
             } as any;
-            await api.saveSale(saleToSave);
+            const saleSaved = await api.saveSale(saleToSave);
+            redirectTo = redirectTo.replace("//", `/${saleSaved.id}/`);
         } catch (e: any) {
             return fail(422, {
                 error: e.message

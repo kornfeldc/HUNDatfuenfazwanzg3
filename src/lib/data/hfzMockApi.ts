@@ -99,7 +99,7 @@ for (let idx = 0; idx < 50; idx++) {
     // We'll first create a partial sale to reference from saleArticles, then finalize it
     const partialSale: ISale = {
         id,
-        additionalCredit: 0, // temporary, will set later
+        addAdditionalCredit: 0, // temporary, will set later
         articleSum: 0,       // temporary, will set later
         extId: `S-${3000 + id}`,
         given: 0,            // temporary, will set later
@@ -147,7 +147,7 @@ for (let idx = 0; idx < 50; idx++) {
         payDate = null;
 
     // finalize sale
-    partialSale.additionalCredit = Math.random() < 0.1 ? randomInt(5, 50) : 0;
+    partialSale.addAdditionalCredit = Math.random() < 0.1 ? randomInt(5, 50) : 0;
     partialSale.articleSum = articleSum;
     partialSale.given = given;
     partialSale.inclTip = inclTip;

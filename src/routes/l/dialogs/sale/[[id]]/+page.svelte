@@ -65,7 +65,7 @@
                         </GlassCircleLink>
                     </button>
                     {#if !sale.payDate && sale.saleArticles.length > 0}
-                        <button type="submit" name="redirectTo" value={`/l/dialogs/sale/${id}/pay`}>
+                        <button type="submit" name="redirectTo" value={`/l/dialogs/sale//pay`}>
                             <TextButton className={"bg-primary!"}>Bezahlen</TextButton>
                         </button>
                         {#if sale.person}

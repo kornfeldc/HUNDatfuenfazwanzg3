@@ -62,7 +62,7 @@ export interface IUser  {
 }
 
 export interface ISale extends IId {
-    additionalCredit: number;
+    addAdditionalCredit: number;
     articleSum: number;
     extId: string;
     given: number;

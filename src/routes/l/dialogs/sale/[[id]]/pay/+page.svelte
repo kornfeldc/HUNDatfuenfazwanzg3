@@ -33,7 +33,7 @@
     });
 
     let baseToReturn = $derived(sale.given - sale.inclTip);
-    let toReturn = $derived(baseToReturn - sale.additionalCredit);
+    let toReturn = $derived(baseToReturn - sale.addAdditionalCredit);
     let allowPay = $derived(sale.given >= toPay);
 
     let isCreditPaymentAvailable = $derived(() => sale.person?.credit > 0);
@@ -59,7 +59,7 @@
         if (mode === "initial") {
             sale.inclTip = toPay;
             sale.given = toPay;
-            sale.additionalCredit = 0.0;
+            sale.addAdditionalCredit = 0.0;
 
             // if(app.$route.query && app.$route.query.jc && app.$route.query.jc > 0)
             //     app.sale.addAdditionalCredit = app.sale.given = parseFloat(app.$route.query.jc);
@@ -80,7 +80,7 @@
 
         if (mode === "given" || mode === "inclTip") {
             if (toReturn < 0)
-                sale.additionalCredit = 0;
+                sale.addAdditionalCredit = 0;
         }
     }
 </script>
@@ -105,7 +105,13 @@
 {#await loadData()}
     <Loading></Loading>
 {:then _}
-    <form method="post" action="/l/dialogs/sale/{id}">
+    <form method="post" action={`/l/dialogs/sale/${id ?? ''}/pay`}>
+        <input type="hidden" name="given" value={sale.given} />
+        <input type="hidden" name="inclTip" value={sale.inclTip} />
+        <input type="hidden" name="addAdditionalCredit" value={sale.addAdditionalCredit} />
+        <input type="hidden" name="toPay" value={toPay} />
+        <input type="hidden" name="usedCredit" value={useCredit} />
+
         <Card className="max-w-xl m-auto">
             {#if sale.person}
                 <PersonOverview person={sale.person}></PersonOverview>
@@ -118,7 +124,7 @@
             {#if isCreditPaymentAvailable()}
                 <div class="grid grid-cols-3 gap-y-2 pt-2">
                     <div class="col-span-3 sm:px-12 flex items-center gap-2">
-                        <Checkbox id="chkCredit" name="chk"></Checkbox>
+                        <Checkbox id="chkCredit" name="chk" bind:checked={useCredit}></Checkbox>
                         <Label for="chkCredit">
                             Mit Guthaben zahlen
                         </Label>
@@ -129,7 +135,7 @@
                     {@render label("retour")}
                     {@render label("neues Guth.")}
 
-                    {@render bigAmount("zu bezahlen", sale.toPay, "text-warning")}
+                    {@render bigAmount("zu bezahlen", toPay, "text-warning")}
                     {@render bigAmount("retour", toReturn, "text-destructive")}
                     {@render bigAmount("neues Guth.", 0, "")}
 
@@ -152,7 +158,7 @@
                     {@render label("zu bezahlen")}
                     {@render label("retour")}
 
-                    {@render bigAmount("zu bezahlen", sale.toPay, "text-warning")}
+                    {@render bigAmount("zu bezahlen", toPay, "text-warning")}
                     {@render bigAmount("retour", toReturn, "text-destructive")}
 
                     <div class="col-span-2"></div>
