@@ -12,6 +12,7 @@
     import BackButton from "$lib/components/global/NavigationButtons/BackButton.svelte";
     import {Checkbox} from "$lib/components/shadcn/ui/checkbox";
     import {Label} from "$lib/components/shadcn/ui/label";
+    import EditableAmount from "$lib/components/global/EditableAmount.svelte";
 
     let id = $page.params.id;
     let {data}: { data: any; } = $props();
@@ -99,11 +100,6 @@
 {#snippet label(label)}
     <div class="text-center items-end align-bottom self-end text-sm">{label}</div>
 {/snippet}
-{#snippet bigAmount(label, amount, className)}
-    <div>
-        <div class={Util.mapClass(`text-center text-3xl ${className}`, !amount, "text-muted-foreground/50")}>{Util.formatCurrency(amount, false)}</div>
-    </div>
-{/snippet}
 {#snippet plusMinus(prop)}
     <div class="flex gap-2 justify-center items-center">
         <button onclick={(event) => addOrRemove(event, prop, -0.5)}>
@@ -160,9 +156,9 @@
                     {@render label("retour")}
                     {@render label("neues Guth.")}
 
-                    {@render bigAmount("zu bezahlen", toPay, useCredit ? "text-ok" : "text-warning")}
-                    {@render bigAmount("retour", toReturn, "text-destructive")}
-                    {@render bigAmount("neues Guth.", newCredit, newCredit < personCredit ? "" : "text-primary")}
+                    <EditableAmount value={toPay} className={useCredit ? "text-ok" : "text-warning"} readonly={true} />
+                    <EditableAmount value={toReturn} className="text-destructive" readonly={true} />
+                    <EditableAmount value={newCredit} className={newCredit < personCredit ? "" : "text-primary"} readonly={true} />
 
                     <div class="col-span-3"></div>
 
@@ -170,9 +166,9 @@
                     {@render label("gegeben")}
                     {@render label("Guth. aufladen")}
 
-                    {@render bigAmount("inkl. Tringgeld", sale.inclTip, "")}
-                    {@render bigAmount("gegeben", sale.given, "")}
-                    {@render bigAmount("Guth. aufladen", sale.addAdditionalCredit, "")}
+                    <EditableAmount bind:value={sale.inclTip} className="" onCommit={() => recalculate("inclTip")} />
+                    <EditableAmount bind:value={sale.given} className="" onCommit={() => recalculate("given")} />
+                    <EditableAmount bind:value={sale.addAdditionalCredit} className="" />
 
                     {@render plusMinus("inclTip")}
                     {@render plusMinus("given")}
@@ -185,16 +181,16 @@
                     {@render label("zu bezahlen")}
                     {@render label("retour")}
 
-                    {@render bigAmount("zu bezahlen", toPay, "text-warning")}
-                    {@render bigAmount("retour", toReturn, "text-destructive")}
+                    <EditableAmount value={toPay} className="text-warning" readonly={true} />
+                    <EditableAmount value={toReturn} className="text-destructive" readonly={true} />
 
                     <div class="col-span-2"></div>
 
                     {@render label("ink. Trinkgeld")}
                     {@render label("gegeben")}
 
-                    {@render bigAmount("inkl. Tringgeld", sale.inclTip, "")}
-                    {@render bigAmount("gegeben", sale.given, "")}
+                    <EditableAmount bind:value={sale.inclTip} className="" onCommit={() => recalculate("inclTip")} />
+                    <EditableAmount bind:value={sale.given} className="" onCommit={() => recalculate("given")} />
 
                     {@render plusMinus("inclTip")}
                     {@render plusMinus("given")}
