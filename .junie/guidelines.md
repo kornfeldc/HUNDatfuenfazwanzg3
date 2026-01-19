@@ -22,6 +22,7 @@ It manages:
 - **Styling**: Tailwind CSS
 - **Database/Auth**: Supabase
 - **Icons**: Lucide Svelte
+- **UI Library**: Shadcn
 
 ## Project Structure
 - `src/routes/l`: "Logged-in" area (protected routes).
