@@ -12,6 +12,7 @@
     import SaleArticles from "$lib/components/sales/SaleArticles.svelte";
     import {uiState} from "$lib/stores/uiState.svelte";
     import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
+    import PaidSaleInfo from "$lib/components/sales/PaidSaleInfo.svelte";
 
     let id = $page.params.id;
 
@@ -52,6 +53,10 @@
             <SaleArticles {sale} {articles} {topSoldArticles} {toggleSearch}
                           showTopLine={!isSearchVisible || !uiState.isMobileDevice}></SaleArticles>
         </Card>
+
+        {#if sale.payDate}
+            <PaidSaleInfo {sale}></PaidSaleInfo>
+        {/if}
 
         {#if !isSearchVisible}
             <PlaceAtBottom>

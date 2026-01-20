@@ -10,8 +10,13 @@
     }
 
     let {historyEntry, type}: IProps = $props();
+
+    let href = $derived.by(() => {
+        if (historyEntry?.saleHistory?.length === 0) return "javascript:void(0);";
+        return `/l/dialogs/sale/${historyEntry.saleHistory?.[0]?.id}`;
+    });
 </script>
-<Card>
+<Card {href}>
     <div class="flex align-middle">
         <div class="font-bold text-lg">
             {moment(historyEntry.date).format("ddd, DD.MM.YYYY")}

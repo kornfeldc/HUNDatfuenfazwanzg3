@@ -13,6 +13,7 @@
     import {Checkbox} from "$lib/components/shadcn/ui/checkbox";
     import {Label} from "$lib/components/shadcn/ui/label";
     import EditableAmount from "$lib/components/global/EditableAmount.svelte";
+    import {untrack} from "svelte";
 
     let id = $page.params.id;
     let {data}: { data: any; } = $props();
@@ -96,6 +97,13 @@
                 sale.addAdditionalCredit = 0;
         }
     }
+    
+    $effect(()=> {
+        useCredit;
+        untrack(()=> {
+            sale.addAdditionalCredit = 0;
+        });
+    });
 </script>
 {#snippet label(label)}
     <div class="text-center items-end align-bottom self-end text-sm">{label}</div>
@@ -143,7 +151,7 @@
             {#if isCreditPaymentAvailable()}
                 <div class="grid grid-cols-3 gap-y-2 pt-2">
                     {@render articles()}
-                    
+
                     <div class="col-span-3 sm:px-12 flex items-center gap-2 pl-1">
                         <Checkbox id="chkCredit" name="chk" bind:checked={useCredit}></Checkbox>
                         <Label for="chkCredit">
@@ -156,9 +164,10 @@
                     {@render label("retour")}
                     {@render label("neues Guth.")}
 
-                    <EditableAmount value={toPay} className={useCredit ? "text-ok" : "text-warning"} readonly={true} />
-                    <EditableAmount value={toReturn} className="text-destructive" readonly={true} />
-                    <EditableAmount value={newCredit} className={newCredit < personCredit ? "" : "text-primary"} readonly={true} />
+                    <EditableAmount value={toPay} className={useCredit ? "text-ok" : "text-warning"} readonly={true}/>
+                    <EditableAmount value={toReturn} className="text-destructive" readonly={true}/>
+                    <EditableAmount value={newCredit} className={newCredit < personCredit ? "" : "text-primary"}
+                                    readonly={true}/>
 
                     <div class="col-span-3"></div>
 
@@ -166,9 +175,9 @@
                     {@render label("gegeben")}
                     {@render label("Guth. aufladen")}
 
-                    <EditableAmount bind:value={sale.inclTip} className="" onCommit={() => recalculate("inclTip")} />
-                    <EditableAmount bind:value={sale.given} className="" onCommit={() => recalculate("given")} />
-                    <EditableAmount bind:value={sale.addAdditionalCredit} className="" />
+                    <EditableAmount bind:value={sale.inclTip} className="" onCommit={() => recalculate("inclTip")}/>
+                    <EditableAmount bind:value={sale.given} className="" onCommit={() => recalculate("given")}/>
+                    <EditableAmount bind:value={sale.addAdditionalCredit} className=""/>
 
                     {@render plusMinus("inclTip")}
                     {@render plusMinus("given")}
@@ -177,20 +186,20 @@
             {:else}
                 <div class="grid grid-cols-2 gap-y-2 pt-2">
                     {@render articles()}
-                    
+
                     {@render label("zu bezahlen")}
                     {@render label("retour")}
 
-                    <EditableAmount value={toPay} className="text-warning" readonly={true} />
-                    <EditableAmount value={toReturn} className="text-destructive" readonly={true} />
+                    <EditableAmount value={toPay} className="text-warning" readonly={true}/>
+                    <EditableAmount value={toReturn} className="text-destructive" readonly={true}/>
 
                     <div class="col-span-2"></div>
 
-                    {@render label("ink. Trinkgeld")}
+                    {@render label("inkl. Trinkgeld")}
                     {@render label("gegeben")}
 
-                    <EditableAmount bind:value={sale.inclTip} className="" onCommit={() => recalculate("inclTip")} />
-                    <EditableAmount bind:value={sale.given} className="" onCommit={() => recalculate("given")} />
+                    <EditableAmount bind:value={sale.inclTip} className="" onCommit={() => recalculate("inclTip")}/>
+                    <EditableAmount bind:value={sale.given} className="" onCommit={() => recalculate("given")}/>
 
                     {@render plusMinus("inclTip")}
                     {@render plusMinus("given")}
@@ -203,9 +212,16 @@
         </PlaceAtBottom>
         <NavigationActions>
             <div slot="actions">
-                <button type="submit" name="redirectTo" value="/l/modules/sales">
-                    <TextButton color="ok">Fertig</TextButton>
-                </button>
+                {#if toReturn > 0}
+                    <button onclick={()=> sale.addAdditionalCredit = toReturn}>
+                        <TextButton className="whitespace-nowrap w-auto">Retour als Guthaben</TextButton>
+                    </button>
+                {/if}
+                {#if toReturn >= 0}
+                    <button type="submit" name="redirectTo" value="/l/modules/sales">
+                        <TextButton color="ok">Fertig</TextButton>
+                    </button>
+                {/if}
             </div>
         </NavigationActions>
     </form>
