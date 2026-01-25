@@ -7,12 +7,13 @@
         persons: Array<IPerson>;
         href?: string;
         group?: "active" | "today" | "inactive";
+        onSubmitting?: (val: boolean) => void;
     }
 
-    let {persons, href = "", group = "active"}: IProps = $props();
+    let {persons, href = "", group = "active", onSubmitting}: IProps = $props();
 </script>
 <Grid>
     {#each persons as person}
-        <CourseGridEntry {person} {href} {group}/>
+        <CourseGridEntry {person} {href} {group} {onSubmitting}/>
     {/each}
 </Grid>

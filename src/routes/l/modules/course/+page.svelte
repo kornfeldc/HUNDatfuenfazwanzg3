@@ -13,6 +13,7 @@
 
     let {data}: { data: { persons: Promise<Array<IPersonWithHistory>> } } = $props();
     let searchString = $state("");
+    let submitting = $state(false);
 
     const onSearch = (value: string) => {
         searchString = value;
@@ -88,7 +89,7 @@
                         {grouped.active365.length} Personen &middot; {Util.formatCurrency(grouped.active365.reduce((acc, p) => acc + (p.courseCount || 0), 0), false, 0)} Einheiten
                     </p>
                 </div>
-                <CourseGrid persons={grouped.active365} group="active"/>
+                <CourseGrid persons={grouped.active365} group="active" onSubmitting={(val) => submitting = val}/>
             </section>
         {/if}
 
@@ -100,7 +101,7 @@
                         {grouped.tookCourseToday.length} Personen &middot; {Util.formatCurrency(grouped.tookCourseToday.reduce((acc, p) => acc + (p.courseCount || 0), 0), false, 0)} Einheiten
                     </p>
                 </div>
-                <CourseGrid persons={grouped.tookCourseToday} group="today"/>
+                <CourseGrid persons={grouped.tookCourseToday} group="today" onSubmitting={(val) => submitting = val}/>
             </section>
         {/if}
 
@@ -112,7 +113,7 @@
                         {grouped.inactive.length} Personen &middot; {Util.formatCurrency(grouped.inactive.reduce((acc, p) => acc + (p.courseCount || 0), 0), false, 0)} Einheiten
                     </p>
                 </div>
-                <CourseGrid persons={grouped.inactive} group="inactive"/>
+                <CourseGrid persons={grouped.inactive} group="inactive" onSubmitting={(val) => submitting = val}/>
             </section>
         {/if}
 
@@ -123,6 +124,10 @@
         {/if}
     </div>
 {/await}
+
+{#if submitting}
+    <Loading />
+{/if}
 
 <NavigationActions>
     <SearchButton {onSearch} slot="persistent"></SearchButton>
