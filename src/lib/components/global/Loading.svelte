@@ -1,11 +1,22 @@
 <script lang="ts">
   import { Dog } from "@lucide/svelte";
+  import { fade, scale } from "svelte/transition";
   // Accessible label for screen readers only
   export let ariaLabel: string = "Loading";
 </script>
 
-<div class="absolute inset-0 z-50 bg-background/20 backdrop-blur-sm flex w-full h-full items-center justify-center">
-  <div role="status" aria-live="polite" aria-label={ariaLabel} class="flex items-center justify-center">
+<div
+  transition:fade={{ duration: 250 }}
+  class="absolute inset-0 z-50 bg-background/20 backdrop-blur-sm flex w-full h-full items-center justify-center"
+>
+  <div
+    in:scale={{ duration: 300, start: 0.9, delay: 50 }}
+    out:scale={{ duration: 200, start: 0.9 }}
+    role="status"
+    aria-live="polite"
+    aria-label={ariaLabel}
+    class="flex items-center justify-center"
+  >
     <div class="icon-wrap" aria-hidden="true">
       <Dog class="dog-icon text-primary/80" size={96} />
     </div>
