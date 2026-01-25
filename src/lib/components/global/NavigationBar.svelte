@@ -3,12 +3,13 @@
     import GlassBar from "./GlassBar.svelte";
     import GlassBarLink from "./GlassBarLink.svelte";
     import PlaceAtBottom from "./PlaceAtBottom.svelte";
-    import {Euro, User, CalendarClock, ShoppingBag} from "@lucide/svelte";
+    import {Euro, User, CalendarClock, ShoppingBag, PawPrint} from "@lucide/svelte";
     
     import {uiState} from "$lib/stores/uiState.svelte";
 
     let modules = $state([
         { name: "Verkauf", href: "/l/modules/sales" },
+        { name: "Kurs", href: "/l/modules/course" },
         { name: "Personen", href: "/l/modules/persons" },
         { name: "Artikel", href: "/l/modules/articles" },
         { name: "ROB", href: "/l/modules/rob" },
@@ -26,6 +27,8 @@
 {#snippet renderIcon(href)}
     {#if href.toLowerCase().endsWith('sales')}
         <Euro />
+    {:else if href.toLowerCase().endsWith('course') }
+        <PawPrint />
     {:else if href.toLowerCase().endsWith('persons') }
         <User />
     {:else if href.toLowerCase().endsWith('articles') }

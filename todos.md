@@ -31,6 +31,9 @@
 - [x] Info Feld
 - [ ] Funktionalität zusammenhängende Personen bezgl. Verkauf kontrollieren
 
+# Kurs
+- [ ] Neuer Tab "Kurs" unter "Personen" - gruppierte anzeige aktiver Kursler (mind. 1 Aufladung im letzten Jahr)
+
 # Rob
 - [ ] Komplette Implementierung
 
