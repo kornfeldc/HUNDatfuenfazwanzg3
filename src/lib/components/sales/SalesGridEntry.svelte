@@ -3,12 +3,15 @@
     import {Util} from "$lib/util";
     import Card from "$lib/components/global/Card.svelte";
     import moment from "moment";
+    import {BadgeCheck} from "@lucide/svelte";
 
     interface IProps {
         sale: ISale;
     }
 
     let {sale}: IProps = $props();
+    
+    let canPayWithCredit = $derived(sale.person?.credit > sale.articleSum);
 </script>
 
 <a href="/l/dialogs/sale/{sale.id}">
@@ -20,7 +23,12 @@
                     <div class="text-muted-foreground font-normal text-xs ml-2">({sale.person?.dogNames})</div>
                 {/if}
             </div>
-            <div class={(sale.payDate ? "text_ok" : "text-warning")+ " text-right"}>{Util.formatCurrency(sale.articleSum)}</div>
+            <div class={(sale.payDate ? "text-ok" : "text-warning")+ " text-right flex justify-center items-center gap-2"}>
+                {#if canPayWithCredit}
+                    <BadgeCheck class="inline-block text-ok h-8"/>                    
+                {/if}
+                {Util.formatCurrency(sale.articleSum)}
+            </div>
 
             {#if !moment(sale.saleDate).isSame(moment(), 'day')}
                 <div class="col-span-3">{Util.formatDate(sale.saleDate)}</div>

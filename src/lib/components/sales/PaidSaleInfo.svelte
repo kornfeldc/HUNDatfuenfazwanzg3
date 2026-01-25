@@ -12,7 +12,7 @@
     
     let usedCreditAmount = $derived.by(()=> {
         if(!sale.usedCredit) return 0; 
-        return sale.articleSum - sale.inclTip;
+        return sale.articleSum - sale.toPay;
     });
     
     let creditChange = $derived.by(() => {

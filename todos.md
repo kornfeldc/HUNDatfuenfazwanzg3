@@ -8,8 +8,8 @@
 - [x] Löschen
 - [x] Barverkauf Sale öffnen und editieren
 - [x] Barverkauf bezahlen
-- [ ] Normalen Sale bezahlen
-- [ ] CreditHistory maintainen und auf person durchrechnen
+- [x] Normalen Sale bezahlen
+- [x] CreditHistory maintainen und auf person durchrechnen
 - [ ] Liste: Anzeige pro Sale ob mit Guthaben bezahlt werden kann
 - [ ] Liste: Alle mit Guthaben abrechnen 
 
@@ -28,6 +28,7 @@
 - [x] Kurs aufbuchen
 - [x] Kurs abbuchen (auch ins Minus soll möglich sein)
 - [x] Info Feld
+- [ ] Funktionalität zusammenhängende Personen bezgl. Verkauf kontrollieren
 
 # Rob
 - [ ] Komplette Implementierung

@@ -20,27 +20,29 @@ export const actions = {
         const redirectTo = formData.get('redirectTo')?.toString() ?? "/l/modules/sales";
 
         let data = Util.parseFormData(formData, [
-            {properties: ['given', 'inclTip', 'addAdditionalCredit', 'toPay'], method: (val) => parseFloat(val)},
+            {properties: ['given', 'inclTip', 'addAdditionalCredit', 'toPay', 'toReturn', 'oldCredit', 'newCredit', 'personId'], method: (val) => parseFloat(val)},
             {properties: ['usedCredit'], method: (val) => val === 'true'}
         ]);
 
         if(id)
             data.id = parseInt(id);
 
-        console.log("parsed payment data", data);
-
         try {
             const saleToUpdate = {
                 id: data.id,
+                toPay: data.toPay,
                 given: data.given,
                 inclTip: data.inclTip,
+                toReturn: data.toReturn,
+                oldCredit: data.oldCredit,
+                newCredit: data.newCredit,
                 addAdditionalCredit: data.addAdditionalCredit,
                 usedCredit: data.usedCredit,
-                toPay: data.toPay,
+                personId: data.personId,
                 payDate: new Date()
             } as any;
 
-            await api.saveSale(saleToUpdate);
+            await api.paySale(saleToUpdate);
         } catch (e: any) {
             console.error("Error saving sale payment:", e);
             return fail(422, {

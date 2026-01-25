@@ -66,7 +66,7 @@ export class HfzSupabaseApi implements IHfzApi {
         return data;
     }
 
-    async addPersonCredit(personId: IId, amount: number, date: Date): Promise<void> {
+    async addPersonCredit(personId: IId, amount: number, date: Date, saleId?: IId): Promise<void> {
         const supabase = this.supabase;
         const payload: any = {
             personId: personId.id,
@@ -74,6 +74,12 @@ export class HfzSupabaseApi implements IHfzApi {
             date: date,
             isBought: amount > 0,
         };
+
+        if (saleId)
+            payload.saleId = saleId.id;
+
+        console.log("Adding credit history entry", payload);
+
         const {error} = await supabase
             .from('credit_history')
             .insert(payload);
@@ -347,11 +353,8 @@ export class HfzSupabaseApi implements IHfzApi {
             articleSum: sale.articleSum,
             toPay: sale.articleSum,
             given: sale.given ?? 0,
-            inclTip: sale.inclTip  ?? 0,
+            inclTip: sale.inclTip ?? 0,
             toReturn: sale.toReturn ?? 0,
-            addAdditionalCredit: sale.addAdditionalCredit ?? 0,
-            usedCredit: sale.usedCredit ?? false,
-            payDate: sale.payDate,
             og: this.og
         };
 
@@ -359,17 +362,18 @@ export class HfzSupabaseApi implements IHfzApi {
             const person = await this.getPerson(sale.person);
             salePayload.personId = person.id;
             salePayload.personName = (person.lastName + " " + person.firstName).trim();
-        } else
+        } else if (!sale.personName)
             salePayload.personName = "Barverkauf";
 
         console.log("Saving salePayload", salePayload);
 
         if (!saleId) {
             salePayload.saleDate = new Date();
+            // set mandatory values for inserting
             salePayload.given = 0;
             salePayload.inclTip = 0;
             salePayload.toReturn = 0;
-            salePayload.usedCredit = 0;
+            salePayload.usedCredit = false; 
             salePayload.addAdditionalCredit = 0;
 
             const {data, error} = await supabase.from('sale').insert(salePayload).select().single();
@@ -450,10 +454,66 @@ export class HfzSupabaseApi implements IHfzApi {
         return this.getSale({id: saleId});
     }
 
+    async paySale(sale: ISale): Promise<ISale> {
+        const supabase = this.supabase;
+        let saleId = sale.id;
+        const salePayload: any = {
+            personId: (sale as any).personId,
+            toPay: sale.toPay,
+            given: sale.given ?? 0,
+            inclTip: sale.inclTip ?? 0,
+            toReturn: sale.toReturn ?? 0,
+            addAdditionalCredit: sale.addAdditionalCredit ?? 0,
+            usedCredit: sale.usedCredit ?? false,
+            payDate: sale.payDate
+        };
+
+        console.log("Saving salePayload", salePayload);
+        const {error} = await supabase.from('sale').update(salePayload).eq('id', saleId);
+        if (error) {
+            console.error("Error updating sale", error);
+            throw error;
+        }
+
+        const creditChange = ((sale as any).newCredit ?? 0) - ((sale as any).oldCredit ?? 0);
+        console.log("Credit change for sale", saleId, ":", creditChange);
+
+        if (salePayload.personId && creditChange != null && sale.payDate) {
+            console.log("call addPErsonCredit")
+            await this.addPersonCredit({id: salePayload.personId}, creditChange, sale.payDate, {id: saleId});
+        }
+        return this.getSale({id: saleId});
+    }
+
     async deleteSale(id: IId): Promise<void> {
-        await this.supabase.from('sale_article').delete().eq('saleId', id.id);
-        await this.supabase.from('credit_history').delete().eq('saleId', id.id);
-        const {error} = await this.supabase.from('sale').delete().eq('id', id.id);
+        const supabase = this.supabase;
+
+        // Get credit history entries to undo credit changes on persons
+        const {data: creditHistory, error: creditError} = await supabase
+            .from('credit_history')
+            .select('personId, credit')
+            .eq('saleId', id.id);
+
+        if (creditError) throw creditError;
+
+        if (creditHistory) {
+            for (const historyEntry of creditHistory) {
+                if (historyEntry.personId && historyEntry.credit) {
+                    const person = await this.getPerson({id: historyEntry.personId});
+                    const newCredit = (person.credit ?? 0) - historyEntry.credit;
+                    const {error: personError} = await supabase
+                        .from('person')
+                        .update({credit: newCredit})
+                        .eq('id', historyEntry.personId)
+                        .eq('og', this.og);
+                    if (personError) throw personError;
+                }
+            }
+        }
+
+        await supabase.from('sale_article').delete().eq('saleId', id.id);
+        await supabase.from('credit_history').delete().eq('saleId', id.id);
+        const {error} = await supabase.from('sale').delete().eq('id', id.id);
         if (error) throw new Error(error.message);
     }
 

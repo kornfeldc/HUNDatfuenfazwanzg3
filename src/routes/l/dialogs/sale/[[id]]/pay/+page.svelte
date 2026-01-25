@@ -36,7 +36,7 @@
 
     let baseToReturn = $derived(sale.given - sale.inclTip);
     let toReturn = $derived(baseToReturn - sale.addAdditionalCredit);
-    let allowPay = $derived(sale.given >= toPay);
+    let oldCredit = $derived(Math.round((sale.person?.credit ?? 0) * 100) / 100);
     let newCredit = $derived.by(() => {
         if (!sale.person)
             return 0;
@@ -48,6 +48,7 @@
         return Math.round(ret * 10) / 10;
     });
 
+    let isCreditManagementAvailable = $derived(() => !!sale.person);
     let isCreditPaymentAvailable = $derived(() => sale.person?.credit > 0);
 
     const loadData = async () => {
@@ -62,8 +63,8 @@
         event.stopPropagation();
 
         (sale as any)[prop] += amount;
+        (sale as any)[prop] = Math.round((sale as any)[prop] * 2) / 2;
 
-        console.log("prop", prop);
         if (prop === "given" || prop === "inclTip")
             recalculate(prop);
         return false;
@@ -97,11 +98,15 @@
                 sale.addAdditionalCredit = 0;
         }
     }
-    
-    $effect(()=> {
+
+    $effect(() => {
         useCredit;
-        untrack(()=> {
+        untrack(() => {
             sale.addAdditionalCredit = 0;
+            sale.inclTip = sale.articleSum;
+            sale.given = sale.articleSum;
+            sale.addAdditionalCredit = 0;
+            recalculate("initial");
         });
     });
 </script>
@@ -118,15 +123,15 @@
         </button>
     </div>
 {/snippet}
-{#snippet articles()}
-    <div class="col-span-3 w-full flex">
+{#snippet articles(colspan = 3)}
+    <div class={"col-span-"+colspan + " w-full flex"}>
         <div class="flex-grow text-muted-foreground">
             {sale.saleArticles.map(sa => `${sa.amount}x ${sa.articleTitle}`).join(", ")}
         </div>
         <div class="font-bold text-xl text-foreground whitespace-nowrap">{Util.formatCurrency(sale.articleSum, true)}</div>
     </div>
 
-    <div class="col-span-3 border-b-[1px] border-b-muted pt-1 mb-1 "></div>
+    <div class={"col-span-"+colspan+" border-b-[1px] border-b-muted pt-1 mb-1 "}></div>
 {/snippet}
 {#await loadData()}
     <Loading></Loading>
@@ -134,9 +139,13 @@
     <form method="post" action={`/l/dialogs/sale/${id ?? ''}/pay`}>
         <input type="hidden" name="given" value={sale.given}/>
         <input type="hidden" name="inclTip" value={sale.inclTip}/>
+        <input type="hidden" name="toReturn" value={toReturn}/>
         <input type="hidden" name="addAdditionalCredit" value={sale.addAdditionalCredit}/>
         <input type="hidden" name="toPay" value={toPay}/>
         <input type="hidden" name="usedCredit" value={useCredit}/>
+        <input type="hidden" name="oldCredit" value={oldCredit}/>
+        <input type="hidden" name="newCredit" value={newCredit}/>
+        <input type="hidden" name="personId" value={sale.person?.id ?? ''}/>
 
         <Card className="max-w-xl m-auto">
             {#if sale.person}
@@ -148,17 +157,19 @@
 
 
         <Card className="max-w-xl m-auto">
-            {#if isCreditPaymentAvailable()}
+            {#if isCreditManagementAvailable()}
                 <div class="grid grid-cols-3 gap-y-2 pt-2">
                     {@render articles()}
 
-                    <div class="col-span-3 sm:px-12 flex items-center gap-2 pl-1">
-                        <Checkbox id="chkCredit" name="chk" bind:checked={useCredit}></Checkbox>
-                        <Label for="chkCredit">
-                            Mit Guthaben zahlen
-                        </Label>
-                    </div>
-                    <div class="col-span-3 border-b-[1px] border-b-muted pt-1 mb-1 "></div>
+                    {#if isCreditPaymentAvailable()}
+                        <div class="col-span-3 sm:px-12 flex items-center gap-2 pl-1">
+                            <Checkbox id="chkCredit" name="chk" bind:checked={useCredit}></Checkbox>
+                            <Label for="chkCredit">
+                                Mit Guthaben zahlen
+                            </Label>
+                        </div>
+                        <div class="col-span-3 border-b-[1px] border-b-muted pt-1 mb-1 "></div>
+                    {/if}
 
                     {@render label("zu bezahlen")}
                     {@render label("retour")}
@@ -185,7 +196,7 @@
                 </div>
             {:else}
                 <div class="grid grid-cols-2 gap-y-2 pt-2">
-                    {@render articles()}
+                    {@render articles(2)}
 
                     {@render label("zu bezahlen")}
                     {@render label("retour")}
@@ -212,7 +223,7 @@
         </PlaceAtBottom>
         <NavigationActions>
             <div slot="actions">
-                {#if toReturn > 0}
+                {#if toReturn > 0 && sale.person}
                     <button onclick={()=> sale.addAdditionalCredit = toReturn}>
                         <TextButton className="whitespace-nowrap w-auto">Retour als Guthaben</TextButton>
                     </button>

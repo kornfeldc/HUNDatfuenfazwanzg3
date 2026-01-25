@@ -21,12 +21,13 @@ export interface IHfzApi {
     createPerson(person: Partial<IPerson>): Promise<IPerson>;
     updatePerson(person: IPerson): Promise<IPerson>;
     
-    addPersonCredit(personId: IId, amount:number, date: Date): Promise<void>;
+    addPersonCredit(personId: IId, amount:number, date: Date, saleId?: IId): Promise<void>;
     addPersonCourse(personId: IId, amount:number, date: Date): Promise<void>;
 
     getSales(dateFrom: string, dateTo?: string): Promise<Array<ISale>>;
     getSale(id: IId): Promise<ISale>;
     saveSale(sale: ISale): Promise<ISale>;
+    paySale(sale: ISale): Promise<ISale>;
     deleteSale(id: IId): Promise<void>;
     getNewSaleForPerson(personId?: IId): Promise<ISale>;
     
