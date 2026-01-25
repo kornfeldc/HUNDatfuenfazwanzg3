@@ -45,7 +45,7 @@
 }
 
 .dark {
-  --background: #111117;
+  --background: #17171c;
   --foreground: oklch(0.984 0.003 247.858);
   --card: oklch(0.208 0.042 265.755);
   --card-foreground: oklch(0.984 0.003 247.858);
@@ -57,8 +57,6 @@
   --secondary-foreground: oklch(0.984 0.003 247.858);
   --muted: oklch(0.279 0.041 260.031);
   --muted-foreground: oklch(0.723 0.021 260.165);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
   --warning: #fedc00;
   --warning-foreground: #000000;
   --destructive: #FD2055;
