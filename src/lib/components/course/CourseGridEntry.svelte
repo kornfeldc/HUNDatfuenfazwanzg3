@@ -24,7 +24,7 @@
 
 </script>
 <div onclick={() => goto(linkTo)} class="cursor-pointer">
-    <Card className={"" + ( group == "inactive" ? "text-muted-foreground" : group === "today" ? "bg-primary/20" : "" )}>
+    <Card className={"" + ( group == "inactive" ? "text-muted-foreground" : group === "today" ? "bg-primary/20" : "" ) + " " + (person.courseCount === 0 ? "border-2 border-destructive/50" : "")}>
         <div class="flex items-center gap-2">
             <div class="flex flex-col grow pt-2 ">
                 <div class="flex items-center gap-2 font-bold text-lg w-full">
@@ -40,12 +40,10 @@
                         <Bone size="16"></Bone>&nbsp;{person.dogNames}
                     </div>
                 {/if}
-                {#if person.courseCount}
-                    <div class="whitespace-nowrap">
-                        Einheit(en) frei:
-                        <span class="text-primary text-lg">{Util.formatCurrency(person.courseCount, false, 0)}</span>
-                    </div>
-                {/if}
+                <div class="whitespace-nowrap">
+                    Einheit(en) frei:
+                    <span class={"text-primary text-lg "+(person.courseCount === 0 ? "text-destructive!" : "")}>{Util.formatCurrency(person.courseCount, false, 0)}</span>
+                </div>
             </div>
             <div onclick={(e) => e.stopPropagation()}>
                 {#if person.courseCount > 0}

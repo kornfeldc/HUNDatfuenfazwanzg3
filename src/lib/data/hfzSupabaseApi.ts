@@ -257,8 +257,7 @@ export class HfzSupabaseApi implements IHfzApi {
         const {data, error} = await supabase
             .from('person')
             .select('*, course_history!inner(*)')
-            .eq("og", this.og)
-            .gt('courseCount', 0);
+            .eq("og", this.og);
 
         if (error) throw error;
 

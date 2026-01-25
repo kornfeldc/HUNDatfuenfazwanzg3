@@ -43,13 +43,13 @@
         for (const p of filtered) {
             // "took a course today" means they got removed at least one course today
             const hasActivityToday = p.courseHistory?.some(h => moment(h.date).isSame(today, 'day') && h.courses < 0);
-            const hasActivity365 = p.courseHistory?.some(h => moment(h.date).isSameOrAfter(activityThreshold, 'day'));
+            const hasActivity365 = p.courseHistory?.some(h => moment(h.date).isSameOrAfter(activityThreshold, 'day') && h.courses > 0);
 
             if (hasActivityToday) {
                 tookCourseToday.push(p);
             } else if (hasActivity365) {
                 active365.push(p);
-            } else {
+            } else if (p.courseCount > 0) {
                 inactive.push(p);
             }
         }
