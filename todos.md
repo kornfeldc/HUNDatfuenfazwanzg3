@@ -41,7 +41,7 @@
 - [x] Authentifizierung
 - [x] Suchzeile Autofokus und Blur bei Enter
 - [x] Zurück-Button "intelligenter"
-- [ ] Dark Mode
+- [x] Dark Mode
 - [x] Scrollen nach ganz unten
 - [x] Suchzeile am Handy zoomt bei fokus
 - [x] Englische Strings von moment obwohl de locale verwendet wird
