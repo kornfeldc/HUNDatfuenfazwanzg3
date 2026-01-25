@@ -16,26 +16,32 @@
 <style>
   .icon-wrap {
     display: inline-flex;
-    /* slow, subtle rotation */
-    animation: rotate 6s linear infinite;
   }
 
-  .dog-icon {
-    /* gentle breathing/pulse */
-    animation: pulse 1.8s ease-in-out infinite;
-    filter: drop-shadow(0 4px 14px color-mix(in oklab, var(--primary) 40%, transparent));
+  :global(.dog-icon) {
+    /* cycling colors with a nice effect */
+    animation: color-cycle 3s ease-in-out infinite;
+    color: var(--primary);
+    filter: drop-shadow(0 4px 14px color-mix(in oklab, var(--primary) 20%, transparent));
   }
 
-  @keyframes rotate {
-    to { transform: rotate(360deg); }
-  }
-
-  @keyframes pulse {
-    0%, 100% { transform: scale(0.96); opacity: 0.9; }
-    50% { transform: scale(1.04); opacity: 1; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .icon-wrap, .dog-icon { animation: none; }
+  @keyframes color-cycle {
+    0%,
+    100% {
+      color: var(--primary);
+      stroke: var(--primary);
+    }
+    25% {
+      color: #3b82f6;
+      stroke: #3b82f6;
+    } /* blue-500 */
+    50% {
+      color: #10b981;
+      stroke: #10b981;
+    } /* emerald-500 */
+    75% {
+      color: #f59e0b;
+      stroke: #f59e0b;
+    } /* amber-500 */
   }
 </style>
