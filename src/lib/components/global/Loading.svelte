@@ -23,7 +23,7 @@
   .dog-icon {
     /* gentle breathing/pulse */
     animation: pulse 1.8s ease-in-out infinite;
-    filter: drop-shadow(0 4px 14px color-mix(in oklab, hsl(var(--primary)) 40%, transparent));
+    filter: drop-shadow(0 4px 14px color-mix(in oklab, var(--primary) 40%, transparent));
   }
 
   @keyframes rotate {
