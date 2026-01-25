@@ -1,7 +1,7 @@
 <script lang="ts">
     import {page} from '$app/stores';
     import type {IArticle, ISale, ISoldArticleAggregate} from "$lib/data/hfzApi";
-    import { Trash } from '@lucide/svelte';
+    import {BadgeCheck, Check, Euro, Trash} from '@lucide/svelte';
     import Loading from "$lib/components/global/Loading.svelte";
     import Card from "$lib/components/global/Card.svelte";
     import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
@@ -34,14 +34,17 @@
     }
 
     const articleSum = $derived(sale.saleArticles?.reduce((acc, sa) => acc + sa.amount * sa.articlePrice, 0) ?? 0);
+
+    const canPayWithCredit = $derived(!sale.payDate && sale.person?.credit > articleSum);
 </script>
 {#await loadData()}
     <Loading></Loading>
 {:then _}
     <form method="post" action={`/l/dialogs/sale/${id ?? ''}`}>
-        <input type="hidden" name="saleArticles" value={JSON.stringify(sale.saleArticles, (key, value) => key === 'sale' ? undefined : value)} />
-        <input type="hidden" name="articleSum" value={articleSum} />
-        <input type="hidden" name="personId" value={sale.person?.id} />
+        <input type="hidden" name="saleArticles"
+               value={JSON.stringify(sale.saleArticles, (key, value) => key === 'sale' ? undefined : value)}/>
+        <input type="hidden" name="articleSum" value={articleSum}/>
+        <input type="hidden" name="personId" value={sale.person?.id}/>
 
         {#if (!isSearchVisible || !uiState.isMobileDevice) && sale.person}
             <Card className="max-w-xl m-auto">
@@ -61,21 +64,31 @@
         {#if !isSearchVisible}
             <PlaceAtBottom>
                 <BackButton></BackButton>
+                <button type="submit" name="deleteAction" value="true">
+                    <GlassCircleLink className={"bg-destructive! text-destructive-foreground!"}>
+                        <Trash/>
+                    </GlassCircleLink>
+                </button>
             </PlaceAtBottom>
             <NavigationActions>
                 <div slot="actions" class="justify-center items-center flex gap-2">
-                    <button type="submit" name="deleteAction" value="true">
-                        <GlassCircleLink className={"bg-destructive! text-destructive-foreground!"}>
-                            <Trash/>
-                        </GlassCircleLink>
-                    </button>
                     {#if !sale.payDate && sale.saleArticles.length > 0}
+                        {#if canPayWithCredit}
+                            <button type="submit" name="redirectTo" value={`/l/dialogs/sale//pay`}>
+                                <TextButton color="ok">Mit GH&nbsp;&nbsp;<BadgeCheck/>
+                                </TextButton>
+                            </button>
+                        {/if}
                         <button type="submit" name="redirectTo" value={`/l/dialogs/sale//pay`}>
-                            <TextButton className={"bg-primary!"}>Bezahlen</TextButton>
+                            <GlassCircleLink className={"bg-ok! text-ok-foreground!"}>
+                                <Euro/>
+                            </GlassCircleLink>
                         </button>
                         {#if sale.person}
                             <button type="submit" name="redirectTo" value="/l/modules/sales">
-                                <TextButton color="ok">Speichern</TextButton>
+                                <GlassCircleLink className={"bg-primary! text-primary-foreground!"}>
+                                    <Check/>
+                                </GlassCircleLink>
                             </button>
                         {/if}
                     {/if}
