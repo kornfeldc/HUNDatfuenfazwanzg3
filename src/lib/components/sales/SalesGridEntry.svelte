@@ -1,8 +1,7 @@
 <script lang="ts">
     import type {ISale} from "$lib/data/hfzApi";
-    import {Util} from "$lib/util";
+    import {Util, moment} from "$lib/util";
     import Card from "$lib/components/global/Card.svelte";
-    import moment from "moment";
     import {BadgeCheck} from "@lucide/svelte";
 
     interface IProps {

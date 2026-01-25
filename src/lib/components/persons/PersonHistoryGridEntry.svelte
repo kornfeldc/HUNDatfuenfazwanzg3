@@ -1,8 +1,7 @@
 <script lang="ts">
     import type {IMergedPersonHistory} from "$lib/data/hfzApi";
     import Card from "$lib/components/global/Card.svelte";
-    import moment from "moment";
-    import {Util} from "$lib/util";
+    import {Util, moment} from "$lib/util";
 
     interface IProps {
         historyEntry: IMergedPersonHistory;

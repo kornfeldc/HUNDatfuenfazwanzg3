@@ -6,7 +6,7 @@
     // noinspection ES6UnusedImports
     import * as Select from "$lib/components/shadcn/ui/select/index.js";
 
-    import moment from "moment";
+    import {moment} from "$lib/util";
     import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
     import BackButton from "$lib/components/global/NavigationButtons/BackButton.svelte";
     import Card from "$lib/components/global/Card.svelte";

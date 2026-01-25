@@ -1,5 +1,5 @@
 import {HfzApi} from "$lib/data/hfzApi";
-import moment from "moment";
+import {moment} from "$lib/util";
 
 export async function load({ cookies, params, url, locals }) {
     const api = HfzApi.create(locals.supabase, locals.og!);

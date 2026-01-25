@@ -9,7 +9,7 @@
     import thenby from 'thenby';
     const { firstBy } = thenby;
     import { page } from '$app/stores';
-    import moment from "moment";
+    import {moment} from "$lib/util";
     import Loading from "$lib/components/global/Loading.svelte";
     import TextButton from "$lib/components/global/TextButton.svelte";
     import { enhance } from '$app/forms';
@@ -19,8 +19,6 @@
     let sales = $state([] as Array<ISale>);
     let submitting = $state(false);
 
-    moment.locale('de');
-    
     let date = $derived($page.url.searchParams.get("date") ?? moment().format("YYYY-MM-DD"));
     let formattedDate = $derived(moment(date).format("dddd, DD.MM.YYYY"));
     

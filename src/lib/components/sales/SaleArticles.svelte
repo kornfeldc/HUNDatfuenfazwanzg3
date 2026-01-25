@@ -6,10 +6,9 @@
         type ISaleArticle,
         type ISoldArticleAggregate
     } from "$lib/data/hfzApi";
-    import {Util} from "$lib/util";
+    import {Util, moment} from "$lib/util";
     import {Check, Minus, Plus} from "@lucide/svelte";
     import GlassCircle from "$lib/components/global/GlassCircle.svelte";
-    import moment from "moment";
     import SearchBar from "$lib/components/global/SearchBar.svelte";
     import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
     import FilterBar from "$lib/components/global/FilterBar.svelte";

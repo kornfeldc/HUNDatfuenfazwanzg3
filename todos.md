@@ -44,7 +44,7 @@
 - [ ] Dark Mode
 - [x] Scrollen nach ganz unten
 - [x] Suchzeile am Handy zoomt bei fokus
-- [ ] Englische Strings von moment obwohl de locale verwendet wird
+- [x] Englische Strings von moment obwohl de locale verwendet wird
 - [ ] "App" Mode (meta, manifest, ...)
 - [ ] History (welcher User hat was geändert)
 

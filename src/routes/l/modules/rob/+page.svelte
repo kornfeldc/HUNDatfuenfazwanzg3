@@ -10,7 +10,7 @@
     import FilterBar from "$lib/components/global/FilterBar.svelte";
     let type = $derived($page.url.searchParams.get("type") ?? "current");
 
-    import moment from "moment";
+    import {moment} from "$lib/util";
     import thenby from 'thenby';
     const { firstBy } = thenby;
 

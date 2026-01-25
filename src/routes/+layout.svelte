@@ -6,6 +6,7 @@
     import {onDestroy, onMount} from 'svelte';
     import {uiState} from '$lib/stores/uiState.svelte';
     import favicon from '$lib/assets/favicon.svg';
+    import {Util} from '$lib/util';
     import {createBrowserClient} from '@supabase/ssr'
 
     let {data, children} = $props();

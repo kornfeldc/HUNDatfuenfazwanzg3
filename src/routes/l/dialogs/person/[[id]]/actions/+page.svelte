@@ -5,7 +5,7 @@
     import {Button} from "$lib/components/shadcn/ui/button";
     import {Input} from "$lib/components/shadcn/ui/input";
     import type {IPerson} from "$lib/data/hfzApi";
-    import moment from "moment";
+    import {moment} from "$lib/util";
     import {invalidateAll} from "$app/navigation";
 
     let {data}: { data: any; } = $props();

@@ -5,9 +5,8 @@
     import {type IPersonWithHistory} from "$lib/data/hfzApi";
 
     import thenby from 'thenby';
-    import moment from 'moment';
     import CourseGrid from "$lib/components/course/CourseGrid.svelte";
-    import {Util} from "$lib/util";
+    import {Util, moment} from "$lib/util";
     import { page } from '$app/stores';
     import FilterBar from "$lib/components/global/FilterBar.svelte";
 

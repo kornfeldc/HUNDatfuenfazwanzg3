@@ -6,8 +6,7 @@
     import BackButton from "$lib/components/global/NavigationButtons/BackButton.svelte";
     import FullScreenCalendar, {type ICalendarItem} from "$lib/components/global/FullScreenCalendar.svelte";
     import {page} from '$app/stores';
-    import moment from "moment";
-    import {Util} from "$lib/util";
+    import {Util, moment} from "$lib/util";
     import TextButton from "$lib/components/global/TextButton.svelte";
 
     let {data}: { data: any } = $props();

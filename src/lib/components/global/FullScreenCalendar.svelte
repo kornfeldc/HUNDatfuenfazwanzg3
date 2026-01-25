@@ -1,6 +1,5 @@
 <script lang="ts">
-    import moment from "moment";
-    import {Util} from "$lib/util";
+    import {Util, moment} from "$lib/util";
     import Pill from "$lib/components/global/Pill.svelte";
     import {CalendarDays, CircleArrowLeft, CircleArrowRight} from "@lucide/svelte";
     import {onMount} from "svelte";
@@ -34,8 +33,6 @@
         bottomRightClassName: string
     }
 
-    moment.locale('de');
-    
     let {day = moment().startOf("day").toDate(), dayHref = "", monthHref = "", items = []}: IProps = $props();
 
     let currentMonth = $derived(moment(day));

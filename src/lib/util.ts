@@ -1,5 +1,8 @@
-import moment from "moment";
+import moment from "moment/min/moment-with-locales.js";
 
+moment.locale('de');
+
+export { moment };
 export class Util {
     static formatDate(date: Date) {
         return moment(date).format('DD.MM.YYYY');

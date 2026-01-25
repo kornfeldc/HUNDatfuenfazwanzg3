@@ -13,7 +13,7 @@ import type {
     IUser
 } from "$lib/data/hfzApi";
 import {type SupabaseClient} from '@supabase/supabase-js';
-import moment from "moment";
+import {moment} from "$lib/util";
 
 export class HfzSupabaseApi implements IHfzApi {
 
