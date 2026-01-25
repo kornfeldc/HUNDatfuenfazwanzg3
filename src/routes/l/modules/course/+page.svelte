@@ -8,12 +8,16 @@
     import moment from 'moment';
     import CourseGrid from "$lib/components/course/CourseGrid.svelte";
     import {Util} from "$lib/util";
+    import { page } from '$app/stores';
+    import FilterBar from "$lib/components/global/FilterBar.svelte";
 
     const {firstBy} = thenby;
 
     let {data}: { data: { persons: Promise<Array<IPersonWithHistory>> } } = $props();
     let searchString = $state("");
     let submitting = $state(false);
+
+    let type = $derived($page.url.searchParams.get("type") ?? "all");
 
     const onSearch = (value: string) => {
         searchString = value;
@@ -60,6 +64,13 @@
             inactive: sortPersons(inactive)
         };
     }
+
+    const filterItems = [
+        {id: "all", label: "Alle"},
+        {id: "today", label: "Heute abgezogen"},
+        {id: "active", label: "Aktive Kursler"},
+        {id: "inactive", label: "Inaktive Kursler"},
+    ];
 </script>
 
 {#await data.persons}
@@ -81,7 +92,9 @@
             </p>
         </div>
 
-        {#if grouped.active365.length > 0}
+        <FilterBar className="px-1" items={filterItems} selected={type} parameterName="type"></FilterBar>
+
+        {#if (type === "all" || type === "active") && grouped.active365.length > 0}
             <section>
                 <div class="mb-3 px-1">
                     <h2 class="text-lg font-bold text-foreground">Aktive Kursler (letztes Jahr)</h2>
@@ -93,7 +106,7 @@
             </section>
         {/if}
 
-        {#if grouped.tookCourseToday.length > 0}
+        {#if (type === "all" || type === "today") && grouped.tookCourseToday.length > 0}
             <section>
                 <div class="mb-3 px-1">
                     <h2 class="text-lg font-bold text-foreground">Heute abgezogen</h2>
@@ -105,7 +118,7 @@
             </section>
         {/if}
 
-        {#if grouped.inactive.length > 0}
+        {#if (type === "all" || type === "inactive") && grouped.inactive.length > 0}
             <section>
                 <div class="mb-3 px-1">
                     <h2 class="text-lg font-bold text-foreground">Inaktive Kursler</h2>
