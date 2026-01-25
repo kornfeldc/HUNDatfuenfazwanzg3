@@ -23,7 +23,7 @@ export async function load({cookies, params, url, locals}) {
 }
 
 export const actions = {
-    default: async ({cookies, request, params, locals}) => {
+    save: async ({cookies, request, params, locals}) => {
         const {id} = params; // Extract the `id` parameter from the `params` object
         const api = HfzApi.create(locals.supabase, locals.og!);
         const formData = await request.formData();
@@ -38,7 +38,7 @@ export const actions = {
 
         let data = Util.parseFormData(formData, [
             {properties: ['saleArticles'], method: (val) => JSON.parse(val)},
-            {properties: ['saleSum'], method: (val) => parseFloat(val)},
+            {properties: ['articleSum'], method: (val) => parseFloat(val)},
             {properties: ['personId'], method: (val) => parseInt(val)}
         ]);
         
@@ -65,5 +65,34 @@ export const actions = {
         }
 
         throw redirect(303, redirectTo);
+    },
+    payWithCredit: async ({cookies, request, params, locals}) => {
+        const {id} = params;
+        const api = HfzApi.create(locals.supabase, locals.og!);
+        const formData = await request.formData();
+
+        let data = Util.parseFormData(formData, [
+            {properties: ['saleArticles'], method: (val) => JSON.parse(val)},
+            {properties: ['articleSum'], method: (val) => parseFloat(val)},
+            {properties: ['personId'], method: (val) => parseInt(val)}
+        ]);
+
+        try {
+            const saleToSave = {
+                id: id ? parseInt(id) : 0,
+                articleSum: data.articleSum,
+                saleArticles: data.saleArticles,
+                person: data.personId ? {id: data.personId} : undefined
+            } as any;
+            const saleSaved = await api.saveSale(saleToSave);
+            await api.paySalesWithCredit(undefined, saleSaved.id);
+        } catch (e: any) {
+            console.error("Error paying with credit:", e);
+            return fail(422, {
+                error: e.message
+            });
+        }
+
+        throw redirect(303, "/l/modules/sales");
     }
 };

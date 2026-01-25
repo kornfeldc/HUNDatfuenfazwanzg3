@@ -13,6 +13,7 @@
     import {uiState} from "$lib/stores/uiState.svelte";
     import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
     import PaidSaleInfo from "$lib/components/sales/PaidSaleInfo.svelte";
+    import { enhance } from '$app/forms';
 
     let id = $page.params.id;
 
@@ -35,12 +36,12 @@
 
     const articleSum = $derived(sale.saleArticles?.reduce((acc, sa) => acc + sa.amount * sa.articlePrice, 0) ?? 0);
 
-    const canPayWithCredit = $derived(!sale.payDate && sale.person?.credit > articleSum);
+    const canPayWithCredit = $derived(!sale.payDate && sale.person?.credit >= articleSum);
 </script>
 {#await loadData()}
     <Loading></Loading>
 {:then _}
-    <form method="post" action={`/l/dialogs/sale/${id ?? ''}`}>
+    <form method="post" action="?/save" use:enhance>
         <input type="hidden" name="saleArticles"
                value={JSON.stringify(sale.saleArticles, (key, value) => key === 'sale' ? undefined : value)}/>
         <input type="hidden" name="articleSum" value={articleSum}/>
@@ -74,7 +75,7 @@
                 <div slot="actions" class="justify-center items-center flex gap-2">
                     {#if !sale.payDate && sale.saleArticles.length > 0}
                         {#if canPayWithCredit}
-                            <button type="submit" name="redirectTo" value={`/l/dialogs/sale//pay`}>
+                            <button type="submit" formaction="?/payWithCredit">
                                 <TextButton color="ok">Mit GH&nbsp;&nbsp;<BadgeCheck/>
                                 </TextButton>
                             </button>
