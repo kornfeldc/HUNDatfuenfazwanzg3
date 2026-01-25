@@ -45,7 +45,7 @@
 - [x] Scrollen nach ganz unten
 - [x] Suchzeile am Handy zoomt bei fokus
 - [x] Englische Strings von moment obwohl de locale verwendet wird
-- [ ] "App" Mode (meta, manifest, ...)
+- [x] "App" Mode (meta, manifest, ...)
 - [ ] History (welcher User hat was geändert)
 
 # Hosting
