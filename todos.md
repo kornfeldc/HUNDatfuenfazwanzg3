@@ -53,3 +53,13 @@
 
 # Überlegen
 - [ ] Tabellen "sale_day" und "person_article_usage" nicht mehr notwendig?
+
+# Kleine Änderungen und Bugfixes
+- [ ] Neuer Verkauf: Suchzeile sollte oben sein
+- [ ] Neuer Verkauf: TOP sollte standardmäßig ausgewählt sein
+- [ ] Neuer Verkauf: nach Personenauswahl, geht oben Suchleiste auf, ist aber nicht fokusiert
+- [ ] Abstand zwischen den Kacheln im Dark Mode
+- [ ] Nach einem Klick auf ein Navigationselement dauert es 1 Sekunde bis Loading erscheint
+- [ ] Titlebar mobil kleiner
+- [ ] Cardpadding mobil kleiner
+- [ ] Avatar nicht rund
