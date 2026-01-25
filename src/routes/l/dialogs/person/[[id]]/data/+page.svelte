@@ -16,11 +16,13 @@
     import {Util} from "$lib/util";
     import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
     import {uiState} from "$lib/stores/uiState.svelte";
+    import { enhance } from '$app/forms';
 
     let id = $page.params.id;
     let {data}: { data: any; } = $props();
     let formPerson = $state({} as IPerson);
     let isConnected = $state(false);
+    let submitting = $state(false);
     
     const loadPerson = async () => {
         const person = await data.person;
@@ -47,7 +49,13 @@
 {#await loadPerson()}
     <Loading></Loading>
 {:then _}
-    <form method="post" action={id ? `/l/dialogs/person/${id}/data` : `/l/dialogs/person/data`}>
+    <form method="post" action={id ? `/l/dialogs/person/${id}/data` : `/l/dialogs/person/data`} use:enhance={() => {
+        submitting = true;
+        return async ({ update }) => {
+            await update();
+            submitting = false;
+        };
+    }}>
         <input type="hidden" name="redirectTo" value={uiState.getLastRouteSmart()}>
         <Card className="max-w-xl m-auto">
             <CardTitleBig className="hidden sm:block pb-2">{formPerson.id ? (formPerson.lastName + " " + formPerson.firstName) : "Neue Person"}</CardTitleBig>
@@ -152,4 +160,8 @@
         </NavigationActions>
     </form>
 {/await}
+
+{#if submitting}
+    <Loading/>
+{/if}
 

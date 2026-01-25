@@ -23,6 +23,7 @@
     let topSoldArticles = $state([] as ISoldArticleAggregate[]);
 
     let isSearchVisible = $state(false);
+    let submitting = $state(false);
 
     const loadData = async () => {
         articles = await data.articles;
@@ -41,7 +42,13 @@
 {#await loadData()}
     <Loading></Loading>
 {:then _}
-    <form method="post" action="?/save" use:enhance>
+    <form method="post" action="?/save" use:enhance={() => {
+        submitting = true;
+        return async ({ update }) => {
+            await update();
+            submitting = false;
+        };
+    }}>
         <input type="hidden" name="saleArticles"
                value={JSON.stringify(sale.saleArticles, (key, value) => key === 'sale' ? undefined : value)}/>
         <input type="hidden" name="articleSum" value={articleSum}/>
@@ -98,3 +105,7 @@
         {/if}
     </form>
 {/await}
+
+{#if submitting}
+    <Loading/>
+{/if}

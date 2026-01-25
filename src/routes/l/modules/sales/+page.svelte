@@ -17,6 +17,7 @@
     let {data}: { data: any } = $props();
     let searchString = $state("");
     let sales = $state([] as Array<ISale>);
+    let submitting = $state(false);
 
     moment.locale('de');
     
@@ -72,7 +73,13 @@
         <AddButton href="/l/modules/personChooser"></AddButton>
         {#if salesThatCanBePayedWithCredit.length > 0}
             <div class="fixed bottom-20 left-0 w-full z-10 flex justify-center">
-                <form method="POST" action="?/payWithCredit" use:enhance>
+                <form method="POST" action="?/payWithCredit" use:enhance={() => {
+                    submitting = true;
+                    return async ({ update }) => {
+                        await update();
+                        submitting = false;
+                    };
+                }}>
                     <input type="hidden" name="date" value={date} />
                     <button type="submit">
                         <TextButton className={"bg-transparent! border-2 border-ok text-ok! whitespace-nowrap w-min px-4"}>Alle mit GH abrechnen</TextButton>
@@ -82,3 +89,7 @@
         {/if}
     </div>
 </NavigationActions>
+
+{#if submitting}
+    <Loading/>
+{/if}

@@ -16,10 +16,12 @@
     import {ArticleTypes, type IArticle} from "$lib/data/hfzApi";
     import {Checkbox} from "$lib/components/shadcn/ui/checkbox";
     import {uiState} from "$lib/stores/uiState.svelte";
+    import { enhance } from '$app/forms';
 
     let id = $page.params.id;
     let {data}: { data: any; } = $props();
     let formArticle = $state({} as IArticle);
+    let submitting = $state(false);
 
     const loadArticle = async () => {
         const article = await data.article;
@@ -35,7 +37,13 @@
 {#await loadArticle()}
     <Loading></Loading>
 {:then _}
-    <form method="post" action={id ? `/l/dialogs/article/${id}` : `/l/dialogs/article`}>
+    <form method="post" action={id ? `/l/dialogs/article/${id}` : `/l/dialogs/article`} use:enhance={() => {
+        submitting = true;
+        return async ({ update }) => {
+            await update();
+            submitting = false;
+        };
+    }}>
         <input type="hidden" name="redirectTo" value={uiState.getLastRouteSmart()}>
         <Card className="max-w-xl m-auto">
             <CardTitleBig className="hidden sm:block pb-2">{formArticle.id ? formArticle.title : "Neuer Artikel"}</CardTitleBig>
@@ -96,3 +104,7 @@
         </NavigationActions>
     </form>
 {/await}
+
+{#if submitting}
+    <Loading/>
+{/if}

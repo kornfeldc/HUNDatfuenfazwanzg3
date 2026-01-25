@@ -18,9 +18,11 @@
     import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
     import {Dog} from "@lucide/svelte";
     import Avatar from "$lib/components/global/Avatar.svelte";
+    import { enhance } from '$app/forms';
 
     let {data, form}: { data: any, form: any } = $props();
     let formUser = $state({} as IUser);
+    let submitting = $state(false);
 
     const loadUser = async () => {
         const user = await data.hfzUser;
@@ -48,7 +50,13 @@
 {#await loadUser()}
     <Loading></Loading>
 {:then _}
-    <form method="post" action="?/updateTheme" id="userForm">
+    <form method="post" action="?/updateTheme" id="userForm" use:enhance={() => {
+        submitting = true;
+        return async ({ update }) => {
+            await update();
+            submitting = false;
+        };
+    }}>
         <input type="hidden" name="redirectTo" value={uiState.getLastRouteSmart()}>
         <Card className="max-w-xl m-auto">
             <div class="flex flex-col items-center gap-4 p-4">
@@ -102,7 +110,13 @@
                          <div class="flex flex-col">
                              <span class="font-medium">{user.email}</span>
                          </div>
-                         <form method="post" action="?/assignOg">
+                         <form method="post" action="?/assignOg" use:enhance={() => {
+                             submitting = true;
+                             return async ({ update }) => {
+                                 await update();
+                                 submitting = false;
+                             };
+                         }}>
                              <input type="hidden" name="email" value={user.email} />
                              <Button type="submit" size="sm" variant="secondary">Freischalten</Button>
                          </form>
@@ -129,3 +143,7 @@
         </div>
     </NavigationActions>
 {/await}
+
+{#if submitting}
+    <Loading/>
+{/if}

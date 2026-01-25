@@ -14,12 +14,14 @@
     import {Label} from "$lib/components/shadcn/ui/label";
     import EditableAmount from "$lib/components/global/EditableAmount.svelte";
     import {untrack} from "svelte";
+    import { enhance } from '$app/forms';
 
     let id = $page.params.id;
     let {data}: { data: any; } = $props();
 
     let sale = $state({} as ISale);
     let useCredit = $state(false);
+    let submitting = $state(false);
     let personCredit = $derived(sale.person?.credit ?? 0);
 
     let toPay = $derived.by(() => {
@@ -136,7 +138,13 @@
 {#await loadData()}
     <Loading></Loading>
 {:then _}
-    <form method="post" action={`/l/dialogs/sale/${id ?? ''}/pay`}>
+    <form method="post" action={`/l/dialogs/sale/${id ?? ''}/pay`} use:enhance={() => {
+        submitting = true;
+        return async ({ update }) => {
+            await update();
+            submitting = false;
+        };
+    }}>
         <input type="hidden" name="given" value={sale.given}/>
         <input type="hidden" name="inclTip" value={sale.inclTip}/>
         <input type="hidden" name="toReturn" value={toReturn}/>
@@ -237,3 +245,7 @@
         </NavigationActions>
     </form>
 {/await}
+
+{#if submitting}
+    <Loading/>
+{/if}
