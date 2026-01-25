@@ -45,12 +45,19 @@ export class HfzSupabaseApi implements IHfzApi {
         if (Array.isArray(data))
             return data.map(HfzSupabaseApi.mapDates);
 
-        const possibleColumns = ["saleDate", "payDate"];
+        const possibleColumns = ["saleDate", "payDate", "date", "timestamp"];
         for (const col of possibleColumns) {
             if (data[col]) {
                 data[col] = new Date(data[col]);
             }
         }
+
+        for (const key in data) {
+            if (typeof data[key] === 'object' && data[key] !== null && !(data[key] instanceof Date)) {
+                data[key] = HfzSupabaseApi.mapDates(data[key]);
+            }
+        }
+
         return data;
     }
 
@@ -243,6 +250,22 @@ export class HfzSupabaseApi implements IHfzApi {
 
         const ret = HfzSupabaseApi.mapDates(data);
         return ret as Array<IPerson>;
+    }
+
+    async getPersonsWithCourseHistory(days: number): Promise<Array<IPersonWithHistory>> {
+        const supabase = this.supabase;
+        const {data, error} = await supabase
+            .from('person')
+            .select('*, course_history!inner(*)')
+            .eq("og", this.og)
+            .gt('courseCount', 0);
+
+        if (error) throw error;
+
+        const ret = HfzSupabaseApi.parseData(data, [
+            ["course_history", "courseHistory"]
+        ]);
+        return ret as Array<IPersonWithHistory>;
     }
 
     async getPersonCreditHistory(id: IId): Promise<Array<ICreditHistory>> {

@@ -13,6 +13,7 @@ export interface IHfzApi {
     updateArticle(article: IArticle): Promise<IArticle>;
 
     getPersons(): Promise<Array<IPerson>>;
+    getPersonsWithCourseHistory(days: number): Promise<Array<IPersonWithHistory>>;
     getPerson(id: IId): Promise<IPerson>;
     getPersonCreditHistory(id: IId): Promise<Array<ICreditHistory>>;
     getPersonCourseHistory(id: IId): Promise<Array<ICourseHistory>>;
@@ -110,6 +111,10 @@ export interface IPerson extends IId {
     saleCountActive: number;
     saleSum: number;
     info: string;
+}
+
+export interface IPersonWithHistory extends IPerson {
+    courseHistory: Array<ICourseHistory>;
 }
 
 export interface IArticle extends IId {

@@ -8,19 +8,20 @@
     interface IProps {
         person: IPerson;
         href?: string;
+        group?: "active" | "today" | "inactive";
     }
 
-    let {person, href = ""}: IProps = $props();
+    let {person, href = "", group = "active"}: IProps = $props();
 
     let linkTo = $derived.by(() => {
         if (href)
             return `${href}?personId=${person.id}`;
-        return "/l/dialogs/person/" + person.id;
+        return "/l/dialogs/person/" + person.id + "/history?type=course";
     });
 
 </script>
 <a href={linkTo}>
-    <Card>
+    <Card className={"" + ( group == "inactive" ? "text-muted-foreground" : group === "today" ? "bg-primary/20" : "" )}>
         <div class="flex items-center gap-2">
             <div class="flex flex-col grow pt-2 ">
                 <div class="flex items-center gap-2 font-bold text-lg w-full">

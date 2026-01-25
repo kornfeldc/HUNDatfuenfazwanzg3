@@ -6,12 +6,13 @@
     interface IProps {
         persons: Array<IPerson>;
         href?: string;
+        group?: "active" | "today" | "inactive";
     }
 
-    let {persons, href = ""}: IProps = $props();
+    let {persons, href = "", group = "active"}: IProps = $props();
 </script>
 <Grid>
     {#each persons as person}
-        <CourseGridEntry {person} {href}/>
+        <CourseGridEntry {person} {href} {group}/>
     {/each}
 </Grid>
