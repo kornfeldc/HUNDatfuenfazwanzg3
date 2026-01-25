@@ -23,8 +23,8 @@
     });
 
 </script>
-<div onclick={() => goto(linkTo)} class="cursor-pointer">
-    <Card className={"" + ( group == "inactive" ? "text-muted-foreground" : group === "today" ? "bg-primary/20" : "" ) + " " + (person.courseCount === 0 ? "border-2 border-destructive/50" : "")}>
+<div class="cursor-pointer" onclick={() => goto(linkTo)}>
+    <Card className={"" + ( group == "inactive" ? "text-muted-foreground" : group === "today" ? "bg-primary/20" : "" ) + " " + (person.courseCount <= 0 ? "border-2 border-destructive/50" : person.courseCount === 1 ? "border-2 border-warning/50" : "")}>
         <div class="flex items-center gap-2">
             <div class="flex flex-col grow pt-2 ">
                 <div class="flex items-center gap-2 font-bold text-lg w-full">
@@ -42,27 +42,25 @@
                 {/if}
                 <div class="whitespace-nowrap">
                     Einheit(en) frei:
-                    <span class={"text-primary text-lg "+(person.courseCount === 0 ? "text-destructive!" : "")}>{Util.formatCurrency(person.courseCount, false, 0)}</span>
+                    <span class={"text-primary text-lg "+(person.courseCount <= 0 ? "text-destructive!" : person.courseCount === 1 ? "text-warning!" : "")}>{Util.formatCurrency(person.courseCount, false, 0)}</span>
                 </div>
             </div>
             <div onclick={(e) => e.stopPropagation()}>
-                {#if person.courseCount > 0}
-                    <form method="POST" action="?/deduct" use:enhance={() => {
+                <form action="?/deduct" method="POST" use:enhance={() => {
                         onSubmitting?.(true);
                         return async ({update}) => {
                             await update();
                             onSubmitting?.(false);
                         };
                     }}>
-                        <input type="hidden" name="personId" value={person.id}/>
-                        <button type="submit">
-                            <GlassCircleLink
-                                    className="whitespace-nowrap mt-1 w-min text-sm bg-background border-2 border-primary! text-primary!">
-                                Einheit abziehen
-                            </GlassCircleLink>
-                        </button>
-                    </form>
-                {/if}
+                    <input name="personId" type="hidden" value={person.id}/>
+                    <button type="submit">
+                        <GlassCircleLink
+                                className={"whitespace-nowrap mt-1 w-min text-sm bg-background border-2 " + (person.courseCount <= 0 ? "border-destructive! text-destructive!" : person.courseCount === 1 ? "border-warning! text-warning!" : "border-primary! text-primary!")}>
+                            Einheit abziehen
+                        </GlassCircleLink>
+                    </button>
+                </form>
             </div>
         </div>
     </Card>

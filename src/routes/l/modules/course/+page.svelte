@@ -67,8 +67,8 @@
 
     const filterItems = [
         {id: "all", label: "Alle"},
-        {id: "today", label: "Heute abgezogen"},
         {id: "active", label: "Aktive Kursler"},
+        {id: "today", label: "Heute abgezogen"},
         {id: "inactive", label: "Inaktive Kursler"},
     ];
 </script>
