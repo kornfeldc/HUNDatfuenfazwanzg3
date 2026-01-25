@@ -485,6 +485,41 @@ export class HfzSupabaseApi implements IHfzApi {
         return this.getSale({id: saleId});
     }
 
+    async paySalesWithCredit(date?: string, saleId?: number): Promise<void> {
+        let salesToPay: Array<ISale> = [];
+
+        if (saleId) {
+            const sale = await this.getSale({id: saleId});
+            if (!sale.payDate && sale.person && sale.person.credit >= sale.articleSum) {
+                salesToPay = [sale];
+            }
+        } else if (date) {
+            const allSales = await this.getSales(date);
+            salesToPay = allSales.filter(s => {
+                const isOnDate = moment(s.saleDate).isSame(moment(date), "day") ||
+                    (moment(date).isSame(moment(), "day") && !s.payDate);
+                return isOnDate && !s.payDate && s.person && s.person.credit >= s.articleSum;
+            });
+        }
+
+        for (const sale of salesToPay) {
+            const saleToUpdate: any = {
+                id: sale.id,
+                toPay: 0,
+                given: 0,
+                inclTip: 0,
+                toReturn: 0,
+                oldCredit: sale.person!.credit,
+                newCredit: sale.person!.credit - sale.articleSum,
+                addAdditionalCredit: 0,
+                usedCredit: true,
+                personId: sale.person!.id,
+                payDate: new Date()
+            };
+            await this.paySale(saleToUpdate);
+        }
+    }
+
     async deleteSale(id: IId): Promise<void> {
         const supabase = this.supabase;
 

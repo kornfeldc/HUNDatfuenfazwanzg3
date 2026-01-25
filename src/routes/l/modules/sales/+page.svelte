@@ -12,6 +12,7 @@
     import moment from "moment";
     import Loading from "$lib/components/global/Loading.svelte";
     import TextButton from "$lib/components/global/TextButton.svelte";
+    import { enhance } from '$app/forms';
 
     let {data}: { data: any } = $props();
     let searchString = $state("");
@@ -42,7 +43,7 @@
         sales = await data.sales; 
     }
     
-    const salesThatCanBePayedWithCredit = $derived.by(() => filter(sales).filter((s: ISale) => !s.payDate && s.person && s.person.credit > s.articleSum));
+    const salesThatCanBePayedWithCredit = $derived.by(() => filter(sales).filter((s: ISale) => !s.payDate && s.person && s.person.credit >= s.articleSum));
     
 </script>
 {#await loadSales()}
@@ -71,7 +72,12 @@
         <AddButton href="/l/modules/personChooser"></AddButton>
         {#if salesThatCanBePayedWithCredit.length > 0}
             <div class="fixed bottom-20 left-0 w-full z-10 flex justify-center">
-                <TextButton className={"bg-transparent! border-2 border-ok text-ok! whitespace-nowrap w-min px-4"}>Alle mit GH bezahlen</TextButton>
+                <form method="POST" action="?/payWithCredit" use:enhance>
+                    <input type="hidden" name="date" value={date} />
+                    <button type="submit">
+                        <TextButton className={"bg-transparent! border-2 border-ok text-ok! whitespace-nowrap w-min px-4"}>Alle mit GH abrechnen</TextButton>
+                    </button>
+                </form>
             </div>
         {/if}
     </div>

@@ -11,7 +11,7 @@
 
     let {sale}: IProps = $props();
     
-    let canPayWithCredit = $derived(sale.person?.credit > sale.articleSum);
+    let canPayWithCredit = $derived(!sale.payDate && sale.person?.credit > sale.articleSum);
 </script>
 
 <a href="/l/dialogs/sale/{sale.id}">

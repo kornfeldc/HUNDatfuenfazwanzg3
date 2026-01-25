@@ -28,6 +28,7 @@ export interface IHfzApi {
     getSale(id: IId): Promise<ISale>;
     saveSale(sale: ISale): Promise<ISale>;
     paySale(sale: ISale): Promise<ISale>;
+    paySalesWithCredit(date?: string, saleId?: number): Promise<void>;
     deleteSale(id: IId): Promise<void>;
     getNewSaleForPerson(personId?: IId): Promise<ISale>;
     

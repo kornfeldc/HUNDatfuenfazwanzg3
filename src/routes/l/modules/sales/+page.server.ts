@@ -9,3 +9,13 @@ export async function load({ cookies, params, url, locals }) {
         articles: api.getArticles()
     };
 }
+
+export const actions = {
+    payWithCredit: async ({ request, locals }) => {
+        const formData = await request.formData();
+        const date = formData.get("date")?.toString();
+        const api = HfzApi.create(locals.supabase, locals.og!);
+        await api.paySalesWithCredit(date);
+        return { success: true };
+    }
+}
