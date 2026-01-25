@@ -10,8 +10,9 @@
 - [x] Barverkauf bezahlen
 - [x] Normalen Sale bezahlen
 - [x] CreditHistory maintainen und auf person durchrechnen
-- [ ] Liste: Anzeige pro Sale ob mit Guthaben bezahlt werden kann
-- [ ] Liste: Alle mit Guthaben abrechnen 
+- [x] Liste: Anzeige pro Sale ob mit Guthaben bezahlt werden kann
+- [x] Liste: Alle mit Guthaben abrechnen 
+- [x] Einzelnen Sale mit Guthaben abrechnen 
 
 # Artikel
 - [x] Gruppe korrekt anzeigen
