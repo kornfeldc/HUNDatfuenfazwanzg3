@@ -149,7 +149,7 @@
         <NavigationActions>
             <div class="flex gap-2" slot="actions">
                 <GlassCircleLink
-                        className={" bg-primary/90! border-0 drop-shadow-primary/90 drop-shadow-xl "}
+                        className={" bg-primary/90! border-0 shadow-md "}
                         href={`/l/dialogs/person/${id}/actions`}>
                     <Diff class="text-primary-foreground"/>
                 </GlassCircleLink>

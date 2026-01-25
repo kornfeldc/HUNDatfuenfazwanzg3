@@ -5,7 +5,7 @@
 <div class={Util.mapClass(
             "whitespace-nowrap p-1 px-2 text-sm m-1 rounded-full cursor-pointer",
             selected,
-            "bg-pill-active text-pill-active-foreground drop-shadow-slate-700/50 drop-shadow-md",
+            "bg-pill-active text-pill-active-foreground shadow-sm",
             "bg-pill text-pill-foreground") + " " + className}>
     {@render children?.()}
 </div>

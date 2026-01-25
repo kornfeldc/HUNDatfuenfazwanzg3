@@ -56,7 +56,7 @@
     <NavigationActions>
         <button slot="actions">
             <GlassCircleLink
-                    className={" bg-primary/90! border-0 drop-shadow-primary/90 drop-shadow-xl "}
+                    className={" bg-primary/90! border-0 shadow-md "}
                     href={"/l/dialogs/person/" + person.id + "/actions"}>
                 <Diff class="text-primary-foreground"/>
             </GlassCircleLink>

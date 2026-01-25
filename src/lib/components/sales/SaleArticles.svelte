@@ -128,7 +128,7 @@
         {#if !sale.payDate}
             <button class="col-span-2" onclick={(event) => setShowAllArticles(event)}>
                 <GlassCircle
-                        className="ml-[-0.5em] mt-2 h-8! px-4! bg-transparent! text-primary border-[1px] border-primary drop-shadow-primary/40 drop-shadow-lg whitespace-nowrap w-min">
+                        className="ml-[-0.5em] mt-2 h-8! px-4! bg-transparent! text-primary border-[1px] border-primary shadow-sm whitespace-nowrap w-min">
                     Artikel hinzufügen
                 </GlassCircle>
             </button>
@@ -180,7 +180,7 @@
     <PlaceAtBottom at="right" top={true}>
         <button onclick={closeSearch}>
             <GlassCircle
-                    className="bg-primary/70! text-primary-foreground! border-primary! drop-shadow-primary/40 drop-shadow-lg">
+                    className="bg-primary/70! text-primary-foreground! border-0 shadow-md">
                 <Check></Check>
             </GlassCircle>
         </button>

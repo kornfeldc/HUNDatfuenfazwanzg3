@@ -132,7 +132,7 @@
     <NavigationActions>
         <div slot="actions">
             <button type="button" onclick={() => goto('/logout')}>
-                <GlassCircleLink className={" bg-destructive! border-0 w-30 text-destructive-foreground drop-shadow-destructive/60 drop-shadow-xl "}>
+                <GlassCircleLink className={" bg-destructive! border-0 w-30 text-destructive-foreground shadow-md "}>
                     Ausloggen 
                 </GlassCircleLink>
             </button>

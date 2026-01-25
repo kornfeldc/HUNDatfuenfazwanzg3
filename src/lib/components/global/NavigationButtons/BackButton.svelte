@@ -21,7 +21,7 @@
     }
 </script>
 {#snippet circleLink()}
-    <GlassCircleLink className={" bg-accent/50! border-0 drop-shadow-accent/90 drop-shadow-xl " + className} {href}>
+    <GlassCircleLink className={" bg-accent/70! dark:bg-gray-500/90! border-0 shadow-sm " + className} {href}>
         <ArrowLeft class="text-accent-foreground"/>
     </GlassCircleLink>
 {/snippet}

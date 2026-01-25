@@ -35,8 +35,8 @@
 </script>
 {#if !uiState.showSearchBar}
     <button onclick={() => openSearch()}>
-        <GlassCircleLink className="bg-gray-400/30! border-0 drop-shadow-gray-500/40 drop-shadow-xl" >
-            <Search class="text-gray-600"/>
+        <GlassCircleLink className="bg-gray-400/30! border-0 shadow-sm" >
+            <Search class="text-gray-600 dark:text-gray-300"/>
         </GlassCircleLink>
     </button>
 {:else}
@@ -46,7 +46,7 @@
     <PlaceAtBottom at="right">
         <button onclick={() => openSearch(false)}>
             <GlassCircle
-                    className="bg-primary/70! text-primary-foreground! border-primary! drop-shadow-primary/40 drop-shadow-lg">
+                    className="bg-primary/70! text-primary-foreground! border-0 shadow-md">
                 <Check></Check>
             </GlassCircle>
         </button>
