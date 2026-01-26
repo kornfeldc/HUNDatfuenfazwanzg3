@@ -26,6 +26,7 @@
     let showAllArticles = $state(false);
     let searchString = $state("");
     let type = $state("top");
+    let initialSaleArticleIds = $state<number[]>([]);
 
     const filterItems = [
         {id: "top", label: "TOP"},
@@ -60,6 +61,7 @@
 
     const setShowAllArticles = (event: any) => {
         showAllArticles = true;
+        initialSaleArticleIds = sale.saleArticles.map(sa => sa.article.id);
         if (toggleSearch) toggleSearch(true);
         event?.stopPropagation();
         event?.preventDefault();
@@ -69,42 +71,76 @@
     const sum = $derived(sale.saleArticles.reduce((acc, sa) => acc + sa.amount * sa.articlePrice, 0));
 
     const articleList = $derived.by(() => {
-        let ret = [...sale.saleArticles];
-        if (showAllArticles) {
-            let virtualSaleArticles = articles
-                .filter(a => !sale.saleArticles.find(sa => sa.article.id === a.id))
-                .map(a => {
-                    return {
-                        article: a,
-                        articleTitle: a.title,
-                        articlePrice: a.price,
-                        amount: 0,
-                        sale: null,
-                        sold: topSoldArticles?.find(t => t.articleId === a.id)?.count ?? 0
-                    } as any;
-                });
-            
-            // sort virtual sale Articles
-            if(type === "top") {
-                if((topSoldArticles?.length ?? 0) > 0)  
-                   virtualSaleArticles = virtualSaleArticles.filter(sa => sa.sold > 0); 
-                virtualSaleArticles.sort((a, b) => b.sold - a.sold);
-            }
-            else
-                virtualSaleArticles.sort((a, b) => a.article.title.localeCompare(b.article.title));
-            
-            ret = [...ret, ...virtualSaleArticles];
+        if (!showAllArticles) {
+            return sale.saleArticles;
         }
 
-        return ret
-            .filter(a =>
-                !showAllArticles ||
-                (type === "all" && a.article.isActive) ||
-                (type === "top" && true) ||
-                a.article.type === type ||
-                (type === "favorite" && a.article.isFavorite) ||
-                (type === "inactive" && !a.article.isActive))
-            .filter(a => !searchString || a.articleTitle.toLowerCase().indexOf(searchString.toLowerCase()) >= 0);
+        // 1. Get ALL potentially relevant articles as ISaleArticle (real or virtual)
+        const allArticlesMapped = articles.map(a => {
+            const real = sale.saleArticles.find(sa => sa.article.id === a.id);
+            const sold = topSoldArticles?.find(t => t.articleId === a.id)?.count ?? 0;
+            if (real) return {...real, sold};
+            return {
+                article: a,
+                articleTitle: a.title,
+                articlePrice: a.price,
+                amount: 0,
+                sale: null,
+                sold: sold
+            } as any;
+        });
+
+        // 2. Filter them
+        let filtered = allArticlesMapped.filter(a => {
+            // Search string filter (always apply if showAllArticles)
+            if (searchString && a.articleTitle.toLowerCase().indexOf(searchString.toLowerCase()) === -1) {
+                return false;
+            }
+
+            // Type filter
+            if (type === "all") return a.article.isActive;
+            if (type === "top") {
+                // Always show articles that are currently in the sale
+                if (!!a.sale) return true;
+
+                // For virtual others:
+                if ((topSoldArticles?.length ?? 0) > 0) {
+                    return a.sold > 0;
+                }
+                return true;
+            }
+            if (type === "favorite") return a.article.isFavorite;
+            if (type === "inactive") return !a.article.isActive;
+
+            return a.article.type === type;
+        });
+
+        // 3. Sort them
+        filtered.sort((a, b) => {
+            const aInitIndex = initialSaleArticleIds.indexOf(a.article.id);
+            const bInitIndex = initialSaleArticleIds.indexOf(b.article.id);
+
+            const aIsInitial = aInitIndex !== -1;
+            const bIsInitial = bInitIndex !== -1;
+
+            // Initially real ones always on top
+            if (aIsInitial && !bIsInitial) return -1;
+            if (!aIsInitial && bIsInitial) return 1;
+
+            // Both were initially real: keep their original order
+            if (aIsInitial && bIsInitial) return aInitIndex - bInitIndex;
+
+            // Both were NOT initially real (could be virtual or newly added real)
+            // Sort by current filter
+            if (type === "top") {
+                if (b.sold !== a.sold) return b.sold - a.sold;
+                return a.articleTitle.localeCompare(b.articleTitle);
+            } else {
+                return a.articleTitle.localeCompare(b.articleTitle);
+            }
+        });
+
+        return filtered;
     });
 
     const closeSearch = (event: any) => {
@@ -112,6 +148,7 @@
         event.preventDefault();
         searchString = "";
         showAllArticles = false;
+        initialSaleArticleIds = [];
         toggleSearch(false);
         return false;
     }
