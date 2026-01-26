@@ -58,8 +58,8 @@
 - [ ] Neuer Verkauf: Suchzeile sollte oben sein
 - [ ] Neuer Verkauf: TOP sollte standardmäßig ausgewählt sein
 - [ ] Neuer Verkauf: nach Personenauswahl, geht oben Suchleiste auf, ist aber nicht fokusiert
-- [ ] Abstand zwischen den Kacheln im Dark Mode
-- [ ] Nach einem Klick auf ein Navigationselement dauert es 1 Sekunde bis Loading erscheint
-- [ ] Titlebar mobil kleiner
-- [ ] Cardpadding mobil kleiner
+- [x] Abstand zwischen den Kacheln im Dark Mode
+- [x] Nach einem Klick auf ein Navigationselement dauert es 1 Sekunde bis Loading erscheint
+- [x] Titlebar mobil kleiner
+- [x] Cardpadding mobil kleiner
 - [ ] Avatar nicht rund

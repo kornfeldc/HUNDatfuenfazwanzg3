@@ -82,9 +82,9 @@
     {@const totalCount = allActive.length}
     {@const totalCourses = allActive.reduce((acc, p) => acc + (p.courseCount || 0), 0)}
 
-    <div class="flex flex-col gap-6 p-4 pb-20">
+    <div class="flex flex-col gap-4 p-2 sm:p-4 pb-20">
         <!-- Global Header -->
-        <div class="bg-card border border-border p-5 rounded-xl shadow-sm flex flex-col gap-1">
+        <div class="bg-card border border-border p-3 sm:p-5 rounded-xl shadow-sm flex flex-col gap-1">
             <h1 class="text-2xl font-bold tracking-tight text-foreground">Kursverwaltung</h1>
             <p class="text-sm text-muted-foreground font-medium">
                 {totalCount} Personen mit insgesamt {Util.formatCurrency(totalCourses, false, 0)} offenen Einheiten

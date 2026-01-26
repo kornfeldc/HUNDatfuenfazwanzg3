@@ -48,7 +48,7 @@
         <PersonOverview person={person}></PersonOverview>
     </Card>
 
-    <FilterBar className="p-0! mt-2" items={filterItems} parameterName="type" selected={type}></FilterBar>
+    <FilterBar className="p-0! mt-2 mb-2" items={filterItems} parameterName="type" selected={type}></FilterBar>
     <div style="margin-left: -0.6em;margin-right: -0.6em;">
         <PersonHistoryGrid history={filteredHistory} {type}></PersonHistoryGrid>
     </div>

@@ -49,7 +49,7 @@
 {#await data.persons}
     <Loading></Loading>
 {:then persons}
-    <FilterBar className="px-3" items={filterItems} selected={type} parameterName="type"></FilterBar>
+    <FilterBar className="px-3 mb-2" items={filterItems} selected={type} parameterName="type"></FilterBar>
     <PersonsGrid persons={filter(persons)}/>
 {/await}
 

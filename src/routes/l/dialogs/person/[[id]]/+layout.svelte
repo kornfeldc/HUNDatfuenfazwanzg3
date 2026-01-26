@@ -25,7 +25,7 @@
     });
 </script>
 
-<div class="flex flex-wrap">
+<div class="flex flex-wrap pb-2">
     {#each filterItems as item}
         <Pill selected={subRoute === item.id}>
             <a href={item.id}>{item.label}</a>

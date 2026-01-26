@@ -82,14 +82,14 @@
     <Loading></Loading>
 {:then _}
     <a href="/l/dialogs/sale">
-        <Card className="mx-3 mb-8">
+        <Card className="m-2 my-4">
             <div class="flex justify-center items-center font-bold text-2xl">
                 <Euro class="text-primary pr-2 h-10 w-10"/>
                 Barverkauf
             </div>
         </Card>
     </a>
-    <FilterBar className="px-3" items={filterItems} selected={type} parameterName="type"></FilterBar>
+    <FilterBar className="px-3 pb-2" items={filterItems} selected={type} parameterName="type"></FilterBar>
     <PersonsGrid persons={filter(persons)} href="/l/dialogs/sale"/>
 {/await}
 

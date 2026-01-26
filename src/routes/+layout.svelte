@@ -8,6 +8,7 @@
     import favicon from '$lib/assets/favicon.svg';
     import {Util} from '$lib/util';
     import {createBrowserClient} from '@supabase/ssr'
+    import Loading from "$lib/components/global/Loading.svelte";
 
     let {data, children} = $props();
 
@@ -22,6 +23,8 @@
     )
 
     let session = $derived(data.session);
+    let isNavigating = $state(false);
+    let interval = $state(undefined as any);
 
     const isDesktopLike = () =>
         typeof window !== 'undefined' &&
@@ -44,6 +47,10 @@
 
     // Track every client-side route change
     afterNavigate(({to}) => {
+        isNavigating = false;
+        if(interval)
+            clearInterval(interval);
+        
         const url = to?.url;
         if (!url) return;
         // capture pathname + search (+ hash if desired)
@@ -54,7 +61,9 @@
 
     beforeNavigate(() => {
         uiState.setNavSearch(false);
-
+        interval = setInterval(() => {
+            isNavigating = true;
+        }, 300);
     });
 
     onDestroy(() => {
@@ -67,4 +76,7 @@
     <link href={favicon} rel="icon"/>
 </svelte:head>
 
+{#if isNavigating}
+    <Loading/>
+{/if}
 {@render children?.()}
