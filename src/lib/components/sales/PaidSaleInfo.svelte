@@ -32,7 +32,7 @@
     {/if}
 {/snippet}
 
-<Card>
+<Card className="mt-2">
     <div class="grid grid-cols-2 gap-4 mt-2">
         {@render infoLine("Bezahlt am", moment(sale.payDate).format("DD.MM.YYYY"), true)}
         {@render infoLine("Artikel gekauft", Util.formatCurrency(sale.articleSum), !!sale.articleSum)}

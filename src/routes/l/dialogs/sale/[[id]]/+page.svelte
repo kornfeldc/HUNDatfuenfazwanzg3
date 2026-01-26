@@ -60,7 +60,7 @@
             </Card>
         {/if}
 
-        <Card className="max-w-xl m-auto">
+        <Card className="mt-2 max-w-xl m-auto">
             <SaleArticles {sale} {articles} {topSoldArticles} {toggleSearch}
                           showTopLine={!isSearchVisible || !uiState.isMobileDevice}></SaleArticles>
         </Card>

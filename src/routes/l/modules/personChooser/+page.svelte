@@ -23,9 +23,6 @@
 
     let type = $derived($page.url.searchParams.get("type") ?? "active");
 
-    const onSearch = (value: string) => {
-        searchString = value;
-    }
     
     const loadData = async () => {
         persons = await data.persons;
@@ -71,11 +68,11 @@
     ];
 
     onMount(() => {
-        uiState.showNavBar = false;
+        uiState.setNavSearch(true);
     });
 
     onDestroy(() => {
-        uiState.showNavBar = true;
+        uiState.setNavSearch(false);
     });
 </script>
 {#await loadData()}

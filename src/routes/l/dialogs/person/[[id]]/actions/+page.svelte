@@ -72,15 +72,13 @@
         <PersonOverview person={person}></PersonOverview>
     </Card>
 
-    <Card className="max-w-xl m-auto">
+    <Card className="max-w-xl m-auto mt-2">
         
-        <div class="grid grid-cols-[6em_1fr] gap-4 pt-4">
-            <Input type="number" placeholder="Anzahl" bind:value={actionData.coursesToRemove}></Input>
-            <div>
-                <Input type="date" placeholder="Datum" bind:value={actionData.perDate}/>
-            </div>
-            <Button variant="outline" class="col-span-2 border-destructive text-destructive hover:bg-destructive/10" onclick={()=> removeCourses()}>Kurseinheit abziehen</Button>
+        <div class="flex gap-4 pt-4">
+            <Input class="w-[6em]" type="number" placeholder="Anzahl" bind:value={actionData.coursesToRemove}></Input>
+            <Input class="grow" type="date" placeholder="Datum" bind:value={actionData.perDate}/>
         </div>
+        <Button variant="outline" class="mt-2 w-full border-destructive text-destructive hover:bg-destructive/10" onclick={()=> removeCourses()}>Kurseinheit abziehen</Button>
         
         <div class="border-[1px] border-border mt-4"></div>
         

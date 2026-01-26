@@ -55,8 +55,7 @@
 - [ ] Tabellen "sale_day" und "person_article_usage" nicht mehr notwendig?
 
 # Kleine Änderungen und Bugfixes
-- [ ] Neuer Verkauf: Suchzeile sollte oben sein
-- [ ] Neuer Verkauf: TOP sollte standardmäßig ausgewählt sein
+- [x] Neuer Verkauf: Suchzeile sollte oben sein
 - [ ] Neuer Verkauf: nach Personenauswahl, geht oben Suchleiste auf, ist aber nicht fokusiert
 - [x] Abstand zwischen den Kacheln im Dark Mode
 - [x] Nach einem Klick auf ein Navigationselement dauert es 1 Sekunde bis Loading erscheint
