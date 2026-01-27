@@ -56,9 +56,9 @@
 
 # Kleine Änderungen und Bugfixes
 - [x] Neuer Verkauf: Suchzeile sollte oben sein
-- [ ] Neuer Verkauf: nach Personenauswahl, geht oben Suchleiste auf, ist aber nicht fokusiert
+- [x] Neuer Verkauf: nach Personenauswahl, geht oben Suchleiste auf, ist aber nicht fokusiert
 - [x] Abstand zwischen den Kacheln im Dark Mode
 - [x] Nach einem Klick auf ein Navigationselement dauert es 1 Sekunde bis Loading erscheint
 - [x] Titlebar mobil kleiner
 - [x] Cardpadding mobil kleiner
-- [ ] Avatar nicht rund
+- [x] Avatar nicht rund

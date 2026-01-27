@@ -7,7 +7,7 @@
     import thenby from 'thenby';
     import {page} from '$app/stores';
     import FilterBar from "$lib/components/global/FilterBar.svelte";
-    import {onDestroy, onMount} from "svelte";
+    import {onDestroy} from "svelte";
     import {uiState} from "$lib/stores/uiState.svelte";
     import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
     import SearchBar from "$lib/components/global/SearchBar.svelte";
@@ -67,9 +67,9 @@
         {id: "inactive", label: "Inaktiv"},
     ];
 
-    onMount(() => {
+    if (typeof window !== 'undefined') {
         uiState.setNavSearch(true);
-    });
+    }
 
     onDestroy(() => {
         uiState.setNavSearch(false);

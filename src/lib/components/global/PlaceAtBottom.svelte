@@ -6,11 +6,11 @@
 
     let bottomClass = $derived.by(() => {
         return (uiState.showPlaceAtBottomOnTop() || top ? "fixed top-0" : "fixed bottom-0") + " "+
-            (top ? "bg-background/80" : "");
+            (top ? "bg-background/80 shadow-background shadow-xl h-20" : "");
     });
 </script>
 {#if uiState.showPlaceAtBottomOnTop()}
-    <div class="fixed top-0 w-full bg-background/80 shadow-background/80 shadow-lg blur-sm h-18"></div>
+    <div class={"fixed top-0 w-full  shadow-background/80 shadow-lg  h-18"}></div>
 {/if}
 <div class={Util.mapClass(`${bottomClass} p-3 flex gap-2 `, at === 'left', "left-0", "right-0")}>
     {@render children?.()}

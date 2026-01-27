@@ -26,13 +26,13 @@
 
     const inputFocused = (event: any) => {
         event.stopPropagation();
-        event.preventDefault();
+        // event.preventDefault();
         return false;
     }
 
     const inputBlurred = (event: any) => {
         event.stopPropagation();
-        event.preventDefault();
+        // event.preventDefault();
         return false;
     }
 
@@ -54,10 +54,21 @@
         return false;
     }
 
-    onMount(async () => {
-        await tick();
-        inputEl?.focus();
-        inputEl?.select?.();
+    onMount(() => {
+        const focus = async () => {
+            await tick();
+            inputEl?.focus();
+            inputEl?.select?.();
+        }
+
+        focus();
+        const t1 = setTimeout(focus, 100);
+        const t2 = setTimeout(focus, 300);
+
+        return () => {
+            clearTimeout(t1);
+            clearTimeout(t2);
+        }
     });
 
     let calcWidth = $derived(fullWidth ? "calc(100vw - 4.5em)" : "calc(100vw - 7em)");
@@ -68,6 +79,7 @@
         <input
                 bind:this={inputEl}
                 bind:value={value}
+                autofocus
                 class={Util.mapClass("border-0 m-0 p-1.5 mr-2 bg-transparent rounded-full text-white placeholder-gray-200 text-base focus:outline-none", true, "w-full", "")}
                 onblur={(event) => inputBlurred(event)}
                 onfocus={(event) => inputFocused(event)}

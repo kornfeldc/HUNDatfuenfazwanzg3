@@ -10,7 +10,7 @@ import Avatar from "$lib/components/global/Avatar.svelte";
     <a href="/l/modules" class="w-full text-center">
         <div class="text-primary text-xl sm:text-3xl font-mono"><b class="font-extrabold">HUND</b><i>atfuenfazwanzg</i></div>
     </a> 
-    <a href="/l/dialogs/user">
+    <a href="/l/dialogs/user" class="w-12">
         <Avatar/>
     </a>
 </div>
