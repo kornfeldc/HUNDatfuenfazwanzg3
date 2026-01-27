@@ -9,8 +9,25 @@
     import {Util} from '$lib/util';
     import {createBrowserClient} from '@supabase/ssr'
     import Loading from "$lib/components/global/Loading.svelte";
+    import {getTheme} from "$lib/utils";
 
     let {data, children} = $props();
+
+    $effect(() => {
+        const theme = getTheme(data);
+        const applyTheme = () => {
+            const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            document.documentElement.classList.toggle('dark', isDark);
+        };
+
+        applyTheme();
+
+        if (theme === 'system') {
+            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            mediaQuery.addEventListener('change', applyTheme);
+            return () => mediaQuery.removeEventListener('change', applyTheme);
+        }
+    });
 
     const supabase = createBrowserClient(
         import.meta.env.VITE_SUPABASE_URL,

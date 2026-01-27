@@ -14,6 +14,7 @@
     import {type IUser} from "$lib/data/hfzApi";
     import {uiState} from "$lib/stores/uiState.svelte";
     import {goto} from "$app/navigation";
+    import {page} from "$app/stores";
     import {Button} from "$lib/components/shadcn/ui/button";
     import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
     import {Dog} from "@lucide/svelte";
@@ -57,7 +58,7 @@
             submitting = false;
         };
     }}>
-        <input type="hidden" name="redirectTo" value={uiState.getLastRouteSmart()}>
+        <input type="hidden" name="redirectTo" value={$page.url.pathname}>
         <Card className="max-w-xl m-auto">
             <div class="flex flex-col items-center gap-4 p-4">
                 <Avatar size={24}/>
