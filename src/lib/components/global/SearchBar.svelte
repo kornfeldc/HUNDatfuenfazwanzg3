@@ -68,7 +68,7 @@
         <input
                 bind:this={inputEl}
                 bind:value={value}
-                class={Util.mapClass("border-0 m-0 p-1.5 mr-2 bg-transparent rounded-full text-white placeholder-gray-200 text-base", true, "w-full", "")}
+                class={Util.mapClass("border-0 m-0 p-1.5 mr-2 bg-transparent rounded-full text-white placeholder-gray-200 text-base focus:outline-none", true, "w-full", "")}
                 onblur={(event) => inputBlurred(event)}
                 onfocus={(event) => inputFocused(event)}
                 onkeydown={(e) => handleKeyDown(e)}
