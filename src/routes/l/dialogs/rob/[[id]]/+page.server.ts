@@ -12,7 +12,7 @@ export async function load({cookies, params, url, locals}) {
 }
 
 export const actions = {
-    default: async ({cookies, request, params, locals}) => {
+    save: async ({cookies, request, params, locals}) => {
         const {id} = params;
         const formData = await request.formData();
 

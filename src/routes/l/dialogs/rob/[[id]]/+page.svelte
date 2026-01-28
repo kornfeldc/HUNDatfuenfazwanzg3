@@ -37,8 +37,8 @@
             formRob.maxPersons = rob.maxPersons;
             formRob.link = rob.link;
         } else {
-            formRob.date = new Date();
-            formRob.maxPersons = 10;
+            formRob.date = moment().startOf("week").add(1, "week").toDate();
+            formRob.maxPersons = 6;
             formRob.link = Math.random().toString(36).substring(2, 8);
         }
         dateStr = moment(formRob.date).format('YYYY-MM-DD');
@@ -55,7 +55,7 @@
 {#await loadRob()}
     <Loading></Loading>
 {:then _}
-    <form method="post" action={id ? `/l/dialogs/rob/${id}` : `/l/dialogs/rob`} use:enhance={() => {
+    <form method="post" action="?/save" use:enhance={() => {
         submitting = true;
         return async ({ update }) => {
             await update();
@@ -64,7 +64,7 @@
     }}>
         <input type="hidden" name="redirectTo" value={uiState.getLastRouteSmart()}>
         <Card className="max-w-xl m-auto">
-            <CardTitleBig className="hidden sm:block pb-2">{formRob.id ? "Rob Kurs bearbeiten" : "Neuer Rob Kurs"}</CardTitleBig>
+            <CardTitleBig className="hidden sm:block pb-2">{formRob.id ? "ROB Kurs bearbeiten" : "Neuer ROB Kurs"}</CardTitleBig>
             <div class="grid grid-cols-12 gap-6">
                 <div class="col-span-12 flex flex-col gap-2">
                     <Label for="date-{id}">Datum</Label>
