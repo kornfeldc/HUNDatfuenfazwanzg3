@@ -14,11 +14,13 @@
     <Card>
         <div class="flex items-center gap-2">
             <div class="flex items-center gap-2 font-bold text-lg w-full">
-                <Calendar size="20" class="text-muted-foreground"></Calendar>
+                <Calendar class="text-muted-foreground" size="20"></Calendar>
                 {Util.formatDate(robCourse.date)}
             </div>
             <div class="whitespace-nowrap text-base text-ok">
-                <span class="text-primary text-lg font-bold">{robCourse.persons?.length ?? 0}</span>
+                <span class={"text-lg font-bold "+(((robCourse.persons?.length ?? 0) > 0) ? "text-primary": "text-warning")}>
+                {robCourse.persons?.length ?? 0}
+            </span>
             </div>
         </div>
         <div class="flex items-center">
