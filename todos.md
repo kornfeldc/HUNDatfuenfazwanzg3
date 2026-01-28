@@ -35,7 +35,8 @@
 - [x] Neuer Tab "Kurs" unter "Personen" - gruppierte anzeige aktiver Kursler (mind. 1 Aufladung im letzten Jahr)
 
 # Rob
-- [ ] Komplette Implementierung
+- [x] Komplette Implementierung
+- [ ] Überprüfung bezgl. "Public" ROB Anmeldung und DB Zugriff usw.
 
 # Global
 - [x] Authentifizierung
