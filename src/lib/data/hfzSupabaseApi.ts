@@ -345,6 +345,22 @@ export class HfzSupabaseApi implements IHfzApi {
         return ret as IRobCourse;
     }
 
+    async getRobCourseByLink(link: string): Promise<IRobCourse> {
+        const supabase = this.supabase;
+        const {data, error} = await supabase
+            .from('rob_course')
+            .select('*, rob_course_person(*)')
+            .eq('link', link)
+            .single();
+
+        if (error) throw error;
+
+        const ret = HfzSupabaseApi.parseData(data, [
+            ["rob_course_person", "persons"]
+        ]);
+        return ret as IRobCourse;
+    }
+
     async getRobCourses(): Promise<Array<IRobCourse>> {
         const supabase = this.supabase;
         const {data, error} = await supabase
@@ -406,6 +422,18 @@ export class HfzSupabaseApi implements IHfzApi {
             .delete()
             .eq('og', this.og)
             .eq('id', id.id);
+        if (error) throw error;
+    }
+
+    async addRobCoursePerson(robCourseId: number, personName: string, dogName: string): Promise<void> {
+        const supabase = this.supabase;
+        const {error} = await supabase
+            .from('rob_course_person')
+            .insert({
+                robCourseId,
+                personName,
+                dogName
+            });
         if (error) throw error;
     }
 
