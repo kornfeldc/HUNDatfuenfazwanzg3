@@ -36,7 +36,13 @@ export const actions = {
 
         try {
             const api = HfzApi.create(locals.supabase, locals.og!);
-            if (id) await api.updateRobCourse(data as any);
+            if (id) {
+                const existing = await api.getRobCourse({id: parseInt(id)});
+                if (existing.persons && existing.persons.length > 0) {
+                    return fail(422, {error: "Kurs kann nicht mehr geändert werden, da bereits Personen angemeldet sind."});
+                }
+                await api.updateRobCourse(data as any);
+            }
             else await api.createRobCourse(data as any);
         } catch (e: any) {
             return fail(422, {
@@ -58,5 +64,19 @@ export const actions = {
         }
 
         throw redirect(303, "/l/modules/rob");
+    },
+    deletePerson: async ({request, locals}) => {
+        const formData = await request.formData();
+        const personId = formData.get('personId')?.toString();
+        if (!personId) return fail(400, {error: "No Person ID provided"});
+
+        try {
+            const api = HfzApi.create(locals.supabase, locals.og!);
+            await api.deleteRobCoursePerson(parseInt(personId));
+        } catch (e: any) {
+            return fail(422, {error: e.message});
+        }
+
+        return { success: true };
     }
 };

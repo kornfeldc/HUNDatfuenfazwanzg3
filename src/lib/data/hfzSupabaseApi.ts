@@ -66,7 +66,7 @@ export class HfzSupabaseApi implements IHfzApi {
         if (Array.isArray(data))
             return data.map(x => HfzSupabaseApi.renameProperty(x, oldName, newName));
 
-        if (data[oldName]) {
+        if (data[oldName] !== undefined) {
             data[newName] = data[oldName];
             delete data[oldName];
         }
@@ -434,6 +434,15 @@ export class HfzSupabaseApi implements IHfzApi {
                 personName,
                 dogName
             });
+        if (error) throw error;
+    }
+
+    async deleteRobCoursePerson(id: number): Promise<void> {
+        const supabase = this.supabase;
+        const {error} = await supabase
+            .from('rob_course_person')
+            .delete()
+            .eq('id', id);
         if (error) throw error;
     }
 

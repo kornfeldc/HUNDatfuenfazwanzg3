@@ -44,6 +44,7 @@ export interface IHfzApi {
     updateRobCourse(robCourse: IRobCourse): Promise<IRobCourse>;
     deleteRobCourse(id: IId): Promise<void>;
     addRobCoursePerson(robCourseId: number, personName: string, dogName: string): Promise<void>;
+    deleteRobCoursePerson(id: number): Promise<void>;
     
     getUnassignedUsers(): Promise<Array<IUser>>;
     assignUserToOg(email: string, og: number): Promise<void>;
