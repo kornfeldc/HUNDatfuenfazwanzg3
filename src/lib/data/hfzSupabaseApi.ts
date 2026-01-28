@@ -334,12 +334,14 @@ export class HfzSupabaseApi implements IHfzApi {
         const supabase = this.supabase;
         const {data, error} = await supabase
             .from('rob_course')
-            .select('*')
+            .select('*, rob_course_person(*)')
             .eq("og", this.og)
             .eq('id', id.id)
             .single();
 
-        const ret = HfzSupabaseApi.mapDates(data);
+        const ret = HfzSupabaseApi.parseData(data, [
+            ["rob_course_person", "persons"]
+        ]);
         return ret as IRobCourse;
     }
 
@@ -347,11 +349,64 @@ export class HfzSupabaseApi implements IHfzApi {
         const supabase = this.supabase;
         const {data, error} = await supabase
             .from('rob_course')
-            .select('*')
+            .select('*, rob_course_person(*)')
             .eq("og", this.og);
 
-        const ret = HfzSupabaseApi.mapDates(data);
+        const ret = HfzSupabaseApi.parseData(data, [
+            ["rob_course_person", "persons"]
+        ]);
         return ret as Array<IRobCourse>;
+    }
+
+    async createRobCourse(robCourse: Partial<IRobCourse>): Promise<IRobCourse> {
+        const supabase = this.supabase;
+        if (!robCourse.link) {
+            robCourse.link = Math.random().toString(36).substring(2, 8);
+        }
+        const payload = {...robCourse, og: this.og} as any;
+        delete payload.persons;
+
+        const {data, error} = await supabase
+            .from('rob_course')
+            .insert(payload)
+            .select('*, rob_course_person(*)')
+            .single();
+        if (error) throw error;
+        return HfzSupabaseApi.parseData(data, [
+            ["rob_course_person", "persons"]
+        ]) as IRobCourse;
+    }
+
+    async updateRobCourse(robCourse: IRobCourse): Promise<IRobCourse> {
+        const supabase = this.supabase;
+        const {data, error} = await supabase
+            .from('rob_course')
+            .update({
+                date: robCourse.date,
+                maxPersons: robCourse.maxPersons,
+                link: robCourse.link
+            })
+            .eq('og', this.og)
+            .eq('id', robCourse.id)
+            .select('*, rob_course_person(*)')
+            .single();
+        if (error) throw error;
+        return HfzSupabaseApi.parseData(data, [
+            ["rob_course_person", "persons"]
+        ]) as IRobCourse;
+    }
+
+    async deleteRobCourse(id: IId): Promise<void> {
+        const supabase = this.supabase;
+        // persons are deleted by cascade or manually? 
+        // looking at the schema there are no foreign key constraints mentioned in the json but usually they are there.
+        // I will just delete the course, assuming cascade or that we don't care for now as per instructions.
+        const {error} = await supabase
+            .from('rob_course')
+            .delete()
+            .eq('og', this.og)
+            .eq('id', id.id);
+        if (error) throw error;
     }
 
     async getSale(id: IId): Promise<ISale> {

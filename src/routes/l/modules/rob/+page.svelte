@@ -8,7 +8,7 @@
     import { page } from '$app/stores';
 
     import FilterBar from "$lib/components/global/FilterBar.svelte";
-    let type = $derived($page.url.searchParams.get("type") ?? "current");
+    let type = $derived($page.url.searchParams.get("type") ?? "all");
 
     import {moment} from "$lib/util";
     import thenby from 'thenby';
@@ -21,11 +21,15 @@
     }
     
     const filter = (robCourses: Array<IRobCourse>) => {
-       return robCourses.filter((r:IRobCourse) =>
-           (r.persons?.find((p:IRobCoursePerson)=> p?.personName.toLowerCase().includes(searchString.toLowerCase())) ||
-           r.persons?.find((p:IRobCoursePerson)=> p?.dogName.toLowerCase().includes(searchString.toLowerCase()))) && 
-           isTypeMatching(r)
-       ).sort(firstBy("date", { direction: "desc" }));
+       return robCourses.filter((r:IRobCourse) => {
+           const matchesSearch = !searchString || 
+               moment(r.date).format('DD.MM.YYYY').includes(searchString) ||
+               r.persons?.some((p:IRobCoursePerson)=> 
+                   p?.personName?.toLowerCase().includes(searchString.toLowerCase()) || 
+                   p?.dogName?.toLowerCase().includes(searchString.toLowerCase())
+               );
+           return matchesSearch && isTypeMatching(r);
+       }).sort(firstBy("date", { direction: "desc" }));
     }
     
     const isTypeMatching = (robCourse: IRobCourse) => 
