@@ -13,6 +13,7 @@
     import Loading from "$lib/components/global/Loading.svelte";
     import TextButton from "$lib/components/global/TextButton.svelte";
     import { enhance } from '$app/forms';
+    import {Button} from "$lib/components/shadcn/ui/button";
 
     let {data}: { data: any } = $props();
     let searchString = $state("");
@@ -62,6 +63,12 @@
             <CircleArrowRight class="text-slate-400"/>
         </a>
     </div>
+    {#if filter(sales).length === 0}
+        <div class="w-full mt-20 flex flex-col justify-center items-center">
+            <p class="text-2xl mb-6">Es gibt noch keine Verkäufe</p>
+            <Button href="/l/modules/personChooser" class="text-xl w-min p-8">Jetzt neuen Verkauf anlegen</Button>
+        </div>
+    {/if}
     <SalesGrid sales={filter(sales)}/>
 {/await}
 
