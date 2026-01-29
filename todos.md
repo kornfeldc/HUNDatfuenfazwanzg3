@@ -29,14 +29,14 @@
 - [x] Kurs aufbuchen
 - [x] Kurs abbuchen (auch ins Minus soll möglich sein)
 - [x] Info Feld
-- [ ] Funktionalität zusammenhängende Personen bezgl. Verkauf kontrollieren
+- [x] Funktionalität zusammenhängende Personen bezgl. Verkauf kontrollieren
 
 # Kurs
 - [x] Neuer Tab "Kurs" unter "Personen" - gruppierte anzeige aktiver Kursler (mind. 1 Aufladung im letzten Jahr)
 
 # Rob
 - [x] Komplette Implementierung
-- [ ] Überprüfung bezgl. "Public" ROB Anmeldung und DB Zugriff usw.
+- [x] Überprüfung bezgl. "Public" ROB Anmeldung und DB Zugriff usw.
 
 # Global
 - [x] Authentifizierung

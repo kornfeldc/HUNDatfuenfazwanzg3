@@ -16,16 +16,20 @@
     import {Util} from "$lib/util";
     import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
     import {uiState} from "$lib/stores/uiState.svelte";
-    import { enhance } from '$app/forms';
+    import {enhance} from '$app/forms';
+    import PersonOverview from "$lib/components/persons/PersonOverview.svelte";
 
     let id = $page.params.id;
     let {data}: { data: any; } = $props();
+    let person = $state({} as IPerson);
     let formPerson = $state({} as IPerson);
     let isConnected = $state(false);
     let submitting = $state(false);
-    
+
+    let isSubPerson = $derived(formPerson.mainPersonId && formPerson.mainPersonId !== formPerson.id);
+
     const loadPerson = async () => {
-        const person = await data.person;
+        person = await data.person;
         formPerson.id = person?.id;
         formPerson.lastName = person?.lastName ?? "";
         formPerson.firstName = person?.firstName ?? "";
@@ -35,10 +39,11 @@
         formPerson.isMember = person?.isMember ?? false;
         formPerson.isActive = person?.isActive ?? true;
         formPerson.personGroup = person?.personGroup ?? "";
+        formPerson.mainPersonId = person?.mainPersonId;
         formPerson.info = person?.info ?? "";
         isConnected = !!formPerson.personGroup;
     }
-    
+
     const swapName = () => {
         const temp = formPerson.firstName;
         formPerson.firstName = formPerson.lastName;
@@ -57,8 +62,16 @@
         };
     }}>
         <input type="hidden" name="redirectTo" value={uiState.getLastRouteSmart()}>
+        {#if formPerson.id}
+            <Card className="max-w-xl m-auto mb-2">
+                <PersonOverview person={person}></PersonOverview>
+            </Card>
+        {/if}
         <Card className="max-w-xl m-auto">
-            <CardTitleBig className="hidden sm:block pb-2">{formPerson.id ? (formPerson.lastName + " " + formPerson.firstName) : "Neue Person"}</CardTitleBig>
+            {#if !formPerson.id}
+                <CardTitleBig
+                        className="hidden sm:block pb-2">{formPerson.id ? (formPerson.lastName + " " + formPerson.firstName) : "Neue Person"}</CardTitleBig>
+            {/if}
             <div class="grid grid-cols-12 gap-6">
                 <div class="col-span-12 flex flex-col gap-2">
                     <Label for="firstName-{id}">Vorname</Label>
@@ -109,26 +122,26 @@
                 <div class="col-span-6 flex flex-col gap-2">
                     <Label for="member-{id}" class="whitespace-nowrap">Ist Mitglied</Label>
                     <input type="hidden" name="isMember" value={formPerson.isMember ? 'on' : ''}/>
-                    <Checkbox id="member-{id}" bind:checked={formPerson.isMember} />
+                    <Checkbox id="member-{id}" bind:checked={formPerson.isMember}/>
                 </div>
 
                 <div class="col-span-6 flex flex-col gap-2">
                     <Label for="active-{id}" class="whitespace-nowrap">Ist Aktiv</Label>
                     <input type="hidden" name="isActive" value={formPerson.isActive ? 'on' : ''}/>
-                    <Checkbox id="active-{id}" bind:checked={formPerson.isActive} />
+                    <Checkbox id="active-{id}" bind:checked={formPerson.isActive}/>
                 </div>
 
                 <div class="col-span-6 flex flex-col gap-2">
                     <Label for="connected-{id}" class="whitespace-nowrap">Zusammenhängend</Label>
                     <input type="hidden" name="isConnected" value={isConnected ? 'on' : ''}/>
-                    <Checkbox id="connected-{id}" bind:checked={isConnected} />
+                    <Checkbox id="connected-{id}" bind:checked={isConnected}/>
                 </div>
 
                 <div class={Util.mapClass("col-span-6 flex flex-col gap-2", isConnected, "", "hidden")}>
                     <Label for="personGroup-{id}" class="whitespace-nowrap">Personengruppe</Label>
                     <InputGroup.Root>
-                        <InputGroup.Input 
-                                name="personGroup" 
+                        <InputGroup.Input
+                                name="personGroup"
                                 id="personGroup-{id}"
                                 bind:value={formPerson.personGroup}></InputGroup.Input>
                     </InputGroup.Root>
@@ -138,9 +151,18 @@
                     <Label for="info-{id}">Sonstige Infos</Label>
                     <InputGroup.Root>
                         <InputGroup.Textarea name="info" id="info-{id}"
-                                          bind:value={formPerson.info}></InputGroup.Textarea>
+                                             bind:value={formPerson.info}></InputGroup.Textarea>
                     </InputGroup.Root>
                 </div>
+
+                {#if isSubPerson}
+                    <div class="col-span-12 flex flex-col gap-2">
+                        <Label>Guthaben wird nur für die Hauptperson verwaltet</Label>
+                        <Button href={`/l/dialogs/person/${formPerson.mainPersonId}/data`} class="w-min">Hauptperson
+                            öffnen
+                        </Button>
+                    </div>
+                {/if}
 
             </div>
 
@@ -148,11 +170,13 @@
 
         <NavigationActions>
             <div class="flex gap-2" slot="actions">
-                <GlassCircleLink
-                        className={" bg-primary/90! border-0 shadow-md "}
-                        href={`/l/dialogs/person/${id}/actions`}>
-                    <Diff class="text-primary-foreground"/>
-                </GlassCircleLink>
+                {#if !isSubPerson}
+                    <GlassCircleLink
+                            className={" bg-primary/90! border-0 shadow-md "}
+                            href={`/l/dialogs/person/${id}/actions`}>
+                        <Diff class="text-primary-foreground"/>
+                    </GlassCircleLink>
+                {/if}
                 <button type="submit">
                     <SaveButton></SaveButton>
                 </button>

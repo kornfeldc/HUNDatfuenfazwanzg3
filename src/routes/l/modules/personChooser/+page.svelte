@@ -87,7 +87,7 @@
         </Card>
     </a>
     <FilterBar className="px-3 pb-2" items={filterItems} selected={type} parameterName="type"></FilterBar>
-    <PersonsGrid persons={filter(persons)} href="/l/dialogs/sale"/>
+    <PersonsGrid persons={filter(persons)} href="/l/dialogs/sale" openMainPerson={true}/>
 {/await}
 
 <PlaceAtBottom>

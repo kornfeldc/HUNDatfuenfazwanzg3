@@ -7,14 +7,16 @@
     interface IProps {
         person: IPerson;
         href?: string;
+        openMainPerson?: boolean;
     }
 
-    let {person,href = ""}: IProps = $props();
+    let {person, href = "", openMainPerson = false}: IProps = $props();
     
     let linkTo = $derived.by(() => {
+       let idToOpen = openMainPerson ? (person.mainPersonId ?? person.id) : person.id;
        if(href)
-           return `${href}?personId=${person.id}`;
-       return "/l/dialogs/person/"+person.id;
+           return `${href}?personId=${idToOpen}`;
+       return "/l/dialogs/person/"+idToOpen;
     });
     
 </script>

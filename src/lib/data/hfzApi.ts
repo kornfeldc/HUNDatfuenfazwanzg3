@@ -110,7 +110,7 @@ export interface IPerson extends IId {
     lastName: string;
     isActive: boolean;
     isMember: boolean;
-    mainPerson?: IPerson;
+    mainPersonId?: number;
     personGroup: string;
     phone: string;
     saleCount: number;

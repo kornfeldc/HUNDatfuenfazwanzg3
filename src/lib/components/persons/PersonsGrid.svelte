@@ -6,12 +6,13 @@
     interface IProps {
         persons: Array<IPerson>;
         href?: string;
+        openMainPerson?: boolean;
     }
 
-    let {persons, href = ""}: IProps = $props();
+    let {persons, href = "", openMainPerson = false}: IProps = $props();
 </script>
 <Grid>
     {#each persons as person}
-        <PersonsGridEntry {person} {href}/>
+        <PersonsGridEntry {person} {href} {openMainPerson}/>
     {/each}
 </Grid>
