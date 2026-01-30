@@ -87,7 +87,7 @@
                 }}>
                     <input type="hidden" name="date" value={date} />
                     <button type="submit">
-                        <TextButton className={"bg-transparent! border-2 border-ok text-ok! whitespace-nowrap w-min px-4"}>Alle mit GH abrechnen</TextButton>
+                        <TextButton className={"bg-transparent! border-2 border-ok text-ok! shadow-sm shadow-ok/50 whitespace-nowrap w-min px-4"}>Alle mit GH abrechnen</TextButton>
                     </button>
                 </form>
             </div>

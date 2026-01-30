@@ -37,6 +37,11 @@ export interface IHfzApi {
     getTopSoldArticlesBySaleId(saleId?: IId, dateFrom?: Date): Promise<Array<ISoldArticleAggregate>>;
     getTopPersonsBySales(dateFrom?: Date): Promise<Array<IPersonSaleAggregate>>;
 
+    getStatisticsArticles(year?: string): Promise<Array<{label: string, value: number}>>;
+    getStatisticsSales(year?: string): Promise<Array<{label: string, count: number, volume: number}>>;
+    getStatisticsPersonSales(year?: string): Promise<Array<{label: string, value: number}>>;
+    getAvailableYears(): Promise<Array<string>>;
+
     getRobCourses(): Promise<Array<IRobCourse>>;
     getRobCourse(id: IId): Promise<IRobCourse>;
     getRobCourseByLink(link: string): Promise<IRobCourse>;

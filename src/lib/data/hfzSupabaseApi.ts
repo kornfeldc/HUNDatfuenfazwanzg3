@@ -860,4 +860,164 @@ export class HfzSupabaseApi implements IHfzApi {
             throw error;
         }
     }
+
+    async getAvailableYears(): Promise<Array<string>> {
+        const {data, error} = await this.supabase
+            .from("sale")
+            .select("saleDate")
+            .eq("og", this.og)
+            .order("saleDate", {ascending: false});
+
+        if (error) {
+            console.error("getAvailableYears error", error);
+            return [];
+        }
+        if (!data) return [];
+        const years = new Set<string>();
+        data.forEach(s => {
+            if (s.saleDate) {
+                years.add(new Date(s.saleDate).getFullYear().toString());
+            }
+        });
+        return Array.from(years).sort((a, b) => b.localeCompare(a));
+    }
+
+    async getStatisticsArticles(year?: string): Promise<Array<{ label: string; value: number }>> {
+        const fetchAll = async (query: any) => {
+            let allData: any[] = [];
+            let from = 0;
+            const step = 1000;
+            while (true) {
+                const {data, error} = await query.range(from, from + step - 1);
+                if (error) throw error;
+                if (!data || data.length === 0) break;
+                allData = [...allData, ...data];
+                if (data.length < step) break;
+                from += step;
+            }
+            return allData;
+        };
+
+        let query = this.supabase
+            .from("sale_article")
+            .select("articleTitle, amount")
+            .eq("og", this.og);
+
+        if (year && year !== "all") {
+            const start = `${year}-01-01`;
+            const end = `${year}-12-31`;
+            const {data: sales} = await this.supabase.from("sale").select("id").eq("og", this.og).gte("saleDate", start).lte("saleDate", end);
+            if (!sales || sales.length === 0) return [];
+            query = query.in("saleId", sales.map(s => s.id));
+        }
+
+        try {
+            const data = await fetchAll(query);
+
+            const map = new Map<string, number>();
+            data.forEach(item => {
+                map.set(item.articleTitle, (map.get(item.articleTitle) || 0) + item.amount);
+            });
+
+            return Array.from(map.entries())
+                .map(([label, value]) => ({label, value}))
+                .sort((a, b) => b.value - a.value)
+                .slice(0, 10);
+        } catch (error) {
+            console.error("getStatisticsArticles error", error);
+            return [];
+        }
+    }
+
+    async getStatisticsSales(year?: string): Promise<Array<{ label: string; count: number; volume: number }>> {
+        const fetchAll = async (query: any) => {
+            let allData: any[] = [];
+            let from = 0;
+            const step = 1000;
+            while (true) {
+                const {data, error} = await query.range(from, from + step - 1);
+                if (error) throw error;
+                if (!data || data.length === 0) break;
+                allData = [...allData, ...data];
+                if (data.length < step) break;
+                from += step;
+            }
+            return allData;
+        };
+
+        let query = this.supabase
+            .from("sale")
+            .select("saleDate, articleSum")
+            .eq("og", this.og);
+
+        if (year && year !== "all") {
+            query = query.gte("saleDate", `${year}-01-01`).lte("saleDate", `${year}-12-31`);
+        }
+
+        try {
+            const data = await fetchAll(query);
+
+            const months = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"];
+            const stats = months.map(m => ({label: m, count: 0, volume: 0}));
+
+            data.forEach(sale => {
+                if (sale.saleDate) {
+                    const date = new Date(sale.saleDate);
+                    const monthIdx = date.getMonth();
+                    stats[monthIdx].count++;
+                    stats[monthIdx].volume += Number(sale.articleSum) || 0;
+                }
+            });
+
+            return stats;
+        } catch (error) {
+            console.error("getStatisticsSales error", error);
+            return [];
+        }
+    }
+
+    async getStatisticsPersonSales(year?: string): Promise<Array<{ label: string; value: number }>> {
+        const fetchAll = async (query: any) => {
+            let allData: any[] = [];
+            let from = 0;
+            const step = 1000;
+            while (true) {
+                const {data, error} = await query.range(from, from + step - 1);
+                if (error) throw error;
+                if (!data || data.length === 0) break;
+                allData = [...allData, ...data];
+                if (data.length < step) break;
+                from += step;
+            }
+            return allData;
+        };
+
+        let query = this.supabase
+            .from("sale")
+            .select("personName, articleSum")
+            .eq("og", this.og);
+
+        if (year && year !== "all") {
+            query = query.gte("saleDate", `${year}-01-01`).lte("saleDate", `${year}-12-31`);
+        }
+
+        try {
+            const data = await fetchAll(query);
+
+            const map = new Map<string, number>();
+            data.forEach(sale => {
+                const name = sale.personName || "Unbekannt";
+                map.set(name, (map.get(name) || 0) + (Number(sale.articleSum) || 0));
+            });
+
+            return Array.from(map.entries())
+                .map(([label, value]) => ({label, value}))
+                .sort((a, b) => b.value - a.value)
+                .slice(0, 15); // Top 15 persons
+        } catch (error) {
+            console.error("getStatisticsPersonSales error", error);
+            return [];
+        }
+    }
+
 }

@@ -68,7 +68,8 @@
 </PlaceAtBottom>
 
 <NavigationActions>
-    <div slot="actions">
+    <div slot="actions" class="flex gap-2">
+        <TextButton color="muted" href={"/l/modules/statistics"}>Statistiken</TextButton>
         <TextButton color="primary" href={"/l/modules/sales?date="+moment().format('YYYY-MM-DD')}>Heute</TextButton>
     </div>
 </NavigationActions>
