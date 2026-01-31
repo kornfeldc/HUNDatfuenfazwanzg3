@@ -104,6 +104,7 @@ export class HfzSupabaseApi implements IHfzApi {
             .single();
 
         if (persError) throw persError;
+        await this.logAction('add_credit', 'person', personId.id, `${amount}€ for ${person.firstName} ${person.lastName}`);
     }
 
     async addPersonCourse(personId: IId, amount: number, date: Date): Promise<void> {
@@ -130,6 +131,7 @@ export class HfzSupabaseApi implements IHfzApi {
             .single();
 
         if (persError) throw persError;
+        await this.logAction('add_course', 'person', personId.id, `${amount} courses for ${person.firstName} ${person.lastName}`);
     }
 
     async createPerson(person: Partial<IPerson>): Promise<IPerson> {
@@ -147,7 +149,9 @@ export class HfzSupabaseApi implements IHfzApi {
             .select('*')
             .single();
         if (error) throw error;
-        return HfzSupabaseApi.mapDates(data) as IPerson;
+        const result = HfzSupabaseApi.mapDates(data) as IPerson;
+        await this.logAction('create', 'person', result.id, `${result.firstName} ${result.lastName}`);
+        return result;
     }
 
     async updatePerson(person: IPerson): Promise<IPerson> {
@@ -170,7 +174,9 @@ export class HfzSupabaseApi implements IHfzApi {
             .select('*')
             .single();
         if (error) throw error;
-        return HfzSupabaseApi.mapDates(data) as IPerson;
+        const result = HfzSupabaseApi.mapDates(data) as IPerson;
+        await this.logAction('update', 'person', result.id, `${result.firstName} ${result.lastName}`);
+        return result;
     }
 
     async deletePerson(id: IId): Promise<void> {
@@ -181,6 +187,7 @@ export class HfzSupabaseApi implements IHfzApi {
             .eq('og', this.og)
             .eq('id', id.id);
         if (error) throw error;
+        await this.logAction('delete', 'person', id.id, ``);
     }
 
     async createArticle(article: Partial<IArticle>): Promise<IArticle> {
@@ -192,7 +199,9 @@ export class HfzSupabaseApi implements IHfzApi {
             .select('*')
             .single();
         if (error) throw error;
-        return HfzSupabaseApi.mapDates(data) as IArticle;
+        const result = HfzSupabaseApi.mapDates(data) as IArticle;
+        await this.logAction('create', 'article', result.id, result.title);
+        return result;
     }
 
     async updateArticle(article: IArticle): Promise<IArticle> {
@@ -211,7 +220,9 @@ export class HfzSupabaseApi implements IHfzApi {
             .select('*')
             .single();
         if (error) throw error;
-        return HfzSupabaseApi.mapDates(data) as IArticle;
+        const result = HfzSupabaseApi.mapDates(data) as IArticle;
+        await this.logAction('update', 'article', result.id, result.title);
+        return result;
     }
 
     async deleteArticle(id: IId): Promise<void> {
@@ -222,6 +233,7 @@ export class HfzSupabaseApi implements IHfzApi {
             .eq('og', this.og)
             .eq('id', id.id);
         if (error) throw error;
+        await this.logAction('delete', 'article', id.id, ``);
     }
 
     async getArticle(id: IId): Promise<IArticle> {
@@ -585,7 +597,9 @@ export class HfzSupabaseApi implements IHfzApi {
             if (error) throw error;
         }
 
-        return this.getSale({id: saleId});
+        const result = await this.getSale({id: saleId});
+        await this.logAction(sale.id ? 'update' : 'create', 'sale', saleId, `Person: ${result.personName}, Sum: ${result.articleSum}€`);
+        return result;
     }
 
     async paySale(sale: ISale): Promise<ISale> {
@@ -616,7 +630,9 @@ export class HfzSupabaseApi implements IHfzApi {
             console.log("call addPErsonCredit")
             await this.addPersonCredit({id: salePayload.personId}, creditChange, sale.payDate, {id: saleId});
         }
-        return this.getSale({id: saleId});
+        const result = await this.getSale({id: saleId});
+        await this.logAction('pay_sale', 'sale', saleId, `Amount: ${result.toPay}€, Person: ${result.personName}`);
+        return result;
     }
 
     async paySalesWithCredit(date?: string, saleId?: number): Promise<void> {
@@ -684,6 +700,7 @@ export class HfzSupabaseApi implements IHfzApi {
         await supabase.from('credit_history').delete().eq('saleId', id.id);
         const {error} = await supabase.from('sale').delete().eq('id', id.id);
         if (error) throw new Error(error.message);
+        await this.logAction('delete', 'sale', id.id, ``);
     }
 
     async getNewSaleForPerson(personId?: IId): Promise<ISale> {
@@ -900,6 +917,51 @@ export class HfzSupabaseApi implements IHfzApi {
             }
         });
         return Array.from(years).sort((a, b) => b.localeCompare(a));
+    }
+
+    private async logAction(action: string, entityType: string, entityId: string | number, details: string): Promise<void> {
+        try {
+            const user = await this.getUser();
+            const {error} = await this.supabase
+                .from('history')
+                .insert({
+                    userEmail: user.email,
+                    action: action,
+                    entityType: entityType,
+                    entityId: entityId.toString(),
+                    details: details,
+                    og: this.og
+                });
+            if (error) {
+                console.error("Error logging action", error);
+            }
+        } catch (e) {
+            console.error("Failed to log action", e);
+        }
+    }
+
+    async getHistory(): Promise<Array<IHistory>> {
+        const {data, error} = await this.supabase
+            .from('history')
+            .select('*')
+            .eq('og', this.og)
+            .order('timestamp', {ascending: false});
+
+        if (error) {
+            console.error("getHistory error", error);
+            return [];
+        }
+
+        return data.map((h: any) => ({
+            id: h.id,
+            timestamp: new Date(h.timestamp),
+            userEmail: h.userEmail,
+            action: h.action,
+            entityType: h.entityType,
+            entityId: h.entityId,
+            details: h.details,
+            og: h.og
+        }));
     }
 
     async getStatisticsArticles(year?: string): Promise<Array<{ label: string; value: number }>> {

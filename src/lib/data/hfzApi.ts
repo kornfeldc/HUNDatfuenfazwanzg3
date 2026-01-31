@@ -55,6 +55,8 @@ export interface IHfzApi {
     
     getUnassignedUsers(): Promise<Array<IUser>>;
     assignUserToOg(email: string, og: number): Promise<void>;
+
+    getHistory(): Promise<Array<IHistory>>;
 }
 
 export class HfzApi {
@@ -203,4 +205,14 @@ export interface ISoldArticleAggregate {
 export interface IPersonSaleAggregate {
     personId: number;
     count: number;
+}
+
+export interface IHistory extends IId {
+    timestamp: Date;
+    userEmail: string;
+    action: string;
+    entityType: string;
+    entityId: string;
+    details: string;
+    og: number;
 }
