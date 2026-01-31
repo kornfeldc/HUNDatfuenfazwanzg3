@@ -9,6 +9,7 @@ export async function load({cookies, params, url, locals}) {
     const api = HfzApi.create(locals.supabase, locals.og!);
     return {
         history: api.getPersonMergedHistory({id: parseInt(id)}),
+        fullHistory: api.getPersonFullHistory(parseInt(id)),
         person: api.getPerson({id: parseInt(id)})
     };
 }

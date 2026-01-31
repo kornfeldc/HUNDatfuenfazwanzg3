@@ -6,38 +6,67 @@
 
     let {history}: { history: Array<IHistory> } = $props();
 
-    const getActionLabel = (action: string) => {
-        switch (action) {
-            case 'create': return 'Erstellt';
-            case 'update': return 'Bearbeitet';
-            case 'delete': return 'Gelöscht';
-            case 'pay_sale': return 'Bezahlt';
-            case 'add_credit': return 'Guthaben aufgeladen';
-            case 'add_course': return 'Kurs hinzugefügt';
-            default: return action;
+    const getActionLabel = (item: IHistory) => {
+        const entityMap: Record<string, string> = {
+            'person': 'Person',
+            'sale': 'Verkauf',
+            'article': 'Artikel'
+        };
+        const entity = entityMap[item.entityType] || item.entityType;
+
+        switch (item.action) {
+            case 'create': return `${entity} erstellt`;
+            case 'update': return `${entity} bearbeitet`;
+            case 'delete': return `${entity} gelöscht`;
+            case 'pay_sale': return 'Verkauf bezahlt';
+            case 'add_credit': {
+                const amount = parseFloat(item.details);
+                if (!isNaN(amount) && amount < 0) return 'Guthaben abgezogen';
+                return 'Guthaben aufgeladen';
+            }
+            case 'add_course': {
+                const amount = parseFloat(item.details);
+                if (!isNaN(amount) && amount < 0) return 'Kurs abgezogen';
+                return 'Kurs hinzugefügt';
+            }
+            default: return `${entity} ${item.action}`;
         }
     };
 
-    const getActionColor = (action: string) => {
-        switch (action) {
+    const getActionColor = (item: IHistory) => {
+        switch (item.action) {
             case 'create': return 'text-ok';
             case 'update': return 'text-primary';
             case 'delete': return 'text-destructive';
             case 'pay_sale': return 'text-ok';
-            case 'add_credit': return 'text-ok';
-            case 'add_course': return 'text-ok';
+            case 'add_credit': {
+                const amount = parseFloat(item.details);
+                if (!isNaN(amount) && amount < 0) return 'text-destructive';
+                return 'text-ok';
+            }
+            case 'add_course': {
+                const amount = parseFloat(item.details);
+                if (!isNaN(amount) && amount < 0) return 'text-destructive';
+                return 'text-ok';
+            }
             default: return '';
         }
     };
 </script>
 
 <div class="flex flex-col gap-2">
-    {#each history as item}
+    {#each history.filter(h => {
+        if (h.action === 'add_credit' || h.action === 'add_course') {
+            const amount = parseFloat(h.details);
+            return !isNaN(amount) && amount !== 0;
+        }
+        return true;
+    }) as item}
         <Card className="flex flex-col gap-1">
             <div class="flex justify-between items-start">
-                <div class="flex items-center gap-2 font-bold {getActionColor(item.action)}">
+                <div class="flex items-center gap-2 font-bold {getActionColor(item)}">
                     <Activity size={16}/>
-                    {getActionLabel(item.action)}
+                    {getActionLabel(item)}
                 </div>
                 <div class="flex items-center gap-1 text-xs text-muted-foreground">
                     <Calendar size={14}/>

@@ -25,7 +25,7 @@ export async function load({params, locals}) {
     }
 
     return {
-        history: api.getHistory(entity, entityId),
+        history: entity === 'person' ? api.getPersonFullHistory(parseInt(entityId)) : api.getHistory(entity, entityId),
         title
     };
 }

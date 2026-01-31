@@ -10,14 +10,17 @@
     import NavigationActions from "$lib/components/global/NavigationActions.svelte";
     import {Diff} from "@lucide/svelte";
     import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
+    import History from "$lib/components/global/History.svelte";
 
     const {firstBy} = thenby;
 
     let {data}: { data: any; } = $props();
     let type = $derived($page.url.searchParams.get("type") ?? "all");
     let history = $state([] as Array<IMergedPersonHistory>);
+    let fullHistory = $state([] as Array<IHistory>);
     let person = $state({} as IPerson);
     let filteredHistory = $derived.by(() => {
+        if (type === "actions") return []; 
         return history.filter(h =>
             type === "all" ||
             type === "sale" && h.saleHistory?.length > 0 ||
@@ -28,6 +31,7 @@
 
     const loadHistory = async () => {
         history = await data.history;
+        fullHistory = await data.fullHistory;
         person = await data.person;
     }
 
@@ -36,6 +40,7 @@
         {id: "sale", label: "Verkauf"},
         {id: "course", label: "Kurs"},
         {id: "credit", label: "Guthaben"},
+        {id: "actions", label: "Aktionen"},
     ];
 
 </script>
@@ -50,16 +55,22 @@
 
     <FilterBar className="p-0! mt-2 mb-2" items={filterItems} parameterName="type" selected={type}></FilterBar>
     <div style="margin-left: -0.6em;margin-right: -0.6em;">
-        <PersonHistoryGrid history={filteredHistory} {type}></PersonHistoryGrid>
+        {#if type === "actions"}
+            <div class="px-2">
+                <History history={fullHistory}></History>
+            </div>
+        {:else}
+            <PersonHistoryGrid history={filteredHistory} {type}></PersonHistoryGrid>
+        {/if}
     </div>
 
     <NavigationActions>
-        <button slot="actions">
+        <div slot="actions" class="flex gap-2">
             <GlassCircleLink
                     className={" bg-primary/90! border-0 shadow-md "}
                     href={"/l/dialogs/person/" + person.id + "/actions"}>
                 <Diff class="text-primary-foreground"/>
             </GlassCircleLink>
-        </button>
+        </div>
     </NavigationActions>
 {/await}

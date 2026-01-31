@@ -47,7 +47,7 @@
 - [x] Suchzeile am Handy zoomt bei fokus
 - [x] Englische Strings von moment obwohl de locale verwendet wird
 - [x] "App" Mode (meta, manifest, ...)
-- [ ] History (welcher User hat was geändert)
+- [x] History (welcher User hat was geändert)
 
 # Hosting
 - [x] Vercel einrichten

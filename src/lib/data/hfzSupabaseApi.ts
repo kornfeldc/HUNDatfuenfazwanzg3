@@ -74,6 +74,7 @@ export class HfzSupabaseApi implements IHfzApi {
     }
 
     async addPersonCredit(personId: IId, amount: number, date: Date, saleId?: IId): Promise<void> {
+        if (amount === 0) return;
         const supabase = this.supabase;
         const payload: any = {
             personId: personId.id,
@@ -109,6 +110,7 @@ export class HfzSupabaseApi implements IHfzApi {
     }
 
     async addPersonCourse(personId: IId, amount: number, date: Date): Promise<void> {
+        if (amount === 0) return;
         const supabase = this.supabase;
         const payload: any = {
             personId: personId.id,
@@ -1026,6 +1028,59 @@ export class HfzSupabaseApi implements IHfzApi {
             details: h.details,
             og: h.og
         }));
+    }
+
+    async getPersonFullHistory(personId: number): Promise<Array<IHistory>> {
+        // 1. Get history for the person itself
+        const personHistory = await this.getHistory('person', personId);
+
+        // 2. Get all sale IDs for the person
+        const {data: sales, error: salesError} = await this.supabase
+            .from('sale')
+            .select('id')
+            .eq('og', this.og)
+            .eq('personId', personId);
+
+        if (salesError) {
+            console.error("getPersonFullHistory sales error", salesError);
+            return personHistory;
+        }
+
+        if (!sales || sales.length === 0) {
+            return personHistory;
+        }
+
+        const saleIds = sales.map(s => s.id.toString());
+
+        // 3. Get history for all those sales
+        const {data: salesHistory, error: historyError} = await this.supabase
+            .from('history')
+            .select('*')
+            .eq('og', this.og)
+            .eq('entityType', 'sale')
+            .in('entityId', saleIds);
+
+        if (historyError) {
+            console.error("getPersonFullHistory history error", historyError);
+            return personHistory;
+        }
+
+        const mappedSalesHistory: Array<IHistory> = salesHistory.map((h: any) => ({
+            id: h.id,
+            timestamp: new Date(h.timestamp),
+            userEmail: h.userEmail,
+            action: h.action,
+            entityType: h.entityType,
+            entityId: h.entityId,
+            details: h.details,
+            og: h.og
+        }));
+
+        // 4. Merge and sort
+        const combined = [...personHistory, ...mappedSalesHistory];
+        combined.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+
+        return combined;
     }
 
     async getStatisticsArticles(year?: string): Promise<Array<{ label: string; value: number }>> {
