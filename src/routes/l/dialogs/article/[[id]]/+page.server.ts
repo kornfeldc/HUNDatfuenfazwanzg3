@@ -6,9 +6,13 @@ export async function load({cookies, params, url, locals}) {
     const {id} = params;
     if (!id) return {title: 'Neuer Artikel'};
     const api = HfzApi.create(locals.supabase, locals.og!);
-    return {
-        article: api.getArticle({id: parseInt(id)})
-    };
+    try {
+        return {
+            article: await api.getArticle({id: parseInt(id)})
+        };
+    } catch (e) {
+        throw redirect(303, "/l/modules/articles");
+    }
 }
 
 export const actions = {
@@ -18,7 +22,14 @@ export const actions = {
         const api = HfzApi.create(locals.supabase, locals.og!);
 
         if (formData.get('deleteAction')) {
-            if (id) await api.deleteArticle({id: parseInt(id)});
+            try {
+                if (id) await api.deleteArticle({id: parseInt(id)});
+            } catch (e: any) {
+                console.error("Delete article error", e);
+                return fail(422, {
+                    error: "Artikel konnte nicht gelöscht werden. Evtl. ist er noch mit Verkäufen verknüpft."
+                });
+            }
             throw redirect(303, "/l/modules/articles");
         }
 

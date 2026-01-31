@@ -24,6 +24,7 @@
     let {data}: { data: any; } = $props();
     let formArticle = $state({} as IArticle);
     let submitting = $state(false);
+    let errorMessage = $state("");
 
     const loadArticle = async () => {
         const article = await data.article;
@@ -39,14 +40,30 @@
 {#await loadArticle()}
     <Loading></Loading>
 {:then _}
-    <form method="post" action={id ? `/l/dialogs/article/${id}` : `/l/dialogs/article`} use:enhance={() => {
+    <form method="post" action={id ? `/l/dialogs/article/${id}` : `/l/dialogs/article`} use:enhance={({ formData }) => {
         submitting = true;
-        return async ({ update }) => {
+        errorMessage = "";
+        const isDelete = !!formData.get('deleteAction');
+        return async ({ update, result }) => {
+            if (isDelete && result.type === 'redirect') {
+                submitting = false;
+                return;
+            }
+            if (result.type === 'failure') {
+                errorMessage = result.data?.error || "Ein Fehler ist aufgetreten";
+                submitting = false;
+                return;
+            }
             await update();
             submitting = false;
         };
     }}>
         <input type="hidden" name="redirectTo" value={uiState.getLastRouteSmart()}>
+        {#if errorMessage}
+            <Card className="max-w-xl m-auto mb-2 bg-destructive/10 text-destructive border-destructive/20">
+                <div class="p-2 text-center font-medium">{errorMessage}</div>
+            </Card>
+        {/if}
         <Card className="max-w-xl m-auto">
             <CardTitleBig className="hidden sm:block pb-2">{formArticle.id ? formArticle.title : "Neuer Artikel"}</CardTitleBig>
             <div class="grid grid-cols-12 gap-6">

@@ -19,6 +19,7 @@
     import { onMount } from 'svelte';
     import { invalidateAll } from '$app/navigation';
     import { Button } from "$lib/components/shadcn/ui/button";
+    import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
 
     let id = $page.params.id;
     let {data}: { data: any; } = $props();
@@ -30,6 +31,7 @@
         persons: [] as any[]
     } as IRobCourse);
     let submitting = $state(false);
+    let errorMessage = $state("");
     let origin = $state("");
     let dateStr = $state("");
     let showToast = $state(false);
@@ -72,12 +74,23 @@
     <div>
         <form method="post" action="?/save" use:enhance={() => {
             submitting = true;
-            return async ({ update }) => {
+            errorMessage = "";
+            return async ({ update, result }) => {
+                if (result.type === 'failure') {
+                    errorMessage = result.data?.error || "Ein Fehler ist aufgetreten";
+                    submitting = false;
+                    return;
+                }
                 await update();
                 submitting = false;
             };
         }} id="robForm">
             <input type="hidden" name="redirectTo" value={uiState.getLastRouteSmart()}>
+            {#if errorMessage}
+                <Card className="max-w-xl m-auto mb-2 bg-destructive/10 text-destructive border-destructive/20">
+                    <div class="p-2 text-center font-medium">{errorMessage}</div>
+                </Card>
+            {/if}
             <Card className="max-w-xl m-auto">
                 <CardTitleBig className="hidden sm:block pb-2">{formRob.id ? "ROB Kurs bearbeiten" : "Neuer ROB Kurs"}</CardTitleBig>
                 <div class="grid grid-cols-12 gap-6">
@@ -133,7 +146,13 @@
                             </div>
                             <form method="post" action="?/deletePerson" use:enhance={() => {
                                 submitting = true;
+                                errorMessage = "";
                                 return async ({ result }) => {
+                                    if (result.type === 'failure') {
+                                        errorMessage = result.data?.error || "Ein Fehler ist aufgetreten";
+                                        submitting = false;
+                                        return;
+                                    }
                                     if (result.type === 'success') {
                                         await invalidateAll();
                                         await loadRob();
@@ -161,6 +180,27 @@
 
         <PlaceAtBottom>
             <BackButton></BackButton>
+            {#if id}
+                <form method="post" action="?/delete" use:enhance={() => {
+                    submitting = true;
+                    errorMessage = "";
+                    return async ({ result }) => {
+                        if (result.type === 'failure') {
+                            errorMessage = result.data?.error || "Ein Fehler ist aufgetreten";
+                            submitting = false;
+                            return;
+                        }
+                        // Redirect will happen automatically if result.type === 'redirect'
+                        submitting = false;
+                    };
+                }}>
+                    <button type="submit">
+                        <GlassCircleLink className={"bg-destructive! text-destructive-foreground!"}>
+                            <TrashIcon/>
+                        </GlassCircleLink>
+                    </button>
+                </form>
+            {/if}
         </PlaceAtBottom>
         <NavigationActions>
             <div slot="actions">

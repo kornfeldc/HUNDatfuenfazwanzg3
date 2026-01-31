@@ -6,9 +6,13 @@ export async function load({cookies, params, url, locals}) {
     const {id} = params;
     if (!id) return {title: 'Neue Person'};
     const api = HfzApi.create(locals.supabase, locals.og!);
-    return {
-        person: api.getPerson({id: parseInt(id)})
-    };
+    try {
+        return {
+            person: await api.getPerson({id: parseInt(id)})
+        };
+    } catch (e) {
+        throw redirect(303, "/l/modules/persons");
+    }
 }
 
 export const actions = {
@@ -18,7 +22,14 @@ export const actions = {
         const api = HfzApi.create(locals.supabase, locals.og!);
 
         if (formData.get('deleteAction')) {
-            if (id) await api.deletePerson({id: parseInt(id)});
+            try {
+                if (id) await api.deletePerson({id: parseInt(id)});
+            } catch (e: any) {
+                console.error("Delete person error", e);
+                return fail(422, {
+                    error: "Person konnte nicht gelöscht werden. Evtl. sind noch Verkäufe oder Kursbuchungen verknüpft."
+                });
+            }
             throw redirect(303, "/l/modules/persons");
         }
 
@@ -41,9 +52,10 @@ export const actions = {
         delete data.isConnected;
         console.log("parsed data", data);
 
+        let savedPerson: IPerson;
         try {
-            if (id) await api.updatePerson(data as any);
-            else await api.createPerson(data as any);
+            if (id) savedPerson = await api.updatePerson(data as any);
+            else savedPerson = await api.createPerson(data as any);
         } catch (e: any) {
             console.log("error", e);
             return fail(422, {
@@ -51,7 +63,12 @@ export const actions = {
             });
         }
 
-        throw redirect(303, redirectTo);
+        let finalRedirectTo = redirectTo;
+        if (finalRedirectTo.includes("{id}")) {
+            finalRedirectTo = finalRedirectTo.replace("{id}", savedPerson!.id.toString());
+        }
+
+        throw redirect(303, finalRedirectTo);
 
         // const redirectTo = formData.get('redirectTo')!.toString();
         // formData.delete('redirectTo');
