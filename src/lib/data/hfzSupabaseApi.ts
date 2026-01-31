@@ -173,6 +173,16 @@ export class HfzSupabaseApi implements IHfzApi {
         return HfzSupabaseApi.mapDates(data) as IPerson;
     }
 
+    async deletePerson(id: IId): Promise<void> {
+        const supabase = this.supabase;
+        const {error} = await supabase
+            .from('person')
+            .delete()
+            .eq('og', this.og)
+            .eq('id', id.id);
+        if (error) throw error;
+    }
+
     async createArticle(article: Partial<IArticle>): Promise<IArticle> {
         const supabase = this.supabase;
         const payload = {...article, og: this.og} as any;
@@ -202,6 +212,16 @@ export class HfzSupabaseApi implements IHfzApi {
             .single();
         if (error) throw error;
         return HfzSupabaseApi.mapDates(data) as IArticle;
+    }
+
+    async deleteArticle(id: IId): Promise<void> {
+        const supabase = this.supabase;
+        const {error} = await supabase
+            .from('article')
+            .delete()
+            .eq('og', this.og)
+            .eq('id', id.id);
+        if (error) throw error;
     }
 
     async getArticle(id: IId): Promise<IArticle> {

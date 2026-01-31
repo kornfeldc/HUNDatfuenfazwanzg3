@@ -15,6 +15,12 @@ export const actions = {
     default: async ({cookies, request, params, locals}) => {
         const {id} = params; // Extract the `id` parameter from the `params` object
         const formData = await request.formData();
+        const api = HfzApi.create(locals.supabase, locals.og!);
+
+        if (formData.get('deleteAction')) {
+            if (id) await api.deleteArticle({id: parseInt(id)});
+            throw redirect(303, "/l/modules/articles");
+        }
 
         const redirectTo = formData.get('redirectTo')?.toString() ?? "/l/modules/articles";
         formData.delete('redirectTo');
@@ -34,7 +40,6 @@ export const actions = {
         console.log("parsed data", data);
 
         try {
-            const api = HfzApi.create(locals.supabase, locals.og!);
             if (id) await api.updateArticle(data as any);
             else await api.createArticle(data as any);
         } catch (e: any) {

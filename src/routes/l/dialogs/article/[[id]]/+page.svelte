@@ -3,6 +3,7 @@
     import NavigationActions from "$lib/components/global/NavigationActions.svelte";
     import SaveButton from "$lib/components/global/NavigationButtons/SaveButton.svelte";
     import {Label} from "$lib/components/shadcn/ui/label";
+    import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
     // noinspection ES6UnusedImports
     import * as InputGroup from "$lib/components/shadcn/ui/input-group/index.js";
     // noinspection ES6UnusedImports
@@ -15,6 +16,7 @@
     import Loading from "$lib/components/global/Loading.svelte";
     import {ArticleTypes, type IArticle} from "$lib/data/hfzApi";
     import {Checkbox} from "$lib/components/shadcn/ui/checkbox";
+    import {Trash} from '@lucide/svelte';
     import {uiState} from "$lib/stores/uiState.svelte";
     import { enhance } from '$app/forms';
 
@@ -96,6 +98,13 @@
 
         <PlaceAtBottom>
             <BackButton></BackButton>
+            {#if id}
+                <button type="submit" name="deleteAction" value="true">
+                    <GlassCircleLink className={"bg-destructive! text-destructive-foreground!"}>
+                        <Trash/>
+                    </GlassCircleLink>
+                </button>
+            {/if}
         </PlaceAtBottom>
         <NavigationActions>
             <button type="submit" slot="actions">

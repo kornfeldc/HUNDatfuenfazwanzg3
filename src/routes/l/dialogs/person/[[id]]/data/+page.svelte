@@ -12,9 +12,12 @@
     import * as InputGroup from "$lib/components/shadcn/ui/input-group/index.js";
     import {Button} from "$lib/components/shadcn/ui/button";
     import {Checkbox} from "$lib/components/shadcn/ui/checkbox";
+    import {Trash} from '@lucide/svelte';
     import CardTitleBig from "$lib/components/global/CardTitleBig.svelte";
     import {Util} from "$lib/util";
     import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
+    import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
+    import BackButton from "$lib/components/global/NavigationButtons/BackButton.svelte";
     import {uiState} from "$lib/stores/uiState.svelte";
     import {enhance} from '$app/forms';
     import PersonOverview from "$lib/components/persons/PersonOverview.svelte";
@@ -167,6 +170,17 @@
             </div>
 
         </Card>
+
+        <PlaceAtBottom>
+            <BackButton></BackButton>
+            {#if id}
+                <button type="submit" name="deleteAction" value="true">
+                    <GlassCircleLink className={"bg-destructive! text-destructive-foreground!"}>
+                        <Trash/>
+                    </GlassCircleLink>
+                </button>
+            {/if}
+        </PlaceAtBottom>
 
         <NavigationActions>
             <div class="flex gap-2" slot="actions">

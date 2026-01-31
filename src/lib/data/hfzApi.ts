@@ -11,6 +11,7 @@ export interface IHfzApi {
     getArticle(id: IId): Promise<IArticle>;
     createArticle(article: Partial<IArticle>): Promise<IArticle>;
     updateArticle(article: IArticle): Promise<IArticle>;
+    deleteArticle(id: IId): Promise<void>;
 
     getPersons(): Promise<Array<IPerson>>;
     getPersonsWithCourseHistory(days: number): Promise<Array<IPersonWithHistory>>;
@@ -21,6 +22,7 @@ export interface IHfzApi {
     getPersonMergedHistory(id: IId): Promise<Array<IMergedPersonHistory>>;
     createPerson(person: Partial<IPerson>): Promise<IPerson>;
     updatePerson(person: IPerson): Promise<IPerson>;
+    deletePerson(id: IId): Promise<void>;
     
     addPersonCredit(personId: IId, amount:number, date: Date, saleId?: IId): Promise<void>;
     addPersonCourse(personId: IId, amount:number, date: Date): Promise<void>;
