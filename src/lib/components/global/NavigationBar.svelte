@@ -8,8 +8,8 @@
     import {uiState} from "$lib/stores/uiState.svelte";
 
     let modules = $state([
-        { name: "Verkauf", href: "/l/modules/sales" },
-        { name: "Kurs", href: "/l/modules/course" },
+        { name: "Verkäufe", href: "/l/modules/sales" },
+        { name: "Kurse", href: "/l/modules/course" },
         { name: "Personen", href: "/l/modules/persons" },
         { name: "Artikel", href: "/l/modules/articles" },
         { name: "ROB", href: "/l/modules/rob" },

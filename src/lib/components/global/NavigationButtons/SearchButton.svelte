@@ -25,8 +25,9 @@
        openSearch(false); 
     }
 
-    const onClear = () => {
-        //openSearch(false);
+    const onClear = (wasEmptyBefore: boolean) => {
+        if(wasEmptyBefore)
+            openSearch(false);
     }
     
     $effect(() => {

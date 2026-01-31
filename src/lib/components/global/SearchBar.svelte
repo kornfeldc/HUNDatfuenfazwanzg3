@@ -3,12 +3,13 @@
     import GlassBar from "$lib/components/global/GlassBar.svelte";
     import {onMount, tick} from "svelte";
     import {Util} from "$lib/util";
+    import {uiState} from "$lib/stores/uiState.svelte";
 
     interface IProps {
         value?: any;
         fullWidth?: boolean;
         onEnter?: () => void;
-        onClear?: () => void;
+        onClear?: (wasEmptyBefore: boolean) => void;
         // stayOpenedOnBlur?: boolean;
         // onSearchOrBlur?: (event: any) => void;
     }
@@ -45,12 +46,14 @@
     }
 
     const clearSearch = (event: Event) => {
+        const wasEmptyBefore = value === "";
+        
         event.stopPropagation();
         event.preventDefault();
         value = "";
         inputEl?.focus();
         if(onClear) 
-            onClear();
+            onClear(wasEmptyBefore);
         return false;
     }
 

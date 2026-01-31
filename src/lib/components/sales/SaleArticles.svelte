@@ -143,9 +143,9 @@
         return filtered;
     });
 
-    const closeSearch = (event: any) => {
-        event.stopPropagation();
-        event.preventDefault();
+    const closeSearch = (event?: any) => {
+        event?.stopPropagation();
+        event?.preventDefault();
         searchString = "";
         showAllArticles = false;
         initialSaleArticleIds = [];
@@ -153,6 +153,10 @@
         return false;
     }
 
+    const onClear = (wasEmptyBefore: boolean) => {
+        if(wasEmptyBefore)
+            closeSearch();
+    }
 
     onMount(() => {
         if (sale.id) return;
@@ -211,7 +215,7 @@
 
 {#if showAllArticles}
     <PlaceAtBottom top={true}>
-        <SearchBar bind:value={searchString}/>
+        <SearchBar bind:value={searchString} {onClear}/>
     </PlaceAtBottom>
 
     <PlaceAtBottom at="right" top={true}>

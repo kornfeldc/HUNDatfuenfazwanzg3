@@ -7,7 +7,7 @@
         onClear = undefined,
     } : {
         onEnter?: () => void;
-        onClear?: () => void;
+        onClear?: (wasEmptyBefore: boolean) => void;
         value?: any;
     }  = $props();
 </script>
