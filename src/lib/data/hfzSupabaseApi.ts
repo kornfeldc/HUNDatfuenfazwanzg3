@@ -1030,6 +1030,68 @@ export class HfzSupabaseApi implements IHfzApi {
         }));
     }
 
+    async getHistoryByDay(date: Date): Promise<Array<IHistory>> {
+        const startOfDay = moment(date).startOf('day').toISOString();
+        const endOfDay = moment(date).endOf('day').toISOString();
+
+        const {data, error} = await this.supabase
+            .from('history')
+            .select('*')
+            .eq('og', this.og)
+            .gte('timestamp', startOfDay)
+            .lte('timestamp', endOfDay)
+            .order('timestamp', {ascending: false});
+
+        if (error) {
+            console.error("getHistoryByDay error", error);
+            return [];
+        }
+
+        return data.map((h: any) => ({
+            id: h.id,
+            timestamp: new Date(h.timestamp),
+            userEmail: h.userEmail,
+            action: h.action,
+            entityType: h.entityType,
+            entityId: h.entityId,
+            details: h.details,
+            og: h.og
+        }));
+    }
+
+    async getPreviousNextDayWithHistory(date: Date): Promise<{ prev: string | null; next: string | null }> {
+        const startOfDay = moment(date).startOf('day').toISOString();
+        const endOfDay = moment(date).endOf('day').toISOString();
+
+        // Get previous day with history
+        const {data: prevData, error: prevError} = await this.supabase
+            .from('history')
+            .select('timestamp')
+            .eq('og', this.og)
+            .lt('timestamp', startOfDay)
+            .order('timestamp', {ascending: false})
+            .limit(1)
+            .maybeSingle();
+
+        // Get next day with history
+        const {data: nextData, error: nextError} = await this.supabase
+            .from('history')
+            .select('timestamp')
+            .eq('og', this.og)
+            .gt('timestamp', endOfDay)
+            .order('timestamp', {ascending: true})
+            .limit(1)
+            .maybeSingle();
+
+        if (prevError) console.error("getPreviousDayWithHistory error", prevError);
+        if (nextError) console.error("getNextDayWithHistory error", nextError);
+
+        return {
+            prev: prevData ? moment(prevData.timestamp).format("YYYY-MM-DD") : null,
+            next: nextData ? moment(nextData.timestamp).format("YYYY-MM-DD") : null
+        };
+    }
+
     async getPersonFullHistory(personId: number): Promise<Array<IHistory>> {
         // 1. Get history for the person itself
         const personHistory = await this.getHistory('person', personId);

@@ -8,6 +8,8 @@
     import {page} from '$app/stores';
     import {Util, moment} from "$lib/util";
     import TextButton from "$lib/components/global/TextButton.svelte";
+    import {History} from "@lucide/svelte";
+    import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
 
     let {data}: { data: any } = $props();
 
@@ -65,6 +67,9 @@
 
 <PlaceAtBottom>
     <BackButton></BackButton>
+    <GlassCircleLink href={`/l/dialogs/history?date=${date}`} className={"bg-accent/70! dark:bg-gray-500/90! border-0 shadow-sm"}>
+        <History class="text-accent-foreground"/>
+    </GlassCircleLink>
 </PlaceAtBottom>
 
 <NavigationActions>
