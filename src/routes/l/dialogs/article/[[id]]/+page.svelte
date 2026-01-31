@@ -19,6 +19,7 @@
     import {Trash} from '@lucide/svelte';
     import {uiState} from "$lib/stores/uiState.svelte";
     import { enhance } from '$app/forms';
+    import { goto } from '$app/navigation';
 
     let id = $page.params.id;
     let {data}: { data: any; } = $props();
@@ -47,6 +48,7 @@
         return async ({ update, result }) => {
             if (isDelete && result.type === 'redirect') {
                 submitting = false;
+                await goto(result.location);
                 return;
             }
             if (result.type === 'failure') {

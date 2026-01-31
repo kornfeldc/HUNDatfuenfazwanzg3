@@ -20,6 +20,7 @@
     import BackButton from "$lib/components/global/NavigationButtons/BackButton.svelte";
     import {uiState} from "$lib/stores/uiState.svelte";
     import {enhance} from '$app/forms';
+    import {goto} from '$app/navigation';
     import PersonOverview from "$lib/components/persons/PersonOverview.svelte";
 
     let id = $page.params.id;
@@ -67,6 +68,7 @@
         return async ({ update, result }) => {
             if (isDelete && result.type === 'redirect') {
                 submitting = false;
+                await goto(result.location);
                 return;
             }
             if (result.type === 'failure') {

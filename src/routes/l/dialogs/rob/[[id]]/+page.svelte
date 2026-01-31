@@ -12,6 +12,7 @@
     import type {IRobCourse} from "$lib/data/hfzApi";
     import {uiState} from "$lib/stores/uiState.svelte";
     import { enhance } from '$app/forms';
+    import { goto } from '$app/navigation';
     import {moment} from "$lib/util";
     import CopyIcon from "@lucide/svelte/icons/copy";
     import CheckIcon from "@lucide/svelte/icons/check";
@@ -185,12 +186,16 @@
                     submitting = true;
                     errorMessage = "";
                     return async ({ result }) => {
+                        if (result.type === 'redirect') {
+                            submitting = false;
+                            await goto(result.location);
+                            return;
+                        }
                         if (result.type === 'failure') {
                             errorMessage = result.data?.error || "Ein Fehler ist aufgetreten";
                             submitting = false;
                             return;
                         }
-                        // Redirect will happen automatically if result.type === 'redirect'
                         submitting = false;
                     };
                 }}>
