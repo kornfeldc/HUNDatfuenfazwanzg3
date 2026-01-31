@@ -104,7 +104,8 @@ export class HfzSupabaseApi implements IHfzApi {
             .single();
 
         if (persError) throw persError;
-        await this.logAction('add_credit', 'person', personId.id, `${amount}€ for ${person.firstName} ${person.lastName}`);
+        const details = `${amount}€ for ${person.firstName} ${person.lastName}${saleId ? ` (Sale ID: ${saleId.id})` : ' (Manual adjustment)'}`;
+        await this.logAction('add_credit', 'person', personId.id, details);
     }
 
     async addPersonCourse(personId: IId, amount: number, date: Date): Promise<void> {
@@ -156,6 +157,7 @@ export class HfzSupabaseApi implements IHfzApi {
 
     async updatePerson(person: IPerson): Promise<IPerson> {
         const supabase = this.supabase;
+        const oldPerson = await this.getPerson({id: person.id});
         const {data, error} = await supabase
             .from('person')
             .update({
@@ -175,19 +177,22 @@ export class HfzSupabaseApi implements IHfzApi {
             .single();
         if (error) throw error;
         const result = HfzSupabaseApi.mapDates(data) as IPerson;
-        await this.logAction('update', 'person', result.id, `${result.firstName} ${result.lastName}`);
+        const diff = this.getDiff(oldPerson, result, ['og', 'id', 'extId', 'credit', 'saleCount', 'saleSum', 'courseCount', 'saleCountActive']);
+        await this.logAction('update', 'person', result.id, diff || `${result.firstName} ${result.lastName}`);
         return result;
     }
 
     async deletePerson(id: IId): Promise<void> {
         const supabase = this.supabase;
+        const person = await this.getPerson(id).catch(() => null);
+        const details = person ? `${person.firstName} ${person.lastName}` : `ID: ${id.id}`;
         const {error} = await supabase
             .from('person')
             .delete()
             .eq('og', this.og)
             .eq('id', id.id);
         if (error) throw error;
-        await this.logAction('delete', 'person', id.id, ``);
+        await this.logAction('delete', 'person', id.id, details);
     }
 
     async createArticle(article: Partial<IArticle>): Promise<IArticle> {
@@ -206,6 +211,7 @@ export class HfzSupabaseApi implements IHfzApi {
 
     async updateArticle(article: IArticle): Promise<IArticle> {
         const supabase = this.supabase;
+        const oldArticle = await this.getArticle({id: article.id});
         const {data, error} = await supabase
             .from('article')
             .update({
@@ -221,19 +227,22 @@ export class HfzSupabaseApi implements IHfzApi {
             .single();
         if (error) throw error;
         const result = HfzSupabaseApi.mapDates(data) as IArticle;
-        await this.logAction('update', 'article', result.id, result.title);
+        const diff = this.getDiff(oldArticle, result);
+        await this.logAction('update', 'article', result.id, diff || result.title);
         return result;
     }
 
     async deleteArticle(id: IId): Promise<void> {
         const supabase = this.supabase;
+        const article = await this.getArticle(id).catch(() => null);
+        const details = article ? article.title : `ID: ${id.id}`;
         const {error} = await supabase
             .from('article')
             .delete()
             .eq('og', this.og)
             .eq('id', id.id);
         if (error) throw error;
-        await this.logAction('delete', 'article', id.id, ``);
+        await this.logAction('delete', 'article', id.id, details);
     }
 
     async getArticle(id: IId): Promise<IArticle> {
@@ -495,6 +504,11 @@ export class HfzSupabaseApi implements IHfzApi {
     async saveSale(sale: ISale): Promise<ISale> {
         const supabase = this.supabase;
         let saleId = sale.id;
+        let oldSale: ISale | null = null;
+        if (saleId) {
+            oldSale = await this.getSale({id: saleId}).catch(() => null);
+        }
+
         const salePayload: any = {
             articleSum: sale.articleSum,
             toPay: sale.articleSum,
@@ -598,13 +612,20 @@ export class HfzSupabaseApi implements IHfzApi {
         }
 
         const result = await this.getSale({id: saleId});
-        await this.logAction(sale.id ? 'update' : 'create', 'sale', saleId, `Person: ${result.personName}, Sum: ${result.articleSum}€`);
+        if (oldSale) {
+            const diff = this.getDiff(oldSale, result, ['og', 'id', 'extId', 'saleDate', 'person', 'saleArticles']);
+            await this.logAction('update', 'sale', saleId, diff || `Person: ${result.personName}, Sum: ${result.articleSum}€`);
+        } else {
+            await this.logAction('create', 'sale', saleId, `Person: ${result.personName}, Sum: ${result.articleSum}€`);
+        }
         return result;
     }
 
     async paySale(sale: ISale): Promise<ISale> {
         const supabase = this.supabase;
         let saleId = sale.id;
+        const oldSale = await this.getSale({id: saleId}).catch(() => null);
+
         const salePayload: any = {
             personId: (sale as any).personId,
             toPay: sale.toPay,
@@ -631,7 +652,8 @@ export class HfzSupabaseApi implements IHfzApi {
             await this.addPersonCredit({id: salePayload.personId}, creditChange, sale.payDate, {id: saleId});
         }
         const result = await this.getSale({id: saleId});
-        await this.logAction('pay_sale', 'sale', saleId, `Amount: ${result.toPay}€, Person: ${result.personName}`);
+        const diff = oldSale ? this.getDiff(oldSale, result, ['og', 'id', 'extId', 'saleDate', 'person', 'saleArticles']) : "";
+        await this.logAction('pay_sale', 'sale', saleId, diff || `Amount: ${result.toPay}€, Person: ${result.personName}`);
         return result;
     }
 
@@ -673,6 +695,9 @@ export class HfzSupabaseApi implements IHfzApi {
     async deleteSale(id: IId): Promise<void> {
         const supabase = this.supabase;
 
+        const sale = await this.getSale(id).catch(() => null);
+        const details = sale ? `Person: ${sale.personName}, Sum: ${sale.articleSum}€` : `ID: ${id.id}`;
+
         // Get credit history entries to undo credit changes on persons
         const {data: creditHistory, error: creditError} = await supabase
             .from('credit_history')
@@ -700,7 +725,7 @@ export class HfzSupabaseApi implements IHfzApi {
         await supabase.from('credit_history').delete().eq('saleId', id.id);
         const {error} = await supabase.from('sale').delete().eq('id', id.id);
         if (error) throw new Error(error.message);
-        await this.logAction('delete', 'sale', id.id, ``);
+        await this.logAction('delete', 'sale', id.id, details);
     }
 
     async getNewSaleForPerson(personId?: IId): Promise<ISale> {
@@ -938,6 +963,37 @@ export class HfzSupabaseApi implements IHfzApi {
         } catch (e) {
             console.error("Failed to log action", e);
         }
+    }
+
+    private getDiff(oldObj: any, newObj: any, ignoredFields: string[] = ['og', 'id', 'extId']): string {
+        const changes: string[] = [];
+        const allKeys = new Set([...Object.keys(oldObj), ...Object.keys(newObj)]);
+
+        for (const key of allKeys) {
+            if (ignoredFields.includes(key)) continue;
+
+            const oldVal = oldObj[key];
+            const newVal = newObj[key];
+
+            if (oldVal !== newVal) {
+                // Special handling for null/undefined/empty string to avoid noisy diffs if they are essentially the same
+                if ((oldVal === null || oldVal === undefined || oldVal === "") && (newVal === null || newVal === undefined || newVal === "")) {
+                    continue;
+                }
+                
+                // Format dates for better readability
+                const formatVal = (v: any) => {
+                    if (v instanceof Date) return moment(v).format('DD.MM.YYYY');
+                    if (v === true) return "Ja";
+                    if (v === false) return "Nein";
+                    return v;
+                };
+
+                changes.push(`${key}: ${formatVal(oldVal)} -> ${formatVal(newVal)}`);
+            }
+        }
+
+        return changes.join(', ');
     }
 
     async getHistory(entityType?: string, entityId?: string | number): Promise<Array<IHistory>> {
