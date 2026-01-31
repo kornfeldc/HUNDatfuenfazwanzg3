@@ -940,12 +940,20 @@ export class HfzSupabaseApi implements IHfzApi {
         }
     }
 
-    async getHistory(): Promise<Array<IHistory>> {
-        const {data, error} = await this.supabase
+    async getHistory(entityType?: string, entityId?: string | number): Promise<Array<IHistory>> {
+        let query = this.supabase
             .from('history')
             .select('*')
-            .eq('og', this.og)
-            .order('timestamp', {ascending: false});
+            .eq('og', this.og);
+
+        if (entityType) {
+            query = query.eq('entityType', entityType);
+        }
+        if (entityId) {
+            query = query.eq('entityId', entityId.toString());
+        }
+
+        const {data, error} = await query.order('timestamp', {ascending: false});
 
         if (error) {
             console.error("getHistory error", error);

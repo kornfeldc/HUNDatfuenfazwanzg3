@@ -40,6 +40,9 @@ It manages:
 - `src/lib/data/hfzSupabaseApi.ts`: Contains all Supabase queries and logic.
 - `src/lib/data/hfzApi.ts`: Contains TypeScript interfaces for the data model.
 
+## Technical
+- We use lucide icons, they are imported like this: `import { ArrowLeft } from "@lucide/svelte"`
+
 ## Data Model Room
 The supabase datamodel looks like this:
 ```json

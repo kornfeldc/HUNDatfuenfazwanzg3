@@ -1,7 +1,7 @@
 <script lang="ts">
     import {page} from '$app/stores';
     import type {IArticle, ISale, ISoldArticleAggregate} from "$lib/data/hfzApi";
-    import {BadgeCheck, Check, Euro, Trash} from '@lucide/svelte';
+    import {BadgeCheck, Check, Euro, History, Trash} from '@lucide/svelte';
     import Loading from "$lib/components/global/Loading.svelte";
     import Card from "$lib/components/global/Card.svelte";
     import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
@@ -72,11 +72,16 @@
         {#if !isSearchVisible}
             <PlaceAtBottom>
                 <BackButton></BackButton>
-                <button type="submit" name="deleteAction" value="true">
-                    <GlassCircleLink className={"bg-destructive! text-destructive-foreground!"}>
-                        <Trash/>
+                {#if id}
+                    <GlassCircleLink href={`/l/dialogs/history/sale/${id}`} className={"bg-accent/70! dark:bg-gray-500/90! border-0 shadow-sm"}>
+                        <History class="text-accent-foreground"/>
                     </GlassCircleLink>
-                </button>
+                    <button type="submit" name="deleteAction" value="true">
+                        <GlassCircleLink className={"bg-destructive! text-destructive-foreground!"}>
+                            <Trash/>
+                        </GlassCircleLink>
+                    </button>
+                {/if}
             </PlaceAtBottom>
             <NavigationActions>
                 <div slot="actions" class="justify-center items-center flex gap-2">

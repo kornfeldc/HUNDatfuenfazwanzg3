@@ -16,7 +16,7 @@
     import Loading from "$lib/components/global/Loading.svelte";
     import {ArticleTypes, type IArticle} from "$lib/data/hfzApi";
     import {Checkbox} from "$lib/components/shadcn/ui/checkbox";
-    import {Trash} from '@lucide/svelte';
+    import {Trash, History} from '@lucide/svelte';
     import {uiState} from "$lib/stores/uiState.svelte";
     import { enhance } from '$app/forms';
     import { goto } from '$app/navigation';
@@ -118,6 +118,9 @@
         <PlaceAtBottom>
             <BackButton></BackButton>
             {#if id}
+                <GlassCircleLink href={`/l/dialogs/history/article/${id}`} className={"bg-accent/70! dark:bg-gray-500/90! border-0 shadow-sm"}>
+                    <History class="text-accent-foreground"/>
+                </GlassCircleLink>
                 <button type="submit" name="deleteAction" value="true">
                     <GlassCircleLink className={"bg-destructive! text-destructive-foreground!"}>
                         <Trash/>
