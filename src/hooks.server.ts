@@ -4,6 +4,10 @@ import { sequence } from '@sveltejs/kit/hooks'
 import './lib/util';
 
 const supabase: Handle = async ({ event, resolve }) => {
+  if (event.url.pathname === '/main.html') {
+    throw redirect(301, '/');
+  }
+
   event.locals.supabase = createServerClient(
       import.meta.env.VITE_SUPABASE_URL,
       import.meta.env.VITE_SUPABASE_KEY, {
