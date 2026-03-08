@@ -18,6 +18,7 @@ const dialogs = [
     { name: "Person", pattern: "/l/dialogs/person" },
     { name: "Artikel", pattern: "/l/dialogs/article" },
     { name: "ROB", pattern: "/l/dialogs/rob" },
+    { name: "Einstellungen", pattern: "/l/dialogs/user" },
 ];
 
 const currentModule = $derived(

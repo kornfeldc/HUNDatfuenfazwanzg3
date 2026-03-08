@@ -31,7 +31,6 @@ export const uiState = $state<UiState>({
         const last = uiState.routes[uiState.routes.length - 1];
         if (last !== path)
             uiState.routes = [...uiState.routes ?? [], path];
-        console.log("uiState.routes", uiState.routes);
     },
     getLastRoute(fragment: string) {
         if (!fragment) return undefined;
@@ -47,15 +46,12 @@ export const uiState = $state<UiState>({
         let redirectTo = null;
         
         if (currentRoute.includes("dialogs/person")) {
-            console.log("i am in a person dialog", uiState.routes);
             // check if the last module was sales or persons 
             const lastModule = this.getLastRoute("modules");
-            console.log("lastModule", lastModule);
             if (lastModule?.includes("modules/persons"))
                 redirectTo = lastModule;
             if (lastModule?.includes("modules/sales")) {
                 // routing was sales > personOverview => return to sale 
-                console.log("return to sale", this.getLastRoute("dialogs/sale/"));
                 redirectTo = this.getLastRoute("dialogs/sale/");
             }
         }

@@ -86,7 +86,6 @@ export class HfzSupabaseApi implements IHfzApi {
         if (saleId)
             payload.saleId = saleId.id;
 
-        console.log("Adding credit history entry", payload);
 
         const {error} = await supabase
             .from('credit_history')
@@ -551,7 +550,6 @@ export class HfzSupabaseApi implements IHfzApi {
         } else if (!sale.personName)
             salePayload.personName = "Barverkauf";
 
-        console.log("Saving salePayload", salePayload);
 
         if (!saleId) {
             salePayload.saleDate = new Date();
@@ -617,12 +615,10 @@ export class HfzSupabaseApi implements IHfzApi {
                         data,
                         error
                     } = await supabase.from('sale_article').update(articlePayload).eq('id', existingId).select().single();
-                    console.log("Updated sale article", error);
                     if (error) throw error;
                     processedIds.push(data.id);
                 } else {
                     const {data, error} = await supabase.from('sale_article').insert(articlePayload).select().single();
-                    console.log("insert sale article", error);
                     if (error) throw error;
                     processedIds.push(data.id);
                 }
@@ -663,7 +659,6 @@ export class HfzSupabaseApi implements IHfzApi {
             payDate: sale.payDate
         };
 
-        console.log("Saving salePayload", salePayload);
         const {error} = await supabase.from('sale').update(salePayload).eq('id', saleId);
         if (error) {
             console.error("Error updating sale", error);
@@ -671,10 +666,8 @@ export class HfzSupabaseApi implements IHfzApi {
         }
 
         const creditChange = ((sale as any).newCredit ?? 0) - ((sale as any).oldCredit ?? 0);
-        console.log("Credit change for sale", saleId, ":", creditChange);
 
         if (salePayload.personId && creditChange != null && sale.payDate) {
-            console.log("call addPErsonCredit")
             await this.addPersonCredit({id: salePayload.personId}, creditChange, sale.payDate, {id: saleId});
         }
         const result = await this.getSale({id: saleId});

@@ -25,8 +25,6 @@ export const actions = {
         const theme = formData.get('theme')?.toString();
         const redirectTo = formData.get('redirectTo')?.toString() ?? "/l/dialogs/user";
         
-        console.log("formData theme", theme);
-
         if (!theme) {
             return fail(400, { error: 'Theme is required' });
         }

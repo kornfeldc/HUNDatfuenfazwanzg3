@@ -50,7 +50,6 @@ export const actions = {
         data.personGroup = data.personGroup ?? "";
         
         delete data.isConnected;
-        console.log("parsed data", data);
 
         let savedPerson: IPerson;
         try {

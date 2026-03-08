@@ -48,7 +48,6 @@ export const actions = {
             ]);
         if(id)
             data.id = parseInt(id);
-        console.log("parsed data", data);
 
         try {
             if (id) await api.updateArticle(data as any);

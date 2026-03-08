@@ -18,7 +18,6 @@
     let sales = $state([] as Array<ISale>);
     const loadSales = async () => {
         sales = await data.sales;
-        console.log("sales", sales);
     }
 
     let calendarItems = $derived.by(() => {

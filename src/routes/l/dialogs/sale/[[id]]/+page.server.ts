@@ -47,8 +47,6 @@ export const actions = {
             redirectTo = redirectTo.replace("//", `/${id}/`);
         }
         
-        console.log("parsed data", data);
-
         try {
             const saleToSave = {
                 id: data.id ?? 0,

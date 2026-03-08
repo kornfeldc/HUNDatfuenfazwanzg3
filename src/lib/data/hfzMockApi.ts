@@ -246,9 +246,6 @@ class HfzMockApi implements IHfzApi {
     }
 
     async getPerson(id: IId): Promise<IPerson> {
-        console.log("getPerson", id);
-        console.log("persons", persons);
-        console.log("match", persons.find(s => s.id === id.id));
         return persons.find(s => s.id === id.id) || persons[0];
     }
 

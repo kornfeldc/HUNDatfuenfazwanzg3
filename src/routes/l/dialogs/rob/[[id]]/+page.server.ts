@@ -36,8 +36,6 @@ export const actions = {
         if(id)
             data.id = parseInt(id);
         
-        console.log("parsed rob data", data);
-
         try {
             const api = HfzApi.create(locals.supabase, locals.og!);
             if (id) {

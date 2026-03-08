@@ -68,7 +68,6 @@ const authGuard: Handle = async ({ event, resolve }) => {
       .maybeSingle()
 
     if (fetchError) {
-      console.log("------ geht nit ------ ");
       console.error(fetchError);
     }
 
