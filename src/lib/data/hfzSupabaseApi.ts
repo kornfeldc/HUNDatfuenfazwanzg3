@@ -280,7 +280,15 @@ export class HfzSupabaseApi implements IHfzApi {
             .eq('id', id.id)
             .single();
 
-        const ret = HfzSupabaseApi.mapDates(data);
+        const ret = HfzSupabaseApi.mapDates(data) as any;
+
+        const {data: courseData} = await supabase
+            .from('course_history')
+            .select('id')
+            .eq('personId', id.id)
+            .limit(1);
+
+        ret.hadCourses = Array.isArray(courseData) && courseData.length > 0;
         return ret as IPerson;
     }
 
@@ -291,15 +299,30 @@ export class HfzSupabaseApi implements IHfzApi {
             .select('*')
             .eq("og", this.og);
 
-        const ret = HfzSupabaseApi.mapDates(data);
-        return ret as Array<IPerson>;
+        if (error) throw error;
+
+        const persons = HfzSupabaseApi.mapDates(data) as Array<any>;
+
+        // Fetch all course_history ids for this org's persons to determine hadCourses
+        const personIds = persons.map((p: any) => p.id);
+        const {data: courseData} = await supabase
+            .from('course_history')
+            .select('personId')
+            .in('personId', personIds);
+
+        const personIdsWithCourses = new Set((courseData ?? []).map((c: any) => c.personId));
+
+        return persons.map(p => ({
+            ...p,
+            hadCourses: personIdsWithCourses.has(p.id),
+        })) as Array<IPerson>;
     }
 
     async getPersonsWithCourseHistory(days: number): Promise<Array<IPersonWithHistory>> {
         const supabase = this.supabase;
         const {data, error} = await supabase
             .from('person')
-            .select('*, course_history!inner(*)')
+            .select('*, course_history(*)')
             .eq("og", this.og);
 
         if (error) throw error;
@@ -307,7 +330,8 @@ export class HfzSupabaseApi implements IHfzApi {
         const ret = HfzSupabaseApi.parseData(data, [
             ["course_history", "courseHistory"]
         ]);
-        return ret as Array<IPersonWithHistory>;
+        // Only return persons that have at least one course_history entry
+        return (ret as Array<IPersonWithHistory>).filter(p => p.courseHistory && p.courseHistory.length > 0);
     }
 
     async getPersonCreditHistory(id: IId): Promise<Array<ICreditHistory>> {

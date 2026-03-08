@@ -9,9 +9,7 @@
     const {person}: IProps = $props();
 </script>
 {#snippet amount(amount, currency, decimals, label)}
-    {#if amount}
-        {label}: <span class="text-primary text-lg text-bold">{Util.formatCurrency(amount, currency, decimals)}</span>
-    {/if}
+    {label}: <span class="text-primary text-lg text-bold">{Util.formatCurrency(amount, currency, decimals)}</span>
 {/snippet}
 <a href={`/l/dialogs/person/${person.id}`}>
     <div class="grid grid-cols-2 gap-1">
@@ -19,7 +17,9 @@
             {person.lastName} {person.firstName}
         </div>
         <div class="text-right text-sm">
-            {@render amount(person.credit, true, 2, "Guthaben")}
+            {#if person.credit}
+                {@render amount(person.credit, true, 2, "Guthaben")}
+            {/if}
         </div>
         <div class="text-sm text-muted-foreground">
             {#if person.dogNames}
@@ -27,7 +27,10 @@
             {/if}
         </div>
         <div class="text-right text-sm">
-            {@render amount(person.courseCount, false, 0, "Einheit(en) frei")}
+            {#if person.courseCount || person.hadCourses}
+                Einheit(en) frei: <span
+                    class="text-primary text-lg text-bold">{Util.formatCurrency(person.courseCount, false, 0)}</span>
+            {/if}
         </div>
     </div>
 </a>

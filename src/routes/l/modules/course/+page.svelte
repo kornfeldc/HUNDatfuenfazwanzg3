@@ -24,8 +24,7 @@
 
     const sortPersons = (persons: Array<IPersonWithHistory>) => {
         return persons.sort(
-            firstBy((person: IPersonWithHistory) => person.lastName || '\uffff', {ignoreCase: true})
-                .thenBy((person: IPersonWithHistory) => person.firstName || '\uffff', {ignoreCase: true})
+            firstBy((person: IPersonWithHistory) => ((person.lastName || '') + ' ' + (person.firstName || '')).trim().toLowerCase() || '\uffff')
         );
     }
 
@@ -46,7 +45,10 @@
         for (const p of filtered) {
             // "took a course today" means they got removed at least one course today
             const hasActivityToday = p.courseHistory?.some(h => moment(h.date).isSame(today, 'day') && h.courses < 0);
-            const hasActivity365 = p.courseHistory?.some(h => moment(h.date).isSameOrAfter(activityThreshold, 'day') && h.courses > 0);
+            const lastEntry = p.courseHistory?.filter(h => moment(h.date).isSameOrAfter(activityThreshold, 'day')).sort((a, b) => moment(b.date).diff(moment(a.date)))[0];
+            const hasActivity365 = p.courseCount > 0
+                ? !!lastEntry
+                : p.courseHistory?.some(h => moment(h.date).isSameOrAfter(activityThreshold, 'day') && h.courses > 0);
 
             if (hasActivityToday) {
                 tookCourseToday.push(p);

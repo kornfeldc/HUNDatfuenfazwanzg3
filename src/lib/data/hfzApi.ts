@@ -114,6 +114,7 @@ export interface ISaleDay {
 
 export interface IPerson extends IId {
     courseCount: number;
+    hadCourses: boolean;
     credit: number;
     dogNames: string;
     email: string;

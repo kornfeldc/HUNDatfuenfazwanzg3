@@ -45,10 +45,7 @@
         formPerson.email = person?.email ?? "";
         formPerson.isMember = person?.isMember ?? false;
         formPerson.isActive = person?.isActive ?? true;
-        formPerson.personGroup = person?.personGroup ?? "";
-        formPerson.mainPersonId = person?.mainPersonId;
         formPerson.info = person?.info ?? "";
-        isConnected = !!formPerson.personGroup;
     }
 
     const swapName = () => {
@@ -155,22 +152,6 @@
                     <Checkbox id="active-{id}" bind:checked={formPerson.isActive}/>
                 </div>
 
-                <div class="col-span-6 flex flex-col gap-2">
-                    <Label for="connected-{id}" class="whitespace-nowrap">Zusammenhängend</Label>
-                    <input type="hidden" name="isConnected" value={isConnected ? 'on' : ''}/>
-                    <Checkbox id="connected-{id}" bind:checked={isConnected}/>
-                </div>
-
-                <div class={Util.mapClass("col-span-6 flex flex-col gap-2", isConnected, "", "hidden")}>
-                    <Label for="personGroup-{id}" class="whitespace-nowrap">Personengruppe</Label>
-                    <InputGroup.Root>
-                        <InputGroup.Input
-                                name="personGroup"
-                                id="personGroup-{id}"
-                                bind:value={formPerson.personGroup}></InputGroup.Input>
-                    </InputGroup.Root>
-                </div>
-
                 <div class="col-span-12 flex flex-col gap-2">
                     <Label for="info-{id}">Sonstige Infos</Label>
                     <InputGroup.Root>
@@ -178,15 +159,6 @@
                                              bind:value={formPerson.info}></InputGroup.Textarea>
                     </InputGroup.Root>
                 </div>
-
-                {#if isSubPerson}
-                    <div class="col-span-12 flex flex-col gap-2">
-                        <Label>Guthaben wird nur für die Hauptperson verwaltet</Label>
-                        <Button href={`/l/dialogs/person/${formPerson.mainPersonId}/data`} class="w-min">Hauptperson
-                            öffnen
-                        </Button>
-                    </div>
-                {/if}
 
             </div>
 
