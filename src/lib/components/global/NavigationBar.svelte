@@ -51,9 +51,6 @@
                 </div> 
                 <div class="flex items-center sm:hidden">
                     {@render renderIcon(module.href)}
-                    {#if isSelected(module.href)}
-                    {module.name}
-                    {/if}
                 </div>
             </GlassBarLink>
         {/each}

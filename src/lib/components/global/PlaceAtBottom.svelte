@@ -12,6 +12,6 @@
 {#if uiState.showPlaceAtBottomOnTop()}
     <div class={"fixed top-0 w-full  shadow-background/80 shadow-lg  h-18"}></div>
 {/if}
-<div class={Util.mapClass(`${bottomClass} p-3 flex gap-2 `, at === 'left', "left-0", "right-0")}>
+<div class={Util.mapClass(`${bottomClass} p-6 flex gap-2 `, at === 'left', "left-0", "right-0")}>
     {@render children?.()}
 </div>
