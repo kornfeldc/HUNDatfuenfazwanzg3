@@ -53,7 +53,7 @@
         <input
             bind:this={inputEl}
             bind:value={uiState.searchString}
-            class="flex-1 bg-transparent border-0 outline-none text-sm text-white placeholder-gray-400 dark:placeholder-gray-300 min-w-0"
+            class="flex-1 bg-transparent border-0 outline-none text-base text-white placeholder-gray-400 dark:placeholder-gray-300 min-w-0"
             placeholder="Suche…"
             type="text"
         />
