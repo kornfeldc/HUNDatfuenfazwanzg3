@@ -1,10 +1,10 @@
 <script lang="ts">
-    import type {IPerson} from "$lib/data/hfzApi";
+    import type {IPersonWithHistory} from "$lib/data/hfzApi";
     import Grid from "$lib/components/global/Grid.svelte";
     import CourseGridEntry from "$lib/components/course/CourseGridEntry.svelte";
 
     interface IProps {
-        persons: Array<IPerson>;
+        persons: Array<IPersonWithHistory>;
         href?: string;
         group?: "active" | "today" | "inactive";
         onSubmitting?: (val: boolean) => void;

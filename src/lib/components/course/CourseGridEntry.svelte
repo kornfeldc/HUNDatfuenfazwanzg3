@@ -1,20 +1,33 @@
 <script lang="ts">
-    import type {IPerson} from "$lib/data/hfzApi";
+    import type {IPersonWithHistory} from "$lib/data/hfzApi";
     import Card from "$lib/components/global/Card.svelte";
     import {Bone, Star} from "@lucide/svelte";
-    import {Util} from "$lib/util";
+    import {Util, moment} from "$lib/util";
     import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
     import {enhance} from "$app/forms";
     import {goto} from "$app/navigation";
 
     interface IProps {
-        person: IPerson;
+        person: IPersonWithHistory;
         href?: string;
         group?: "active" | "today" | "inactive";
         onSubmitting?: (val: boolean) => void;
     }
 
     let {person, href = "", group = "active", onSubmitting}: IProps = $props();
+
+    const lastCourseTaken = $derived.by(() => {
+        const deductions = person.courseHistory?.filter(h => h.courses < 0);
+        if (!deductions || deductions.length === 0) return null;
+        return deductions.sort((a, b) => moment(b.date).diff(moment(a.date)))[0];
+    });
+
+    const lastCourseDateLabel = $derived.by(() => {
+        if (!lastCourseTaken) return null;
+        const today = moment().startOf('day');
+        if (moment(lastCourseTaken.date).isSame(today, 'day')) return 'Heute';
+        return Util.formatDate(lastCourseTaken.date);
+    });
 
     let linkTo = $derived.by(() => {
         if (href)
@@ -45,7 +58,7 @@
                     <span class={"text-primary text-lg "+(person.courseCount <= 0 ? "text-destructive!" : person.courseCount === 1 ? "text-warning!" : "")}>{Util.formatCurrency(person.courseCount, false, 0)}</span>
                 </div>
             </div>
-            <div onclick={(e) => e.stopPropagation()}>
+            <div onclick={(e) => e.stopPropagation()} class="flex flex-col items-center gap-1">
                 <form action="?/deduct" method="POST" use:enhance={() => {
                         onSubmitting?.(true);
                         return async ({update}) => {
@@ -61,6 +74,9 @@
                         </GlassCircleLink>
                     </button>
                 </form>
+                {#if lastCourseDateLabel}
+                    <div class="text-xs text-muted-foreground text-center whitespace-nowrap pt-2">Zuletzt: {lastCourseDateLabel}</div>
+                {/if}
             </div>
         </div>
     </Card>
