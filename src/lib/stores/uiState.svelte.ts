@@ -6,6 +6,8 @@ export type UiState = {
     showPlaceAtBottomOnTop: () => boolean,
     setNavSearch: (showSearch: boolean) => void;
     
+    searchString: string;
+    
     routes: string[];
     pushRoute: (path: string) => void;
     getLastRoute: (fragment: string) => string | undefined;
@@ -17,6 +19,7 @@ export const uiState = $state<UiState>({
     showActions: true,
     showSearchBar: false,
     isMobileDevice: false,
+    searchString: "",
     showPlaceAtBottomOnTop: () => 
         uiState.showSearchBar && uiState.isMobileDevice,
     setNavSearch:(showSearch:boolean)=> {

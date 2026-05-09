@@ -2,8 +2,8 @@
     import SalesGrid from "$lib/components/sales/SalesGrid.svelte";
     import AddButton from "$lib/components/global/NavigationButtons/AddButton.svelte";
     import NavigationActions from "$lib/components/global/NavigationActions.svelte";
-    import SearchButton from "$lib/components/global/NavigationButtons/SearchButton.svelte";
     import type {ISale} from "$lib/data/hfzApi";
+    import { uiState } from "$lib/stores/uiState.svelte";
     import Pill from "$lib/components/global/Pill.svelte";
     import {CalendarDays, CircleArrowLeft, CircleArrowRight} from "@lucide/svelte";
     import thenby from 'thenby';
@@ -16,21 +16,16 @@
     import {Button} from "$lib/components/shadcn/ui/button";
 
     let {data}: { data: any } = $props();
-    let searchString = $state("");
     let sales = $state([] as Array<ISale>);
     let submitting = $state(false);
 
     let date = $derived($page.url.searchParams.get("date") ?? moment().format("YYYY-MM-DD"));
     let formattedDate = $derived(moment(date).format("dddd, DD.MM.YYYY"));
     
-    const onSearch = (value: string) => {
-        searchString = value;
-    }
-
     const filter = (sales: Array<ISale>) => {
         return sales.filter((s: ISale) =>
-            (s.personName?.toLowerCase().includes(searchString.toLowerCase()) ||
-            s.person?.dogNames?.toLowerCase().includes(searchString.toLowerCase())) &&
+            (s.personName?.toLowerCase().includes(uiState.searchString.toLowerCase()) ||
+            s.person?.dogNames?.toLowerCase().includes(uiState.searchString.toLowerCase())) &&
             isSaleOnDate(s)
         ).sort(firstBy("personName"));
     }
@@ -73,7 +68,6 @@
 {/await}
 
 <NavigationActions>
-    <SearchButton slot="persistent" {onSearch}></SearchButton>
     <div slot="actions">
         <AddButton href="/l/modules/personChooser"></AddButton>
         {#if salesThatCanBePayedWithCredit.length > 0}

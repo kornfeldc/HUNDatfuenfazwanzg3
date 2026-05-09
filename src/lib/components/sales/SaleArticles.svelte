@@ -7,24 +7,21 @@
         type ISoldArticleAggregate
     } from "$lib/data/hfzApi";
     import {Util, moment} from "$lib/util";
-    import {Check, Minus, Plus} from "@lucide/svelte";
+    import {Minus, Plus, X} from "@lucide/svelte";
     import GlassCircle from "$lib/components/global/GlassCircle.svelte";
-    import SearchBar from "$lib/components/global/SearchBar.svelte";
-    import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
     import FilterBar from "$lib/components/global/FilterBar.svelte";
     import {onMount} from "svelte";
+    import {uiState} from "$lib/stores/uiState.svelte";
 
     interface IProps {
         sale: ISale;
         articles: IArticle[];
         topSoldArticles?: ISoldArticleAggregate[];
-        toggleSearch: (isVisible: boolean) => void;
         showTopLine?: boolean;
     }
 
-    let {sale, articles, topSoldArticles, toggleSearch, showTopLine = true}: IProps = $props();
+    let {sale, articles, topSoldArticles, showTopLine = true}: IProps = $props();
     let showAllArticles = $state(false);
-    let searchString = $state("");
     let type = $state("top");
     let initialSaleArticleIds = $state<number[]>([]);
 
@@ -62,7 +59,6 @@
     const setShowAllArticles = (event: any) => {
         showAllArticles = true;
         initialSaleArticleIds = sale.saleArticles.map(sa => sa.article.id);
-        if (toggleSearch) toggleSearch(true);
         event?.stopPropagation();
         event?.preventDefault();
         return false;
@@ -93,7 +89,7 @@
         // 2. Filter them
         let filtered = allArticlesMapped.filter(a => {
             // Search string filter (always apply if showAllArticles)
-            if (searchString && a.articleTitle.toLowerCase().indexOf(searchString.toLowerCase()) === -1) {
+            if (uiState.searchString && a.articleTitle.toLowerCase().indexOf(uiState.searchString.toLowerCase()) === -1) {
                 return false;
             }
 
@@ -146,17 +142,20 @@
     const closeSearch = (event?: any) => {
         event?.stopPropagation();
         event?.preventDefault();
-        searchString = "";
+        uiState.searchString = "";
         showAllArticles = false;
         initialSaleArticleIds = [];
-        toggleSearch(false);
         return false;
     }
 
-    const onClear = (wasEmptyBefore: boolean) => {
-        if(wasEmptyBefore)
-            closeSearch();
-    }
+    $effect(() => {
+        if (uiState.searchString && !showAllArticles && !sale.payDate) {
+            setShowAllArticles(null);
+        }
+        if (uiState.searchString) {
+            type = "all";
+        }
+    });
 
     onMount(() => {
         if (sale.id) return;
@@ -185,10 +184,15 @@
     {/if}
 
     {#if showAllArticles}
-        <div class="col-span-5">
+        <div class="col-span-4">
             <FilterBar items={filterItems} selected={type} parameterName="type"
                        onSelected={(selectedType)=> type = selectedType}></FilterBar>
         </div>
+        <button onclick={closeSearch} class="col-span-1 flex justify-end pr-1">
+            <GlassCircle className="bg-primary/70! text-primary-foreground! border-0 shadow-md h-8! w-8! p-1!">
+                <X class="w-4 h-4"/>
+            </GlassCircle>
+        </button>
         <div class="col-span-5 border-b-[1px] border-b-muted pt-1 mb-1 "></div>
     {/if}
 
@@ -212,18 +216,3 @@
         <div class={Util.mapClass("whitespace-nowrap pl-1 text-right", !saleArticle.sale, "text-muted-foreground")}>{Util.formatCurrency(saleArticle.amount * saleArticle.articlePrice)}</div>
     {/each}
 </div>
-
-{#if showAllArticles}
-    <PlaceAtBottom top={true}>
-        <SearchBar bind:value={searchString} {onClear}/>
-    </PlaceAtBottom>
-
-    <PlaceAtBottom at="right" top={true}>
-        <button onclick={closeSearch}>
-            <GlassCircle
-                    className="bg-primary/70! text-primary-foreground! border-0 shadow-md">
-                <Check></Check>
-            </GlassCircle>
-        </button>
-    </PlaceAtBottom>
-{/if}

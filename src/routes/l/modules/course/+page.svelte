@@ -1,8 +1,7 @@
 <script lang="ts">
     import Loading from "$lib/components/global/Loading.svelte";
-    import SearchButton from "$lib/components/global/NavigationButtons/SearchButton.svelte";
-    import NavigationActions from "$lib/components/global/NavigationActions.svelte";
     import {type IPersonWithHistory} from "$lib/data/hfzApi";
+    import { uiState } from "$lib/stores/uiState.svelte";
 
     import thenby from 'thenby';
     import CourseGrid from "$lib/components/course/CourseGrid.svelte";
@@ -13,14 +12,9 @@
     const {firstBy} = thenby;
 
     let {data}: { data: { persons: Promise<Array<IPersonWithHistory>> } } = $props();
-    let searchString = $state("");
     let submitting = $state(false);
 
     let type = $derived($page.url.searchParams.get("type") ?? "all");
-
-    const onSearch = (value: string) => {
-        searchString = value;
-    }
 
     const sortPersons = (persons: Array<IPersonWithHistory>) => {
         return persons.sort(
@@ -30,9 +24,9 @@
 
     const filterAndGroup = (persons: Array<IPersonWithHistory>) => {
         const filtered = persons.filter((p: IPersonWithHistory) =>
-            (p.lastName?.toLowerCase().includes(searchString.toLowerCase()) ||
-                p.firstName?.toLowerCase().includes(searchString.toLowerCase()) ||
-                p.dogNames?.toLowerCase().includes(searchString.toLowerCase()))
+            (p.lastName?.toLowerCase().includes(uiState.searchString.toLowerCase()) ||
+                p.firstName?.toLowerCase().includes(uiState.searchString.toLowerCase()) ||
+                p.dogNames?.toLowerCase().includes(uiState.searchString.toLowerCase()))
         );
 
         const today = moment().startOf('day');
@@ -131,7 +125,7 @@
             </section>
         {/if}
 
-        {#if totalCount === 0 && searchString}
+        {#if totalCount === 0 && uiState.searchString}
              <div class="p-12 text-center text-muted-foreground">
                  Keine Personen gefunden, die der Suche entsprechen.
              </div>
@@ -143,6 +137,3 @@
     <Loading />
 {/if}
 
-<NavigationActions>
-    <SearchButton {onSearch} slot="persistent"></SearchButton>
-</NavigationActions>

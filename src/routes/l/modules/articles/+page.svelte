@@ -3,26 +3,20 @@
     import ArticlesGrid from "$lib/components/articles/ArticlesGrid.svelte";
     import AddButton from "$lib/components/global/NavigationButtons/AddButton.svelte";
     import NavigationActions from "$lib/components/global/NavigationActions.svelte";
-    import SearchButton from "$lib/components/global/NavigationButtons/SearchButton.svelte";
     import {ArticleTypes, type IArticle} from "$lib/data/hfzApi";
     import FilterBar from "$lib/components/global/FilterBar.svelte";
+    import { uiState } from "$lib/stores/uiState.svelte";
 
     import thenby from 'thenby';
     const {firstBy} = thenby;
 
     let {data}: { data: any } = $props();
-    let searchString = $state("");
-
     import { page } from '$app/stores';
     let type = $derived($page.url.searchParams.get("type") ?? "favorite");
     
-    const onSearch = (value: string) => {
-        searchString = value;
-    }
-
     const filter = (articles: Array<IArticle>) => {
         return articles.filter((a: IArticle) =>
-            a.title?.toLowerCase().includes(searchString.toLowerCase()) &&
+            a.title?.toLowerCase().includes(uiState.searchString.toLowerCase()) &&
             (
                 !type || 
                 (type === "favorite" && a.isFavorite && a.isActive) ||
@@ -46,6 +40,5 @@
 {/await}
 
 <NavigationActions>
-    <SearchButton slot="persistent" {onSearch}></SearchButton>
     <AddButton slot="actions" href="/l/dialogs/article"></AddButton>
 </NavigationActions>

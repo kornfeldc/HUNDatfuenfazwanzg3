@@ -2,10 +2,10 @@
     import Loading from "$lib/components/global/Loading.svelte";
     import RobGrid from "$lib/components/rob/RobGrid.svelte";
     import AddButton from "$lib/components/global/NavigationButtons/AddButton.svelte";
-    import SearchButton from "$lib/components/global/NavigationButtons/SearchButton.svelte";
     import NavigationActions from "$lib/components/global/NavigationActions.svelte";
     import type {IRobCourse, IRobCoursePerson} from "$lib/data/hfzApi";
     import { page } from '$app/stores';
+    import { uiState } from "$lib/stores/uiState.svelte";
 
     import FilterBar from "$lib/components/global/FilterBar.svelte";
     let type = $derived($page.url.searchParams.get("type") ?? "all");
@@ -15,18 +15,13 @@
     const { firstBy } = thenby;
 
     let {data}: { data: any } = $props();
-    let searchString = $state("");
-    const onSearch = (value: string) => {
-        searchString = value;
-    }
-    
     const filter = (robCourses: Array<IRobCourse>) => {
        return robCourses.filter((r:IRobCourse) => {
-           const matchesSearch = !searchString || 
-               moment(r.date).format('DD.MM.YYYY').includes(searchString) ||
+           const matchesSearch = !uiState.searchString || 
+               moment(r.date).format('DD.MM.YYYY').includes(uiState.searchString) ||
                r.persons?.some((p:IRobCoursePerson)=> 
-                   p?.personName?.toLowerCase().includes(searchString.toLowerCase()) || 
-                   p?.dogName?.toLowerCase().includes(searchString.toLowerCase())
+                   p?.personName?.toLowerCase().includes(uiState.searchString.toLowerCase()) || 
+                   p?.dogName?.toLowerCase().includes(uiState.searchString.toLowerCase())
                );
            return matchesSearch && isTypeMatching(r);
        }).sort(firstBy("date", { direction: "desc" }));
@@ -50,6 +45,5 @@
 {/await}
 
 <NavigationActions>
-    <SearchButton slot="persistent" {onSearch}></SearchButton>
     <AddButton slot="actions" href="/l/dialogs/rob"></AddButton>
 </NavigationActions>

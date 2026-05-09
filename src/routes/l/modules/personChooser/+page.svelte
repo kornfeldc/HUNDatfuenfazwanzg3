@@ -7,17 +7,14 @@
     import thenby from 'thenby';
     import {page} from '$app/stores';
     import FilterBar from "$lib/components/global/FilterBar.svelte";
-    import {onDestroy} from "svelte";
     import {uiState} from "$lib/stores/uiState.svelte";
-    import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
-    import SearchBar from "$lib/components/global/SearchBar.svelte";
     import BackButton from "$lib/components/global/NavigationButtons/BackButton.svelte";
     import Card from "$lib/components/global/Card.svelte";
+    import NavigationActions from "$lib/components/global/NavigationActions.svelte";
 
     const {firstBy} = thenby;
 
     let {data}: { data: any } = $props();
-    let searchString = $state("");
     let persons = $state([] as Array<IPerson>);
     let topPersons = $state([] as Array<IPersonSaleAggregate>);
 
@@ -44,9 +41,9 @@
                 .thenBy((person: IPerson) => person.firstName || '\uffff', { ignoreCase: true });
         
         return persons.filter((p: IPerson) =>
-            (p.lastName?.toLowerCase().includes(searchString.toLowerCase()) ||
-                p.firstName?.toLowerCase().includes(searchString.toLowerCase()) ||
-                p.dogNames?.toLowerCase().includes(searchString.toLowerCase())) &&
+            (p.lastName?.toLowerCase().includes(uiState.searchString.toLowerCase()) ||
+                p.firstName?.toLowerCase().includes(uiState.searchString.toLowerCase()) ||
+                p.dogNames?.toLowerCase().includes(uiState.searchString.toLowerCase())) &&
             isTypeMatching(p)
         ).sort(sortMethod);
     }
@@ -67,13 +64,6 @@
         {id: "inactive", label: "Inaktiv"},
     ];
 
-    if (typeof window !== 'undefined') {
-        uiState.setNavSearch(true);
-    }
-
-    onDestroy(() => {
-        uiState.setNavSearch(false);
-    });
 </script>
 {#await loadData()}
     <Loading></Loading>
@@ -90,7 +80,6 @@
     <PersonsGrid persons={filter(persons)} href="/l/dialogs/sale" openMainPerson={true}/>
 {/await}
 
-<PlaceAtBottom>
-    <BackButton></BackButton>
-    <SearchBar bind:value={searchString}></SearchBar>
-</PlaceAtBottom>
+<NavigationActions>
+    <BackButton slot="actions"></BackButton>
+</NavigationActions>
