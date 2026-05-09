@@ -8,8 +8,12 @@ export async function load({cookies, params, url, locals}) {
     if (!id) {
         const personId = url.searchParams.get('personId');
         const param = personId ? {id: parseInt(personId ?? -1)} : undefined;
+        const existingSale = await api.getNewSaleForPerson(param);
+        if (existingSale.id) {
+            throw redirect(303, `/l/dialogs/sale/${existingSale.id}`);
+        }
         return {
-            sale: api.getNewSaleForPerson(param),
+            sale: Promise.resolve(existingSale),
             topSoldArticles: api.getTopSoldArticles(param),
             articles: api.getArticles()
         };
