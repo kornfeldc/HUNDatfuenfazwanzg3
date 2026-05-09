@@ -4,7 +4,7 @@
     import { page } from "$app/stores";
     import { onMount } from "svelte";
 
-    const hiddenRoutes = ["/pay"];
+    const hiddenRoutes = ["/pay", "/calendar", "/statistics"];
     const isHidden = $derived(hiddenRoutes.some(r => $page.url.pathname.endsWith(r)));
 
     let visible = $state(true);
