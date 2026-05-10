@@ -208,9 +208,7 @@
             </PlaceAtBottom>
         {/if}
         {#if !hasPersons}
-            <button type="submit" form="robForm">
-                <SaveButton></SaveButton>
-            </button>
+            <SaveButton form="robForm"></SaveButton>
         {/if}
     </div>
 {:catch error}

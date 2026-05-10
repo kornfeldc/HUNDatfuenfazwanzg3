@@ -37,7 +37,7 @@
 {#await loadData()}
     <Loading></Loading>
 {:then _}
-    <form method="post" action="?/save" use:enhance={() => {
+    <form id="saleForm" method="post" action="?/save" use:enhance={() => {
         submitting = true;
         return async ({ update }) => {
             await update();
@@ -71,7 +71,7 @@
                 </a>
             </PlaceAtBottom>
             <PlaceAtBottom>
-                <button type="submit" name="deleteAction" value="true" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-destructive cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+                <button type="submit" form="saleForm" name="deleteAction" value="true" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-destructive cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
                     <Trash class="w-6 h-6"/>
                 </button>
             </PlaceAtBottom>
@@ -79,19 +79,19 @@
         {#if !sale.payDate && sale.saleArticles?.length > 0}
             {#if canPayWithCredit}
                 <PlaceAtBottom>
-                    <button type="submit" formaction="?/payWithCredit" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-ok cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+                    <button type="submit" form="saleForm" formaction="?/payWithCredit" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-ok cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
                         <BadgeCheck class="w-6 h-6"/>
                     </button>
                 </PlaceAtBottom>
             {/if}
             <PlaceAtBottom>
-                <button type="submit" name="redirectTo" value={`/l/dialogs/sale//pay`} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-ok cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+                <button type="submit" form="saleForm" name="redirectTo" value={`/l/dialogs/sale//pay`} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-ok cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
                     <Euro class="w-6 h-6"/>
                 </button>
             </PlaceAtBottom>
             {#if sale.person}
                 <PlaceAtBottom>
-                    <button type="submit" name="redirectTo" value="/l/modules/sales" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-primary cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+                    <button type="submit" form="saleForm" name="redirectTo" value="/l/modules/sales" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-primary cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
                         <Check class="w-6 h-6"/>
                     </button>
                 </PlaceAtBottom>

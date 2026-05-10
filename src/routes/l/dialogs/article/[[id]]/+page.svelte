@@ -41,7 +41,7 @@
 {#await loadArticle()}
     <Loading></Loading>
 {:then _}
-    <form method="post" action={id ? `/l/dialogs/article/${id}` : `/l/dialogs/article`} use:enhance={({ formData }) => {
+    <form id="articleForm" method="post" action={id ? `/l/dialogs/article/${id}` : `/l/dialogs/article`} use:enhance={({ formData }) => {
         submitting = true;
         errorMessage = "";
         const isDelete = !!formData.get('deleteAction');
@@ -123,14 +123,12 @@
                 </a>
             </PlaceAtBottom>
             <PlaceAtBottom>
-                <button type="submit" name="deleteAction" value="true" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-destructive cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+                <button type="submit" form="articleForm" name="deleteAction" value="true" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-destructive cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
                     <Trash class="w-6 h-6"/>
                 </button>
             </PlaceAtBottom>
         {/if}
-        <button type="submit">
-            <SaveButton></SaveButton>
-        </button>
+        <SaveButton form="articleForm"></SaveButton>
     </form>
 {/await}
 

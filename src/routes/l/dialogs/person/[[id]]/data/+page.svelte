@@ -58,7 +58,7 @@
 {#await loadPerson()}
     <Loading></Loading>
 {:then _}
-    <form method="post" action={id ? `/l/dialogs/person/${id}/data` : `/l/dialogs/person/data`} use:enhance={({ formData }) => {
+    <form id="personForm" method="post" action={id ? `/l/dialogs/person/${id}/data` : `/l/dialogs/person/data`} use:enhance={({ formData }) => {
         submitting = true;
         errorMessage = "";
         const isDelete = !!formData.get('deleteAction');
@@ -166,21 +166,19 @@
 
         {#if id}
             <PlaceAtBottom>
-                <button type="submit" name="deleteAction" value="true" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-destructive cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+                <button type="submit" form="personForm" name="deleteAction" value="true" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-destructive cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
                     <Trash class="w-6 h-6"/>
                 </button>
             </PlaceAtBottom>
         {/if}
         {#if !isSubPerson}
             <PlaceAtBottom>
-                <button type="submit" onclick={() => redirectValue = `/l/dialogs/person/{id}/actions`} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-primary cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+                <button type="submit" form="personForm" onclick={() => redirectValue = `/l/dialogs/person/{id}/actions`} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-primary cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
                     <Diff class="w-6 h-6"/>
                 </button>
             </PlaceAtBottom>
         {/if}
-        <button type="submit" onclick={() => redirectValue = uiState.getLastRouteSmart()}>
-            <SaveButton></SaveButton>
-        </button>
+        <SaveButton form="personForm"></SaveButton>
     </form>
 {/await}
 

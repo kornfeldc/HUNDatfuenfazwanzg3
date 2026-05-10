@@ -138,7 +138,7 @@
 {#await loadData()}
     <Loading></Loading>
 {:then _}
-    <form method="post" action={`/l/dialogs/sale/${id ?? ''}/pay`} use:enhance={() => {
+    <form id="salePayForm" method="post" action={`/l/dialogs/sale/${id ?? ''}/pay`} use:enhance={() => {
         submitting = true;
         return async ({ update }) => {
             await update();
@@ -236,7 +236,7 @@
         {/if}
         {#if toReturn >= 0}
             <PlaceAtBottom>
-                <button type="submit" name="redirectTo" value="/l/modules/sales" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-ok cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+                <button type="submit" form="salePayForm" name="redirectTo" value="/l/modules/sales" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-ok cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
                     <Check class="w-6 h-6"/>
                 </button>
             </PlaceAtBottom>
