@@ -57,6 +57,7 @@
 		"@supabase/ssr": "^0.7.0",
 		"@supabase/supabase-js": "^2.76.1",
 		"moment": "^2.30.1",
+		"svelte-motion": "^0.12.2",
 		"thenby": "^1.3.4"
 	}
 }

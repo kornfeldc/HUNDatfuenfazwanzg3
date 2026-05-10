@@ -44,21 +44,21 @@
     <div class="
         flex items-center gap-2
         w-full sm:w-auto sm:min-w-80 sm:max-w-lg
-        bg-slate-900/30 dark:bg-white/10
-        border border-white/20 dark:border-white/10
+        bg-background/80 dark:bg-white/10
+        border border-border dark:border-white/10
         backdrop-blur-sm shadow-xl
         rounded-full px-4 py-2
     ">
-        <Search class="shrink-0 text-gray-400 dark:text-gray-300 w-4 h-4" />
+        <Search class="shrink-0 text-muted-foreground w-4 h-4" />
         <input
             bind:this={inputEl}
             bind:value={uiState.searchString}
-            class="flex-1 bg-transparent border-0 outline-none text-base text-white placeholder-gray-400 dark:placeholder-gray-300 min-w-0"
+            class="flex-1 bg-transparent border-0 outline-none text-base text-foreground placeholder-muted-foreground min-w-0"
             placeholder="Suche…"
             type="text"
         />
         {#if uiState.searchString}
-            <button onclick={clear} class="shrink-0 text-gray-400 dark:text-gray-300 hover:text-white transition-colors">
+            <button onclick={clear} class="shrink-0 text-muted-foreground hover:text-foreground transition-colors">
                 <CircleX class="w-4 h-4" />
             </button>
         {/if}

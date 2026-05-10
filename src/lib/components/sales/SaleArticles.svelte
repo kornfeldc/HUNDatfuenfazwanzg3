@@ -9,6 +9,7 @@
     import {Util, moment} from "$lib/util";
     import {Minus, Plus, X} from "@lucide/svelte";
     import GlassCircle from "$lib/components/global/GlassCircle.svelte";
+    import {Button} from "$lib/components/shadcn/ui/button";
     import FilterBar from "$lib/components/global/FilterBar.svelte";
     import {onMount} from "svelte";
     import {uiState} from "$lib/stores/uiState.svelte";
@@ -166,12 +167,12 @@
 <div class="grid [grid-template-columns:1fr_auto_auto_auto_auto] gap-2 items-center h-full">
     {#if showTopLine}
         {#if !sale.payDate}
-            <button class="col-span-2" onclick={(event) => setShowAllArticles(event)}>
-                <GlassCircle
-                        className="ml-[-0.5em] mt-2 h-8! px-4! bg-transparent! text-primary border-[1px] border-primary shadow-sm whitespace-nowrap w-min">
-                    Artikel hinzufügen
-                </GlassCircle>
-            </button>
+            <Button
+                variant="outline"
+                class="col-span-2 mt-2 w-min whitespace-nowrap text-primary border-primary hover:bg-primary/10 hover:text-primary"
+                onclick={(event) => setShowAllArticles(event)}>
+                Artikel hinzufügen
+            </Button>
         {:else}
             <div class="col-span-2 text-lg pt-2">
                 {moment(sale.saleDate).format('DD.MM.YYYY')}

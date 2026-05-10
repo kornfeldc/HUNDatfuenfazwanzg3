@@ -1,13 +1,15 @@
 <script lang="ts">
-    import {onMount} from "svelte";
-    let {children} = $props();
+    import * as Sidebar from "$lib/components/shadcn/ui/sidebar";
+    import AppSidebar from "$lib/components/global/AppSidebar.svelte";
+    import MobileDock from "$lib/components/global/MobileDock.svelte";
 
-    onMount(() => {
-        const mq = window.matchMedia('(prefers-color-scheme: dark)');
-        const systemDark = mq.matches;
-        // if(systemDark)
-        //     document.body.parentElement!.classList.add('dark');
-    });
+    let {children} = $props();
 </script>
 
-{@render children?.()}
+<Sidebar.Provider>
+    <AppSidebar/>
+    <main class="flex-1 overflow-auto min-h-0">
+        {@render children?.()}
+    </main>
+    <MobileDock/>
+</Sidebar.Provider>

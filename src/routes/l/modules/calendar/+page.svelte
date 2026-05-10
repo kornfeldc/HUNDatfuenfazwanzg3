@@ -1,15 +1,9 @@
 <script lang="ts">
     import Loading from "$lib/components/global/Loading.svelte";
-    import NavigationActions from "$lib/components/global/NavigationActions.svelte";
     import {type ISale} from "$lib/data/hfzApi";
-    import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
-    import BackButton from "$lib/components/global/NavigationButtons/BackButton.svelte";
     import FullScreenCalendar, {type ICalendarItem} from "$lib/components/global/FullScreenCalendar.svelte";
     import {page} from '$app/stores';
     import {Util, moment} from "$lib/util";
-    import TextButton from "$lib/components/global/TextButton.svelte";
-    import {History} from "@lucide/svelte";
-    import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
 
     let {data}: { data: any } = $props();
 
@@ -64,16 +58,3 @@
     </div>
 {/await}
 
-<PlaceAtBottom>
-    <BackButton></BackButton>
-    <GlassCircleLink href={`/l/dialogs/history?date=${date}`} className={"bg-accent/70! dark:bg-gray-500/90! border-0 shadow-sm"}>
-        <History class="text-accent-foreground"/>
-    </GlassCircleLink>
-</PlaceAtBottom>
-
-<NavigationActions>
-    <div slot="actions" class="flex gap-2">
-        <TextButton color="muted" href={"/l/modules/statistics"}>Statistiken</TextButton>
-        <TextButton color="primary" href={"/l/modules/sales?date="+moment().format('YYYY-MM-DD')}>Heute</TextButton>
-    </div>
-</NavigationActions>

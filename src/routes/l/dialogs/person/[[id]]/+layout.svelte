@@ -41,7 +41,7 @@
     <BackButton></BackButton>
     {#if data.id}
         <GlassCircleLink href={`/l/dialogs/history/person/${data.id}`} className={"bg-accent/70! dark:bg-gray-500/90! border-0 shadow-sm"}>
-            <History class="text-accent-foreground"/>
+            <History class="text-foreground"/>
         </GlassCircleLink>
     {/if}
 </PlaceAtBottom>

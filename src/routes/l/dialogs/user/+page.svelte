@@ -17,7 +17,7 @@
     import {page} from "$app/stores";
     import {Button} from "$lib/components/shadcn/ui/button";
     import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
-    import {Dog} from "@lucide/svelte";
+    import {Dog, LogOut} from "@lucide/svelte";
     import Avatar from "$lib/components/global/Avatar.svelte";
     import { enhance } from '$app/forms';
 
@@ -133,14 +133,11 @@
     <NavigationActions>
         <div slot="actions">
             <button type="button" onclick={() => goto('/logout')}>
-                <GlassCircleLink className={" bg-destructive! border-0 w-30 text-destructive-foreground shadow-md "}>
-                    Ausloggen 
+                <GlassCircleLink className={" bg-destructive! border-0 text-destructive-foreground shadow-md "}>
+                    <LogOut class="w-5 h-5 shrink-0"/>
+                    <span class="hidden md:inline">Ausloggen</span>
                 </GlassCircleLink>
             </button>
-
-<!--                <button type="submit" >-->
-<!--                    <SaveButton></SaveButton>-->
-<!--                </button>-->
         </div>
     </NavigationActions>
 {/await}

@@ -22,7 +22,7 @@
 </script>
 {#snippet circleLink()}
     <GlassCircleLink className={" bg-accent/70! dark:bg-gray-500/90! border-0 shadow-sm " + className} {href}>
-        <ArrowLeft class="text-accent-foreground"/>
+        <ArrowLeft/>
     </GlassCircleLink>
 {/snippet}
 {#if href}
