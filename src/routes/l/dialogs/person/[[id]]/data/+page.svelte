@@ -17,11 +17,11 @@
     import {Util} from "$lib/util";
     import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
     import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
-    import BackButton from "$lib/components/global/NavigationButtons/BackButton.svelte";
     import {uiState} from "$lib/stores/uiState.svelte";
     import {enhance} from '$app/forms';
     import {goto} from '$app/navigation';
     import PersonOverview from "$lib/components/persons/PersonOverview.svelte";
+    import { breadcrumbStore } from '$lib/stores/breadcrumbStore.svelte';
 
     let id = $page.params.id;
     let {data}: { data: any; } = $props();
@@ -46,6 +46,9 @@
         formPerson.isMember = person?.isMember ?? false;
         formPerson.isActive = person?.isActive ?? true;
         formPerson.info = person?.info ?? "";
+        breadcrumbStore.detailLabel = formPerson.id
+            ? (formPerson.firstName + ' ' + formPerson.lastName).trim()
+            : 'Neue Person';
     }
 
     const swapName = () => {
@@ -165,7 +168,6 @@
         </Card>
 
         <PlaceAtBottom>
-            <BackButton></BackButton>
             {#if id}
                 <button type="submit" name="deleteAction" value="true">
                     <GlassCircleLink className={"bg-destructive! text-destructive-foreground!"}>

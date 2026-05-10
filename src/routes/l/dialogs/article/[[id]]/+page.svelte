@@ -20,6 +20,7 @@
     import {uiState} from "$lib/stores/uiState.svelte";
     import { enhance } from '$app/forms';
     import { goto } from '$app/navigation';
+    import { breadcrumbStore } from '$lib/stores/breadcrumbStore.svelte';
 
     let id = $page.params.id;
     let {data}: { data: any; } = $props();
@@ -35,6 +36,7 @@
         formArticle.type = article?.type ?? "other";
         formArticle.isFavorite = article?.isFavorite ?? false;
         formArticle.isActive = article?.isActive ?? true;
+        breadcrumbStore.detailLabel = formArticle.title || 'Neuer Artikel';
     }
 </script>
 

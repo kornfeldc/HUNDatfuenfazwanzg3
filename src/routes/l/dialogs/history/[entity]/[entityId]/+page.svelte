@@ -5,13 +5,16 @@
     import Card from "$lib/components/global/Card.svelte";
     import CardTitleBig from "$lib/components/global/CardTitleBig.svelte";
     import Loading from "$lib/components/global/Loading.svelte";
+    import { breadcrumbStore } from '$lib/stores/breadcrumbStore.svelte';
 
     let {data} = $props();
 
     const loadData = async () => {
+        const title = await data.title;
+        breadcrumbStore.detailLabel = title || 'Verlauf';
         return {
             history: await data.history,
-            title: await data.title
+            title
         }
     }
 </script>

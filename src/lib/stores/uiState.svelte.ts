@@ -47,7 +47,9 @@ export const uiState = $state<UiState>({
     getLastRouteSmart() {
         const currentRoute = uiState.routes[uiState.routes.length - 1];
         let redirectTo = null;
-        
+
+        if (!currentRoute) return undefined;
+
         if (currentRoute.includes("dialogs/person")) {
             // check if the last module was sales or persons 
             const lastModule = this.getLastRoute("modules");

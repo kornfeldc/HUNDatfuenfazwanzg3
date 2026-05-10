@@ -13,6 +13,7 @@
     import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
     import PaidSaleInfo from "$lib/components/sales/PaidSaleInfo.svelte";
     import { enhance } from '$app/forms';
+    import { breadcrumbStore } from '$lib/stores/breadcrumbStore.svelte';
 
     let id = $page.params.id;
 
@@ -27,6 +28,9 @@
         articles = await data.articles;
         sale = await data.sale;
         topSoldArticles = await data.topSoldArticles;
+        breadcrumbStore.detailLabel = sale.person
+            ? (sale.person.firstName + ' ' + sale.person.lastName).trim()
+            : (sale.personName || 'Neuer Verkauf');
     }
 
     const articleSum = $derived(sale.saleArticles?.reduce((acc, sa) => acc + sa.amount * sa.articlePrice, 0) ?? 0);

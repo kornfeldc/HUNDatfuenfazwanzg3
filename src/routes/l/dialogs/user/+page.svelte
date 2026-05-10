@@ -20,12 +20,14 @@
     import {Dog, LogOut} from "@lucide/svelte";
     import Avatar from "$lib/components/global/Avatar.svelte";
     import { enhance } from '$app/forms';
+    import { breadcrumbStore } from '$lib/stores/breadcrumbStore.svelte';
 
     let {data, form}: { data: any, form: any } = $props();
     let formUser = $state({} as IUser);
     let submitting = $state(false);
 
     const loadUser = async () => {
+        breadcrumbStore.detailLabel = 'Mein Profil';
         const user = await data.hfzUser;
         formUser.theme = user?.theme ?? "system";
         formUser.email = user?.email;

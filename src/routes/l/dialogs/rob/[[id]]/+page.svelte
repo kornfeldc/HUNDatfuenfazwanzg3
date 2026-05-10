@@ -21,6 +21,7 @@
     import { invalidateAll } from '$app/navigation';
     import { Button } from "$lib/components/shadcn/ui/button";
     import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
+    import { breadcrumbStore } from '$lib/stores/breadcrumbStore.svelte';
 
     let id = $page.params.id;
     let {data}: { data: any; } = $props();
@@ -59,6 +60,9 @@
             formRob.persons = [];
         }
         dateStr = moment(formRob.date).format('YYYY-MM-DD');
+        breadcrumbStore.detailLabel = formRob.id
+            ? 'Rob ' + moment(formRob.date).format('DD.MM.YYYY')
+            : 'Neuer Rob Kurs';
     }
 
     const copyLink = () => {

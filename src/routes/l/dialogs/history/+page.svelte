@@ -9,6 +9,7 @@
     import NavigationActions from "$lib/components/global/NavigationActions.svelte";
     import {ChevronLeft, ChevronRight} from "@lucide/svelte";
     import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
+    import { breadcrumbStore } from '$lib/stores/breadcrumbStore.svelte';
 
     let {data} = $props();
 
@@ -19,6 +20,7 @@
     const loadHistory = async () => {
         history = await data.history;
         paging = await data.paging;
+        breadcrumbStore.detailLabel = moment(date).format('DD.MM.YYYY');
     }
 </script>
 

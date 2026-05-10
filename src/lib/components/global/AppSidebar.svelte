@@ -35,9 +35,9 @@
 
 <Sidebar.Root collapsible="icon" variant="floating">
     <Sidebar.Header class="group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:justify-center">
-        <a href="/l/modules" class="flex items-center gap-2 p-2">
-            <img src={logo} alt="logo" class="w-8 h-8 shrink-0">
-            <span class="font-mono font-bold text-primary text-lg group-data-[collapsible=icon]:hidden whitespace-nowrap overflow-hidden">
+        <a href="/l/modules" class="flex flex-col items-center gap-1 p-2 group-data-[collapsible=icon]:p-1">
+            <img src={logo} alt="logo" class="w-10 h-10 shrink-0 group-data-[collapsible=icon]:w-7 group-data-[collapsible=icon]:h-7">
+            <span class="font-mono font-bold text-primary text-sm group-data-[collapsible=icon]:hidden whitespace-nowrap overflow-hidden text-center">
                 <b class="font-extrabold">HUND</b><i class="font-light">atfuenfazwanzg</i>
             </span>
         </a>

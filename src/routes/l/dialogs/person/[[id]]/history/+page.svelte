@@ -11,6 +11,7 @@
     import {Diff} from "@lucide/svelte";
     import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
     import History from "$lib/components/global/History.svelte";
+    import { breadcrumbStore } from '$lib/stores/breadcrumbStore.svelte';
 
     const {firstBy} = thenby;
 
@@ -33,6 +34,9 @@
         history = await data.history;
         fullHistory = await data.fullHistory;
         person = await data.person;
+        breadcrumbStore.detailLabel = person
+            ? (person.firstName + ' ' + person.lastName).trim()
+            : '';
     }
 
     const filterItems = [
