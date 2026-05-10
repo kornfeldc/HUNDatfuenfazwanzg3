@@ -2,7 +2,6 @@
     import Loading from "$lib/components/global/Loading.svelte";
     import PersonsGrid from "$lib/components/persons/PersonsGrid.svelte";
     import AddButton from "$lib/components/global/NavigationButtons/AddButton.svelte";
-    import NavigationActions from "$lib/components/global/NavigationActions.svelte";
     import {ArticleTypes, type IPerson} from "$lib/data/hfzApi";
     import { uiState } from "$lib/stores/uiState.svelte";
 
@@ -47,6 +46,4 @@
     <PersonsGrid persons={filter(persons)}/>
 {/await}
 
-<NavigationActions>
-    <AddButton slot="actions" href="/l/dialogs/person"></AddButton>
-</NavigationActions>
+<AddButton href="/l/dialogs/person"></AddButton>

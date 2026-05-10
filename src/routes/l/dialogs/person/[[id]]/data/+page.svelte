@@ -1,10 +1,10 @@
 <script lang="ts">
     import {page} from '$app/stores';
     import SaveButton from "$lib/components/global/NavigationButtons/SaveButton.svelte";
-    import NavigationActions from "$lib/components/global/NavigationActions.svelte";
+    import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
     import Card from "$lib/components/global/Card.svelte";
     import Loading from "$lib/components/global/Loading.svelte";
-    import {ArrowUpDown, Diff} from "@lucide/svelte";
+    import {ArrowUpDown, Diff, Trash} from "@lucide/svelte";
     import type {IPerson} from "$lib/data/hfzApi";
     import {Label} from "$lib/components/shadcn/ui/label";
 
@@ -12,11 +12,8 @@
     import * as InputGroup from "$lib/components/shadcn/ui/input-group/index.js";
     import {Button} from "$lib/components/shadcn/ui/button";
     import {Checkbox} from "$lib/components/shadcn/ui/checkbox";
-    import {Trash} from '@lucide/svelte';
     import CardTitleBig from "$lib/components/global/CardTitleBig.svelte";
     import {Util} from "$lib/util";
-    import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
-    import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
     import {uiState} from "$lib/stores/uiState.svelte";
     import {enhance} from '$app/forms';
     import {goto} from '$app/navigation';
@@ -167,31 +164,23 @@
 
         </Card>
 
-        <PlaceAtBottom>
-            {#if id}
-                <button type="submit" name="deleteAction" value="true">
-                    <GlassCircleLink className={"bg-destructive! text-destructive-foreground!"}>
-                        <Trash/>
-                    </GlassCircleLink>
+        {#if id}
+            <PlaceAtBottom>
+                <button type="submit" name="deleteAction" value="true" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-destructive cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+                    <Trash class="w-6 h-6"/>
                 </button>
-            {/if}
-        </PlaceAtBottom>
-
-        <NavigationActions>
-            <div class="flex gap-2" slot="actions">
-                {#if !isSubPerson}
-                    <button type="submit" onclick={() => redirectValue = `/l/dialogs/person/{id}/actions`}>
-                        <GlassCircleLink
-                                className={" bg-primary/90! border-0 shadow-md "}>
-                            <Diff class="text-primary-foreground"/>
-                        </GlassCircleLink>
-                    </button>
-                {/if}
-                <button type="submit" onclick={() => redirectValue = uiState.getLastRouteSmart()}>
-                    <SaveButton></SaveButton>
+            </PlaceAtBottom>
+        {/if}
+        {#if !isSubPerson}
+            <PlaceAtBottom>
+                <button type="submit" onclick={() => redirectValue = `/l/dialogs/person/{id}/actions`} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-primary cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+                    <Diff class="w-6 h-6"/>
                 </button>
-            </div>
-        </NavigationActions>
+            </PlaceAtBottom>
+        {/if}
+        <button type="submit" onclick={() => redirectValue = uiState.getLastRouteSmart()}>
+            <SaveButton></SaveButton>
+        </button>
     </form>
 {/await}
 

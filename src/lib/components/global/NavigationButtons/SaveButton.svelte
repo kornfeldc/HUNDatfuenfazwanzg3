@@ -1,13 +1,10 @@
 <script lang="ts">
-    import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
+    import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
     import { Save } from "@lucide/svelte";
-    import { dockActionsStore } from "$lib/stores/dockActionsStore.svelte";
     let {className = ""} = $props();
-    const inDock = $derived(dockActionsStore.renderingInDock);
 </script>
-<GlassCircleLink className={" bg-ok! border-0 text-white shadow-md " + (inDock ? "" : "w-30 ") + className}>
-    <Save class="w-5 h-5 shrink-0"/>
-    {#if !inDock}
-        <span>Speichern</span>
-    {/if}
-</GlassCircleLink>
+<PlaceAtBottom>
+    <span class={"flex items-center justify-center w-[34px] h-[34px] rounded-full text-ok cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors " + className}>
+        <Save class="w-6 h-6 shrink-0"/>
+    </span>
+</PlaceAtBottom>

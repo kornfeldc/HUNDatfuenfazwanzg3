@@ -45,13 +45,13 @@
 
 <!-- Mobile dock: shown only on small screens (md:hidden) -->
 {#if isModulesPage || (isDialogsPage && hasActions)}
-<div class="md:hidden fixed bottom-4 left-0 right-0 z-50 flex justify-center pointer-events-none">
+<div class="md:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-center pointer-events-none pb-[env(safe-area-inset-bottom)]" style="padding-bottom: max(1rem, env(safe-area-inset-bottom))">
     <div class="pointer-events-auto">
         <Dock.Root class="bg-background/50! backdrop-blur-md shadow-lg">
             {#if isModulesPage}
                 <!-- Sidebar toggle button — always leftmost -->
                 <Dock.Icon onclick={() => sidebar.toggle()} class="text-foreground">
-                    <PanelLeft class="w-5 h-5"/>
+                    <PanelLeft class="w-6 h-6"/>
                 </Dock.Icon>
 
                 <Dock.Separator/>
@@ -62,7 +62,7 @@
                         onclick={() => goto(module.href)}
                         class={isActive(module.href) ? 'text-primary' : 'text-foreground'}
                     >
-                        <module.icon class="w-5 h-5"/>
+                        <module.icon class="w-6 h-6"/>
                     </Dock.Icon>
                 {/each}
 
@@ -74,12 +74,10 @@
                     {/each}
                 {/if}
             {:else if isDialogsPage && hasActions}
-                <!-- Dialog/special-page mode: show action buttons from PlaceAtBottom -->
-                <div class="flex items-center gap-1 px-1">
-                    {#each dockActionsStore.actionsList as actionSnippet}
-                        {@render actionSnippet()}
-                    {/each}
-                </div>
+                <!-- Dialog/special-page mode: show action buttons from store -->
+                {#each dockActionsStore.actionsList as actionSnippet}
+                    {@render actionSnippet()}
+                {/each}
             {/if}
         </Dock.Root>
     </div>

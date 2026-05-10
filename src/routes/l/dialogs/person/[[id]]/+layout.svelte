@@ -3,7 +3,6 @@
     import Pill from "$lib/components/global/Pill.svelte";
     import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
     import BackButton from "$lib/components/global/NavigationButtons/BackButton.svelte";
-    import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
     import {History} from "@lucide/svelte";
     import {onMount} from "svelte";
     import {uiState} from "$lib/stores/uiState.svelte";
@@ -37,11 +36,11 @@
     </div>
 {/if}
 {@render children?.()}
-<PlaceAtBottom>
-    <BackButton></BackButton>
-    {#if data.id}
-        <GlassCircleLink href={`/l/dialogs/history/person/${data.id}`} className={"bg-accent/70! dark:bg-gray-500/90! border-0 shadow-sm"}>
-            <History class="text-foreground"/>
-        </GlassCircleLink>
-    {/if}
-</PlaceAtBottom>
+<BackButton></BackButton>
+{#if data.id}
+    <PlaceAtBottom>
+        <a href={`/l/dialogs/history/person/${data.id}`} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-foreground hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+            <History class="w-6 h-6"/>
+        </a>
+    </PlaceAtBottom>
+{/if}

@@ -10,7 +10,6 @@
     import {uiState} from "$lib/stores/uiState.svelte";
     import BackButton from "$lib/components/global/NavigationButtons/BackButton.svelte";
     import Card from "$lib/components/global/Card.svelte";
-    import NavigationActions from "$lib/components/global/NavigationActions.svelte";
 
     const {firstBy} = thenby;
 
@@ -80,6 +79,4 @@
     <PersonsGrid persons={filter(persons)} href="/l/dialogs/sale" openMainPerson={true}/>
 {/await}
 
-<NavigationActions>
-    <BackButton slot="actions"></BackButton>
-</NavigationActions>
+<BackButton></BackButton>

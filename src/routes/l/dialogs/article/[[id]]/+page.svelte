@@ -1,9 +1,7 @@
 <script lang="ts">
     import {page} from '$app/stores';
-    import NavigationActions from "$lib/components/global/NavigationActions.svelte";
     import SaveButton from "$lib/components/global/NavigationButtons/SaveButton.svelte";
     import {Label} from "$lib/components/shadcn/ui/label";
-    import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
     // noinspection ES6UnusedImports
     import * as InputGroup from "$lib/components/shadcn/ui/input-group/index.js";
     // noinspection ES6UnusedImports
@@ -117,24 +115,22 @@
             </div>
         </Card>
 
-        <PlaceAtBottom>
-            <BackButton></BackButton>
-            {#if id}
-                <GlassCircleLink href={`/l/dialogs/history/article/${id}`} className={"bg-accent/70! dark:bg-gray-500/90! border-0 shadow-sm"}>
-                    <History class="text-foreground"/>
-                </GlassCircleLink>
-                <button type="submit" name="deleteAction" value="true">
-                    <GlassCircleLink className={"bg-destructive! text-destructive-foreground!"}>
-                        <Trash/>
-                    </GlassCircleLink>
+        <BackButton></BackButton>
+        {#if id}
+            <PlaceAtBottom>
+                <a href={`/l/dialogs/history/article/${id}`} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-foreground hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+                    <History class="w-6 h-6"/>
+                </a>
+            </PlaceAtBottom>
+            <PlaceAtBottom>
+                <button type="submit" name="deleteAction" value="true" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-destructive cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+                    <Trash class="w-6 h-6"/>
                 </button>
-            {/if}
-        </PlaceAtBottom>
-        <NavigationActions>
-            <button type="submit" slot="actions">
-                <SaveButton></SaveButton>
-            </button>
-        </NavigationActions>
+            </PlaceAtBottom>
+        {/if}
+        <button type="submit">
+            <SaveButton></SaveButton>
+        </button>
     </form>
 {/await}
 

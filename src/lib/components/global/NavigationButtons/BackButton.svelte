@@ -1,6 +1,6 @@
 <script lang="ts">
     import {ArrowLeft} from "@lucide/svelte";
-    import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
+    import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
     import {uiState} from "$lib/stores/uiState.svelte";
     import {goto} from "$app/navigation";
 
@@ -9,26 +9,25 @@
     const onclick = (event: any) => {
         event.stopPropagation();
         event.preventDefault();
-        
+
         const lastModule = uiState.getLastRouteSmart();
         if(lastModule) {
             goto(lastModule);
             return false;
         }
-        
+
         history.back();
         return false;
     }
 </script>
-{#snippet circleLink()}
-    <GlassCircleLink className={" bg-accent/70! dark:bg-gray-500/90! border-0 shadow-sm " + className} {href}>
-        <ArrowLeft/>
-    </GlassCircleLink>
-{/snippet}
-{#if href}
-    {@render circleLink()}
-{:else}
-    <button {onclick}>
-        {@render circleLink()}
-    </button>
-{/if}
+<PlaceAtBottom>
+    {#if href}
+        <a {href} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-foreground hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+            <ArrowLeft class="w-6 h-6"/>
+        </a>
+    {:else}
+        <button {onclick} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-foreground cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+            <ArrowLeft class="w-6 h-6"/>
+        </button>
+    {/if}
+</PlaceAtBottom>

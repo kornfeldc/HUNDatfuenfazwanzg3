@@ -18,11 +18,9 @@
 <div class="hidden md:flex fixed bottom-4 right-4 z-50 pointer-events-none">
     <div class="pointer-events-auto">
         <Dock.Root class="bg-background/50! backdrop-blur-md shadow-lg">
-            <div class="flex items-center gap-1 px-1">
-                {#each dockActionsStore.actionsList as actionSnippet}
-                    {@render actionSnippet()}
-                {/each}
-            </div>
+            {#each dockActionsStore.actionsList as actionSnippet}
+                {@render actionSnippet()}
+            {/each}
         </Dock.Root>
     </div>
 </div>

@@ -1,7 +1,6 @@
 <script lang="ts">
     import History from "$lib/components/global/History.svelte";
     import BackButton from "$lib/components/global/NavigationButtons/BackButton.svelte";
-    import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
     import Card from "$lib/components/global/Card.svelte";
     import CardTitleBig from "$lib/components/global/CardTitleBig.svelte";
     import Loading from "$lib/components/global/Loading.svelte";
@@ -30,7 +29,5 @@
         <History history={res.history}/>
     </div>
 
-    <PlaceAtBottom>
-        <BackButton/>
-    </PlaceAtBottom>
+    <BackButton/>
 {/await}

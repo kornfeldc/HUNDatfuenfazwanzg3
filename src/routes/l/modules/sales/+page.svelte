@@ -1,7 +1,6 @@
 <script lang="ts">
     import SalesGrid from "$lib/components/sales/SalesGrid.svelte";
     import AddButton from "$lib/components/global/NavigationButtons/AddButton.svelte";
-    import NavigationActions from "$lib/components/global/NavigationActions.svelte";
     import type {ISale} from "$lib/data/hfzApi";
     import { uiState } from "$lib/stores/uiState.svelte";
     import Pill from "$lib/components/global/Pill.svelte";
@@ -67,27 +66,23 @@
     <SalesGrid sales={filter(sales)}/>
 {/await}
 
-<NavigationActions>
-    <div slot="actions">
-        <AddButton href="/l/modules/personChooser"></AddButton>
-        {#if salesThatCanBePayedWithCredit.length > 0}
-            <div class="fixed bottom-20 left-0 w-full z-10 flex justify-center">
-                <form method="POST" action="?/payWithCredit" use:enhance={() => {
-                    submitting = true;
-                    return async ({ update }) => {
-                        await update();
-                        submitting = false;
-                    };
-                }}>
-                    <input type="hidden" name="date" value={date} />
-                    <button type="submit">
-                        <TextButton className={"bg-transparent! border-2 border-ok text-ok! shadow-sm shadow-ok/50 whitespace-nowrap w-min px-4"}>Alle mit GH abrechnen</TextButton>
-                    </button>
-                </form>
-            </div>
-        {/if}
+<AddButton href="/l/modules/personChooser"></AddButton>
+{#if salesThatCanBePayedWithCredit.length > 0}
+    <div class="fixed bottom-20 left-0 w-full z-10 flex justify-center">
+        <form method="POST" action="?/payWithCredit" use:enhance={() => {
+            submitting = true;
+            return async ({ update }) => {
+                await update();
+                submitting = false;
+            };
+        }}>
+            <input type="hidden" name="date" value={date} />
+            <button type="submit">
+                <TextButton className={"bg-transparent! border-2 border-ok text-ok! shadow-sm shadow-ok/50 whitespace-nowrap w-min px-4"}>Alle mit GH abrechnen</TextButton>
+            </button>
+        </form>
     </div>
-</NavigationActions>
+{/if}
 
 {#if submitting}
     <Loading/>

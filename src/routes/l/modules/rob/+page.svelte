@@ -2,7 +2,6 @@
     import Loading from "$lib/components/global/Loading.svelte";
     import RobGrid from "$lib/components/rob/RobGrid.svelte";
     import AddButton from "$lib/components/global/NavigationButtons/AddButton.svelte";
-    import NavigationActions from "$lib/components/global/NavigationActions.svelte";
     import type {IRobCourse, IRobCoursePerson} from "$lib/data/hfzApi";
     import { page } from '$app/stores';
     import { uiState } from "$lib/stores/uiState.svelte";
@@ -44,6 +43,4 @@
     <RobGrid robCourses={filter(robCourses)}/>
 {/await}
 
-<NavigationActions>
-    <AddButton slot="actions" href="/l/dialogs/rob"></AddButton>
-</NavigationActions>
+<AddButton href="/l/dialogs/rob"></AddButton>

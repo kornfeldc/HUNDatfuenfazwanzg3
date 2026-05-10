@@ -1,9 +1,18 @@
 <script lang="ts">
     import {Plus} from "@lucide/svelte";
-    import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
+    import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
+    import {goto} from "$app/navigation";
 
     let {href = "", className = ""} = $props();
 </script>
-<GlassCircleLink {href} className={" bg-primary/40! dark:bg-primary/70! border-0 shadow-sm " + className}>
-    <Plus class="text-primary dark:text-primary-foreground"/>
-</GlassCircleLink>
+<PlaceAtBottom>
+    {#if href}
+        <a {href} class={"flex items-center justify-center w-[34px] h-[34px] rounded-full text-primary hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors " + className}>
+            <Plus class="w-6 h-6"/>
+        </a>
+    {:else}
+        <span class={"flex items-center justify-center w-[34px] h-[34px] rounded-full text-primary hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors " + className}>
+            <Plus class="w-6 h-6"/>
+        </span>
+    {/if}
+</PlaceAtBottom>

@@ -2,7 +2,6 @@
     import Loading from "$lib/components/global/Loading.svelte";
     import ArticlesGrid from "$lib/components/articles/ArticlesGrid.svelte";
     import AddButton from "$lib/components/global/NavigationButtons/AddButton.svelte";
-    import NavigationActions from "$lib/components/global/NavigationActions.svelte";
     import {ArticleTypes, type IArticle} from "$lib/data/hfzApi";
     import FilterBar from "$lib/components/global/FilterBar.svelte";
     import { uiState } from "$lib/stores/uiState.svelte";
@@ -39,6 +38,4 @@
     <ArticlesGrid articles={filter(articles)}/>
 {/await}
 
-<NavigationActions>
-    <AddButton slot="actions" href="/l/dialogs/article"></AddButton>
-</NavigationActions>
+<AddButton href="/l/dialogs/article"></AddButton>

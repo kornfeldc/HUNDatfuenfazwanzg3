@@ -5,12 +5,9 @@
     import Loading from "$lib/components/global/Loading.svelte";
     import Card from "$lib/components/global/Card.svelte";
     import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
-    import NavigationActions from "$lib/components/global/NavigationActions.svelte";
     import BackButton from "$lib/components/global/NavigationButtons/BackButton.svelte";
-    import TextButton from "$lib/components/global/TextButton.svelte";
     import PersonOverview from "$lib/components/persons/PersonOverview.svelte";
     import SaleArticles from "$lib/components/sales/SaleArticles.svelte";
-    import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
     import PaidSaleInfo from "$lib/components/sales/PaidSaleInfo.svelte";
     import { enhance } from '$app/forms';
     import { breadcrumbStore } from '$lib/stores/breadcrumbStore.svelte';
@@ -66,43 +63,40 @@
             <PaidSaleInfo {sale}></PaidSaleInfo>
         {/if}
 
-        <PlaceAtBottom>
-            <BackButton></BackButton>
-            {#if id}
-                <GlassCircleLink href={`/l/dialogs/history/sale/${id}`} className={"bg-accent/70! dark:bg-gray-500/90! border-0 shadow-sm"}>
-                    <History class="text-foreground"/>
-                </GlassCircleLink>
-                <button type="submit" name="deleteAction" value="true">
-                    <GlassCircleLink className={"bg-destructive! text-destructive-foreground!"}>
-                        <Trash/>
-                    </GlassCircleLink>
+        <BackButton></BackButton>
+        {#if id}
+            <PlaceAtBottom>
+                <a href={`/l/dialogs/history/sale/${id}`} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-foreground hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+                    <History class="w-6 h-6"/>
+                </a>
+            </PlaceAtBottom>
+            <PlaceAtBottom>
+                <button type="submit" name="deleteAction" value="true" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-destructive cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+                    <Trash class="w-6 h-6"/>
                 </button>
-            {/if}
-        </PlaceAtBottom>
-        <NavigationActions>
-            <div slot="actions" class="justify-center items-center flex gap-2">
-                {#if !sale.payDate && sale.saleArticles.length > 0}
-                    {#if canPayWithCredit}
-                        <button type="submit" formaction="?/payWithCredit">
-                            <TextButton color="ok">Mit GH&nbsp;&nbsp;<BadgeCheck/>
-                            </TextButton>
-                        </button>
-                    {/if}
-                    <button type="submit" name="redirectTo" value={`/l/dialogs/sale//pay`}>
-                        <GlassCircleLink className={"bg-ok! text-ok-foreground!"}>
-                            <Euro/>
-                        </GlassCircleLink>
+            </PlaceAtBottom>
+        {/if}
+        {#if !sale.payDate && sale.saleArticles?.length > 0}
+            {#if canPayWithCredit}
+                <PlaceAtBottom>
+                    <button type="submit" formaction="?/payWithCredit" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-ok cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+                        <BadgeCheck class="w-6 h-6"/>
                     </button>
-                    {#if sale.person}
-                        <button type="submit" name="redirectTo" value="/l/modules/sales">
-                            <GlassCircleLink className={"bg-primary! text-primary-foreground!"}>
-                                <Check/>
-                            </GlassCircleLink>
-                        </button>
-                    {/if}
-                {/if}
-            </div>
-        </NavigationActions>
+                </PlaceAtBottom>
+            {/if}
+            <PlaceAtBottom>
+                <button type="submit" name="redirectTo" value={`/l/dialogs/sale//pay`} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-ok cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+                    <Euro class="w-6 h-6"/>
+                </button>
+            </PlaceAtBottom>
+            {#if sale.person}
+                <PlaceAtBottom>
+                    <button type="submit" name="redirectTo" value="/l/modules/sales" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-primary cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+                        <Check class="w-6 h-6"/>
+                    </button>
+                </PlaceAtBottom>
+            {/if}
+        {/if}
     </form>
 {/await}
 

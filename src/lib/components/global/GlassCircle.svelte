@@ -18,10 +18,10 @@
     const dockIconColor = $derived(bgToTextColor(className));
 </script>
 {#if inDock}
-    <!-- Dock mode: compact icon with color matching the original button bg -->
-    <div class={"flex items-center justify-center w-10 h-10 rounded-full cursor-pointer transition-colors hover:bg-white/10 " + dockIconColor}>
+    <!-- Dock mode: just the icon, no circle background — let Dock.Icon handle hover -->
+    <span class={"flex items-center justify-center cursor-pointer w-full h-full " + dockIconColor}>
         {@render children?.()}
-    </div>
+    </span>
 {:else}
     <div class={"cursor-pointer flex bg-white/15 dark:bg-black/40 border border-white/30 dark:border-white/10 shadow-md p-2 rounded-full backdrop-blur-sm w-12 h-12 items-center justify-center transition-colors hover:bg-white/25 "+className}>
         {@render children?.()}

@@ -7,9 +7,8 @@
     import thenby from 'thenby';
     import Card from "$lib/components/global/Card.svelte";
     import PersonOverview from "$lib/components/persons/PersonOverview.svelte";
-    import NavigationActions from "$lib/components/global/NavigationActions.svelte";
+    import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
     import {Diff} from "@lucide/svelte";
-    import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
     import History from "$lib/components/global/History.svelte";
     import { breadcrumbStore } from '$lib/stores/breadcrumbStore.svelte';
 
@@ -68,13 +67,9 @@
         {/if}
     </div>
 
-    <NavigationActions>
-        <div slot="actions" class="flex gap-2">
-            <GlassCircleLink
-                    className={" bg-primary/90! border-0 shadow-md "}
-                    href={"/l/dialogs/person/" + person.id + "/actions"}>
-                <Diff class="text-primary-foreground"/>
-            </GlassCircleLink>
-        </div>
-    </NavigationActions>
+    <PlaceAtBottom>
+        <a href={"/l/dialogs/person/" + person.id + "/actions"} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-primary hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+            <Diff class="w-6 h-6"/>
+        </a>
+    </PlaceAtBottom>
 {/await}

@@ -7,9 +7,9 @@
     import {Util} from "$lib/util";
     import {Minus, Plus} from "@lucide/svelte";
     import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
-    import NavigationActions from "$lib/components/global/NavigationActions.svelte";
     import TextButton from "$lib/components/global/TextButton.svelte";
     import BackButton from "$lib/components/global/NavigationButtons/BackButton.svelte";
+    import {Check, PiggyBank} from "@lucide/svelte";
     import {Checkbox} from "$lib/components/shadcn/ui/checkbox";
     import {Label} from "$lib/components/shadcn/ui/label";
     import EditableAmount from "$lib/components/global/EditableAmount.svelte";
@@ -226,23 +226,21 @@
             {/if}
         </Card>
 
-        <PlaceAtBottom>
-            <BackButton></BackButton>
-        </PlaceAtBottom>
-        <NavigationActions>
-            <div slot="actions">
-                {#if toReturn > 0 && sale.person}
-                    <button onclick={()=> sale.addAdditionalCredit = toReturn}>
-                        <TextButton className="whitespace-nowrap w-auto">Retour als Guthaben</TextButton>
-                    </button>
-                {/if}
-                {#if toReturn >= 0}
-                    <button type="submit" name="redirectTo" value="/l/modules/sales">
-                        <TextButton color="ok">Fertig</TextButton>
-                    </button>
-                {/if}
-            </div>
-        </NavigationActions>
+        <BackButton></BackButton>
+        {#if toReturn > 0 && sale.person}
+            <PlaceAtBottom>
+                <button onclick={() => sale.addAdditionalCredit = toReturn} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-primary cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+                    <PiggyBank class="w-6 h-6"/>
+                </button>
+            </PlaceAtBottom>
+        {/if}
+        {#if toReturn >= 0}
+            <PlaceAtBottom>
+                <button type="submit" name="redirectTo" value="/l/modules/sales" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-ok cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+                    <Check class="w-6 h-6"/>
+                </button>
+            </PlaceAtBottom>
+        {/if}
     </form>
 {/await}
 

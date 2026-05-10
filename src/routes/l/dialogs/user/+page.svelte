@@ -1,6 +1,4 @@
 <script lang="ts">
-    import NavigationActions from "$lib/components/global/NavigationActions.svelte";
-    import SaveButton from "$lib/components/global/NavigationButtons/SaveButton.svelte";
     // noinspection ES6UnusedImports
     import * as InputGroup from "$lib/components/shadcn/ui/input-group/index.js";
     // noinspection ES6UnusedImports
@@ -16,8 +14,7 @@
     import {goto} from "$app/navigation";
     import {page} from "$app/stores";
     import {Button} from "$lib/components/shadcn/ui/button";
-    import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
-    import {Dog, LogOut} from "@lucide/svelte";
+    import {LogOut} from "@lucide/svelte";
     import Avatar from "$lib/components/global/Avatar.svelte";
     import { enhance } from '$app/forms';
     import { breadcrumbStore } from '$lib/stores/breadcrumbStore.svelte';
@@ -26,8 +23,9 @@
     let formUser = $state({} as IUser);
     let submitting = $state(false);
 
+    breadcrumbStore.detailLabel = 'Mein Profil';
+
     const loadUser = async () => {
-        breadcrumbStore.detailLabel = 'Mein Profil';
         const user = await data.hfzUser;
         formUser.theme = user?.theme ?? "system";
         formUser.email = user?.email;
@@ -129,19 +127,12 @@
         </Card>
     {/if}
 
+    <BackButton></BackButton>
     <PlaceAtBottom>
-        <BackButton></BackButton>
+        <button type="button" onclick={() => goto('/logout')} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-destructive cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+            <LogOut class="w-6 h-6"/>
+        </button>
     </PlaceAtBottom>
-    <NavigationActions>
-        <div slot="actions">
-            <button type="button" onclick={() => goto('/logout')}>
-                <GlassCircleLink className={" bg-destructive! border-0 text-destructive-foreground shadow-md "}>
-                    <LogOut class="w-5 h-5 shrink-0"/>
-                    <span class="hidden md:inline">Ausloggen</span>
-                </GlassCircleLink>
-            </button>
-        </div>
-    </NavigationActions>
 {/await}
 
 {#if submitting}

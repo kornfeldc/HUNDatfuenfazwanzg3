@@ -6,9 +6,7 @@
     import CardTitleBig from "$lib/components/global/CardTitleBig.svelte";
     import PlaceAtBottom from "$lib/components/global/PlaceAtBottom.svelte";
     import BackButton from "$lib/components/global/NavigationButtons/BackButton.svelte";
-    import NavigationActions from "$lib/components/global/NavigationActions.svelte";
     import {ChevronLeft, ChevronRight} from "@lucide/svelte";
-    import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
     import { breadcrumbStore } from '$lib/stores/breadcrumbStore.svelte';
 
     let {data} = $props();
@@ -35,22 +33,19 @@
         <History {history}></History>
     </div>
 
-    <PlaceAtBottom>
-        <BackButton></BackButton>
-    </PlaceAtBottom>
-
-    <NavigationActions>
-        <div slot="actions" class="flex gap-2">
-            {#if paging.prev}
-                <GlassCircleLink href={`/l/dialogs/history?date=${paging.prev}`} className="bg-primary/90! border-0 shadow-md">
-                    <ChevronLeft class="text-primary-foreground"/>
-                </GlassCircleLink>
-            {/if}
-            {#if paging.next}
-                <GlassCircleLink href={`/l/dialogs/history?date=${paging.next}`} className="bg-primary/90! border-0 shadow-md">
-                    <ChevronRight class="text-primary-foreground"/>
-                </GlassCircleLink>
-            {/if}
-        </div>
-    </NavigationActions>
+    <BackButton></BackButton>
+    {#if paging.prev}
+        <PlaceAtBottom>
+            <a href={`/l/dialogs/history?date=${paging.prev}`} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-primary hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+                <ChevronLeft class="w-6 h-6"/>
+            </a>
+        </PlaceAtBottom>
+    {/if}
+    {#if paging.next}
+        <PlaceAtBottom>
+            <a href={`/l/dialogs/history?date=${paging.next}`} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-primary hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+                <ChevronRight class="w-6 h-6"/>
+            </a>
+        </PlaceAtBottom>
+    {/if}
 {/await}

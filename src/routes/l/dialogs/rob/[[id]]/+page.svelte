@@ -1,6 +1,5 @@
 <script lang="ts">
     import {page} from '$app/stores';
-    import NavigationActions from "$lib/components/global/NavigationActions.svelte";
     import SaveButton from "$lib/components/global/NavigationButtons/SaveButton.svelte";
     import {Label} from "$lib/components/shadcn/ui/label";
     import * as InputGroup from "$lib/components/shadcn/ui/input-group/index.js";
@@ -20,7 +19,6 @@
     import { onMount } from 'svelte';
     import { invalidateAll } from '$app/navigation';
     import { Button } from "$lib/components/shadcn/ui/button";
-    import GlassCircleLink from "$lib/components/global/GlassCircleLink.svelte";
     import { breadcrumbStore } from '$lib/stores/breadcrumbStore.svelte';
 
     let id = $page.params.id;
@@ -183,9 +181,9 @@
             </div>
         {/if}
 
-        <PlaceAtBottom>
-            <BackButton></BackButton>
-            {#if id}
+        <BackButton></BackButton>
+        {#if id}
+            <PlaceAtBottom>
                 <form method="post" action="?/delete" use:enhance={() => {
                     submitting = true;
                     errorMessage = "";
@@ -203,23 +201,17 @@
                         submitting = false;
                     };
                 }}>
-                    <button type="submit">
-                        <GlassCircleLink className={"bg-destructive! text-destructive-foreground!"}>
-                            <TrashIcon/>
-                        </GlassCircleLink>
+                    <button type="submit" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-destructive cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
+                        <TrashIcon class="w-6 h-6"/>
                     </button>
                 </form>
-            {/if}
-        </PlaceAtBottom>
-        <NavigationActions>
-            <div slot="actions">
-                {#if !hasPersons}
-                    <button type="submit" form="robForm">
-                        <SaveButton></SaveButton>
-                    </button>
-                {/if}
-            </div>
-        </NavigationActions>
+            </PlaceAtBottom>
+        {/if}
+        {#if !hasPersons}
+            <button type="submit" form="robForm">
+                <SaveButton></SaveButton>
+            </button>
+        {/if}
     </div>
 {:catch error}
     <div class="text-destructive text-center p-4">
