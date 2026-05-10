@@ -41,12 +41,6 @@
     );
     const hasActions = $derived(dockActionsStore.actionsList.length > 0);
 
-    // Set renderingInDock flag so GlassCircle renders in dock-compact mode
-    $effect(() => {
-        const active = hasActions;
-        dockActionsStore.renderingInDock = active;
-        return () => { dockActionsStore.renderingInDock = false; };
-    });
 </script>
 
 <!-- Mobile dock: shown only on small screens (md:hidden) -->

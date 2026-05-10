@@ -26,7 +26,4 @@
 {#if uiState.showPlaceAtBottomOnTop()}
     <div class={"fixed top-0 w-full  shadow-background/80 shadow-lg  h-18"}></div>
 {/if}
-<!-- Desktop (md+): show the fixed bottom bar normally -->
-<div class={Util.mapClass(`${bottomClass} p-6 hidden md:flex gap-2 `, at === 'left', "left-0", "right-0")}>
-    {@render children?.()}
-</div>
+<!-- Desktop (md+): hidden — the DesktopDock handles action button rendering on desktop -->

@@ -2,6 +2,7 @@
     import * as Sidebar from "$lib/components/shadcn/ui/sidebar";
     import AppSidebar from "$lib/components/global/AppSidebar.svelte";
     import MobileDock from "$lib/components/global/MobileDock.svelte";
+    import DesktopDock from "$lib/components/global/DesktopDock.svelte";
 
     let {children} = $props();
 </script>
@@ -12,4 +13,5 @@
         {@render children?.()}
     </main>
     <MobileDock/>
+    <DesktopDock/>
 </Sidebar.Provider>
