@@ -1,4 +1,4 @@
-import type {IArticle, ICourseHistory, ICreditHistory, IHfzApi, IId, IPerson, IRobCourse, ISale, IUser, ISoldArticleAggregate, IPersonSaleAggregate} from "$lib/data/hfzApi";
+import type {IArticle, ICourseHistory, ICreditHistory, IHfzApi, IId, IHistory, IPerson, IRobCourse, ISale, IUser, ISoldArticleAggregate, IPersonSaleAggregate} from "$lib/data/hfzApi";
 
 // In-memory mock data for development/testing only.
 // Generates ~10 persons, 10 articles, and 50 sales with dates from now and the last month.
@@ -339,6 +339,26 @@ class HfzMockApi implements IHfzApi {
 
     async getTheme(): Promise<"light" | "dark" | "system"> {
         return "system";
+    }
+
+    async getHistoryPage(limit: number, offset: number): Promise<Array<IHistory>> {
+        return this.getHistory().then(history => history.slice(offset, offset + limit));
+    }
+
+    async getHistory(): Promise<Array<IHistory>> {
+        return [];
+    }
+
+    async getHistoryByDay(): Promise<Array<IHistory>> {
+        return [];
+    }
+
+    async getPreviousNextDayWithHistory(): Promise<{ prev: string | null; next: string | null }> {
+        return {prev: null, next: null};
+    }
+
+    async getPersonFullHistory(): Promise<Array<IHistory>> {
+        return [];
     }
 
     async getTopSoldArticles(personId?: IId, dateFrom?: Date): Promise<Array<ISoldArticleAggregate>> {

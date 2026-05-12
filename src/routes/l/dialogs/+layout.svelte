@@ -7,6 +7,12 @@
 
     let { children } = $props();
 
+    const hideSearchBar = $derived([
+        '/l/dialogs/article',
+        '/l/dialogs/person',
+        '/l/dialogs/rob'
+    ].some(path => $page.url.pathname.startsWith(path)));
+
     $effect(() => {
         // reset search and breadcrumb detail when navigating to a new dialog
         $page.url.pathname;
@@ -15,7 +21,9 @@
     });
 </script>
 <MobileBreadcrumb />
-<PersistentSearchBar/>
-<div class="px-4 pb-32 md:pb-4">
+{#if !hideSearchBar}
+    <PersistentSearchBar/>
+{/if}
+<div class="px-4 pb-32 md:pb-4 {hideSearchBar ? 'pt-4 md:pt-6' : ''}">
     {@render children?.()}
 </div>

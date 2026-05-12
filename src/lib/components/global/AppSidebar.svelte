@@ -9,6 +9,7 @@
         PawPrint,
         CalendarDays,
         BarChart2,
+        History,
         LogOut,
     } from "@lucide/svelte";
     import Avatar from "$lib/components/global/Avatar.svelte";
@@ -25,6 +26,7 @@
         { name: "ROB", href: "/l/modules/rob", icon: CalendarClock },
         { name: "Kalender", href: "/l/modules/calendar", icon: CalendarDays },
         { name: "Statistiken", href: "/l/modules/statistics", icon: BarChart2 },
+        { name: "Historie", href: "/l/modules/history", icon: History },
     ];
 
     const isActive = (href: string) => {

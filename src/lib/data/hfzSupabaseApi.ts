@@ -4,6 +4,7 @@ import type {
     ICreditHistory,
     IHfzApi,
     IId,
+    IHistory,
     IMergedPersonHistory,
     IPerson,
     IPersonSaleAggregate,
@@ -1045,6 +1046,38 @@ export class HfzSupabaseApi implements IHfzApi {
             details: h.details,
             og: h.og
         }));
+    }
+
+    private mapHistory(data: Array<any> | null): Array<IHistory> {
+        return (data ?? []).map((h: any) => ({
+            id: h.id,
+            timestamp: new Date(h.timestamp),
+            userEmail: h.userEmail,
+            action: h.action,
+            entityType: h.entityType,
+            entityId: h.entityId,
+            details: h.details,
+            og: h.og
+        }));
+    }
+
+    async getHistoryPage(limit: number, offset: number): Promise<Array<IHistory>> {
+        const safeLimit = Math.min(Math.max(limit, 1), 101);
+        const safeOffset = Math.max(offset, 0);
+
+        const {data, error} = await this.supabase
+            .from('history')
+            .select('*')
+            .eq('og', this.og)
+            .order('timestamp', {ascending: false})
+            .range(safeOffset, safeOffset + safeLimit - 1);
+
+        if (error) {
+            console.error("getHistoryPage error", error);
+            return [];
+        }
+
+        return this.mapHistory(data);
     }
 
     async getHistoryByDay(date: Date): Promise<Array<IHistory>> {

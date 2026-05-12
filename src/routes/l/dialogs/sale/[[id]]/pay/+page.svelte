@@ -15,6 +15,7 @@
     import EditableAmount from "$lib/components/global/EditableAmount.svelte";
     import {untrack} from "svelte";
     import { enhance } from '$app/forms';
+    import { breadcrumbStore } from '$lib/stores/breadcrumbStore.svelte';
 
     let id = $page.params.id;
     let {data}: { data: any; } = $props();
@@ -55,6 +56,9 @@
 
     const loadData = async () => {
         sale = await data.sale;
+        breadcrumbStore.detailLabel = sale.person
+            ? (sale.person.firstName + ' ' + sale.person.lastName).trim()
+            : (sale.personName || 'Barverkauf');
         if (personCredit >= sale.articleSum)
             useCredit = true;
         recalculate("initial");

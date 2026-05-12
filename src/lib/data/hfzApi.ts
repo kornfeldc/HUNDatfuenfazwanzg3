@@ -57,6 +57,7 @@ export interface IHfzApi {
     assignUserToOg(email: string, og: number): Promise<void>;
 
     getHistory(entityType?: string, entityId?: string | number): Promise<Array<IHistory>>;
+    getHistoryPage(limit: number, offset: number): Promise<Array<IHistory>>;
     getHistoryByDay(date: Date): Promise<Array<IHistory>>;
     getPreviousNextDayWithHistory(date: Date): Promise<{prev: string | null, next: string | null}>;
     getPersonFullHistory(personId: number): Promise<Array<IHistory>>;
