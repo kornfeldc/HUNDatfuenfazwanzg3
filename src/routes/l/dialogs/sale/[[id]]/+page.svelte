@@ -67,12 +67,12 @@
         {#if id}
             <PlaceAtBottom>
                 <a href={`/l/dialogs/history/sale/${id}`} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-foreground hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
-                    <History class="w-6 h-6"/>
+                    <History class="w-7 h-7"/>
                 </a>
             </PlaceAtBottom>
             <PlaceAtBottom>
                 <button type="submit" form="saleForm" name="deleteAction" value="true" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-destructive cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
-                    <Trash class="w-6 h-6"/>
+                    <Trash class="w-7 h-7"/>
                 </button>
             </PlaceAtBottom>
         {/if}
@@ -80,19 +80,19 @@
             {#if canPayWithCredit}
                 <PlaceAtBottom>
                     <button type="submit" form="saleForm" formaction="?/payWithCredit" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-ok cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
-                        <BadgeCheck class="w-6 h-6"/>
+                        <BadgeCheck class="w-7 h-7"/>
                     </button>
                 </PlaceAtBottom>
             {/if}
             <PlaceAtBottom>
                 <button type="submit" form="saleForm" name="redirectTo" value={`/l/dialogs/sale//pay`} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-ok cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
-                    <Euro class="w-6 h-6"/>
+                    <Euro class="w-7 h-7"/>
                 </button>
             </PlaceAtBottom>
             {#if sale.person}
                 <PlaceAtBottom>
                     <button type="submit" form="saleForm" name="redirectTo" value="/l/modules/sales" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-primary cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
-                        <Check class="w-6 h-6"/>
+                        <Check class="w-7 h-7"/>
                     </button>
                 </PlaceAtBottom>
             {/if}

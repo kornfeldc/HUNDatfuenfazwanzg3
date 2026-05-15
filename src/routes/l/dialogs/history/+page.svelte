@@ -37,14 +37,14 @@
     {#if paging.prev}
         <PlaceAtBottom>
             <a href={`/l/dialogs/history?date=${paging.prev}`} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-primary hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
-                <ChevronLeft class="w-6 h-6"/>
+                <ChevronLeft class="w-7 h-7"/>
             </a>
         </PlaceAtBottom>
     {/if}
     {#if paging.next}
         <PlaceAtBottom>
             <a href={`/l/dialogs/history?date=${paging.next}`} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-primary hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
-                <ChevronRight class="w-6 h-6"/>
+                <ChevronRight class="w-7 h-7"/>
             </a>
         </PlaceAtBottom>
     {/if}

@@ -23,11 +23,11 @@
 <PlaceAtBottom>
     {#if href}
         <a {href} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-foreground hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
-            <ArrowLeft class="w-6 h-6"/>
+            <ArrowLeft class="w-7 h-7"/>
         </a>
     {:else}
         <button {onclick} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-foreground cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
-            <ArrowLeft class="w-6 h-6"/>
+            <ArrowLeft class="w-7 h-7"/>
         </button>
     {/if}
 </PlaceAtBottom>

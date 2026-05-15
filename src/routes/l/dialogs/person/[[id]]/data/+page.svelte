@@ -167,14 +167,14 @@
         {#if id}
             <PlaceAtBottom>
                 <button type="submit" form="personForm" name="deleteAction" value="true" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-destructive cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
-                    <Trash class="w-6 h-6"/>
+                    <Trash class="w-7 h-7"/>
                 </button>
             </PlaceAtBottom>
         {/if}
         {#if !isSubPerson}
             <PlaceAtBottom>
                 <button type="submit" form="personForm" onclick={() => redirectValue = `/l/dialogs/person/{id}/actions`} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-primary cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
-                    <Diff class="w-6 h-6"/>
+                    <Diff class="w-7 h-7"/>
                 </button>
             </PlaceAtBottom>
         {/if}

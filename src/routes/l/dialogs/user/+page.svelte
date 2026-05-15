@@ -130,7 +130,7 @@
     <BackButton></BackButton>
     <PlaceAtBottom>
         <button type="button" onclick={() => goto('/logout')} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-destructive cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
-            <LogOut class="w-6 h-6"/>
+            <LogOut class="w-7 h-7"/>
         </button>
     </PlaceAtBottom>
 {/await}

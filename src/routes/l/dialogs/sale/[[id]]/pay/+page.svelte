@@ -234,14 +234,14 @@
         {#if toReturn > 0 && sale.person}
             <PlaceAtBottom>
                 <button onclick={() => sale.addAdditionalCredit = toReturn} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-primary cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
-                    <PiggyBank class="w-6 h-6"/>
+                    <PiggyBank class="w-7 h-7"/>
                 </button>
             </PlaceAtBottom>
         {/if}
         {#if toReturn >= 0}
             <PlaceAtBottom>
                 <button type="submit" form="salePayForm" name="redirectTo" value="/l/modules/sales" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-ok cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
-                    <Check class="w-6 h-6"/>
+                    <Check class="w-7 h-7"/>
                 </button>
             </PlaceAtBottom>
         {/if}

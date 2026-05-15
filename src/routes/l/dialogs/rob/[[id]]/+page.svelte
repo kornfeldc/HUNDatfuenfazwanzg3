@@ -202,7 +202,7 @@
                     };
                 }}>
                     <button type="submit" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-destructive cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
-                        <TrashIcon class="w-6 h-6"/>
+                        <TrashIcon class="w-7 h-7"/>
                     </button>
                 </form>
             </PlaceAtBottom>

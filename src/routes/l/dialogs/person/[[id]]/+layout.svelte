@@ -40,7 +40,7 @@
 {#if data.id}
     <PlaceAtBottom>
         <a href={`/l/dialogs/history/person/${data.id}`} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-foreground hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
-            <History class="w-6 h-6"/>
+            <History class="w-7 h-7"/>
         </a>
     </PlaceAtBottom>
 {/if}

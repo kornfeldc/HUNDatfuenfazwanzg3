@@ -51,7 +51,7 @@
             {#if isModulesPage}
                 <!-- Sidebar toggle button — always leftmost -->
                 <Dock.Icon onclick={() => sidebar.toggle()} class="text-foreground">
-                    <PanelLeft class="w-6 h-6"/>
+                    <PanelLeft class="w-8 h-8"/>
                 </Dock.Icon>
 
                 <Dock.Separator/>
@@ -62,7 +62,7 @@
                         onclick={() => goto(module.href)}
                         class={isActive(module.href) ? 'text-primary' : 'text-foreground'}
                     >
-                        <module.icon class="w-6 h-6"/>
+                        <module.icon class="w-8 h-8"/>
                     </Dock.Icon>
                 {/each}
 

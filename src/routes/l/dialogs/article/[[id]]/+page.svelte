@@ -119,12 +119,12 @@
         {#if id}
             <PlaceAtBottom>
                 <a href={`/l/dialogs/history/article/${id}`} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-foreground hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
-                    <History class="w-6 h-6"/>
+                    <History class="w-7 h-7"/>
                 </a>
             </PlaceAtBottom>
             <PlaceAtBottom>
                 <button type="submit" form="articleForm" name="deleteAction" value="true" class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-destructive cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">
-                    <Trash class="w-6 h-6"/>
+                    <Trash class="w-7 h-7"/>
                 </button>
             </PlaceAtBottom>
         {/if}

@@ -8,11 +8,11 @@
 <PlaceAtBottom>
     {#if href}
         <a {href} class={"flex items-center justify-center w-[34px] h-[34px] rounded-full text-primary hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors " + className}>
-            <Plus class="w-6 h-6"/>
+            <Plus class="w-7 h-7"/>
         </a>
     {:else}
         <span class={"flex items-center justify-center w-[34px] h-[34px] rounded-full text-primary hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors " + className}>
-            <Plus class="w-6 h-6"/>
+            <Plus class="w-7 h-7"/>
         </span>
     {/if}
 </PlaceAtBottom>

@@ -5,6 +5,6 @@
 </script>
 <PlaceAtBottom>
     <button type="submit" {form} class={"flex items-center justify-center w-[34px] h-[34px] rounded-full text-ok cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors " + className}>
-        <Save class="w-6 h-6 shrink-0"/>
+        <Save class="w-7 h-7 shrink-0"/>
     </button>
 </PlaceAtBottom>
