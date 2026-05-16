@@ -2,33 +2,11 @@
     import { Search, CircleX } from "@lucide/svelte";
     import { uiState } from "$lib/stores/uiState.svelte";
     import { page } from "$app/stores";
-    import { onMount } from "svelte";
 
     const hiddenRoutes = ["/pay", "/calendar", "/statistics"];
     const isHidden = $derived(hiddenRoutes.some(r => $page.url.pathname.endsWith(r)));
 
-    let visible = $state(true);
-    let lastScrollY = $state(0);
     let inputEl: HTMLInputElement | null = null;
-
-    const handleScroll = () => {
-        const currentScrollY = window.scrollY;
-        if (currentScrollY < 10) {
-            visible = true;
-        } else if (currentScrollY > lastScrollY + 4) {
-            visible = false;
-        } else if (currentScrollY < lastScrollY - 4) {
-            visible = true;
-        }
-        lastScrollY = currentScrollY;
-    };
-
-    onMount(() => {
-        window.addEventListener("scroll", handleScroll, { passive: true });
-        return () => {
-            window.removeEventListener("scroll", handleScroll);
-        };
-    });
 
     const clear = () => {
         uiState.searchString = "";
@@ -38,7 +16,7 @@
 
 {#if !isHidden}
 <div
-    class="sticky top-0 z-40 w-full flex justify-center px-3 py-2 transition-all duration-300 {visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'}"
+    class="sticky top-0 z-40 w-full flex justify-center px-3 py-2"
 >
     <!-- Mobile: full width. Desktop: floating pill -->
     <div class="

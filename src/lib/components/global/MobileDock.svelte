@@ -13,6 +13,7 @@
     import * as Dock from "$lib/components/shadcn/ui/dock";
     import * as Sidebar from "$lib/components/shadcn/ui/sidebar";
     import { dockActionsStore } from "$lib/stores/dockActionsStore.svelte";
+    import { onMount } from "svelte";
 
     // Only the four main nav modules shown in the dock
     const mainModules = [
@@ -28,6 +29,29 @@
     };
 
     const sidebar = Sidebar.useSidebar();
+
+    // Scroll-hide behavior
+    let dockVisible = $state(true);
+    let lastScrollY = $state(0);
+
+    const handleScroll = (e?: Event) => {
+        const target = e?.target as Element | null;
+        const currentScrollY = target ? target.scrollTop : window.scrollY;
+        if (currentScrollY < 10) {
+            dockVisible = true;
+        } else if (currentScrollY > lastScrollY + 8) {
+            dockVisible = false;
+        } else if (currentScrollY < lastScrollY - 8) {
+            dockVisible = true;
+        }
+        lastScrollY = currentScrollY;
+    };
+
+    onMount(() => {
+        const scrollEl = document.querySelector('main') ?? window;
+        scrollEl.addEventListener('scroll', handleScroll, { passive: true });
+        return () => scrollEl.removeEventListener('scroll', handleScroll);
+    });
 
     // personChooser shows action-only dock
     const isPersonChooserPage = $derived($page.url.pathname.startsWith('/l/modules/personChooser'));
@@ -45,7 +69,7 @@
 
 <!-- Mobile dock: shown only on small screens (md:hidden) -->
 {#if isModulesPage || (isDialogsPage && hasActions)}
-<div class="md:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-center pointer-events-none pb-[env(safe-area-inset-bottom)]" style="padding-bottom: max(1rem, env(safe-area-inset-bottom))">
+<div class="md:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-center pointer-events-none transition-transform duration-300 {dockVisible ? 'translate-y-0' : 'translate-y-full'}" style="padding-bottom: max(1rem, env(safe-area-inset-bottom))">
     <div class="pointer-events-auto">
         <Dock.Root class="bg-background/50! backdrop-blur-md shadow-lg">
             {#if isModulesPage}
