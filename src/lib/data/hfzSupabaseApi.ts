@@ -7,6 +7,7 @@ import type {
     IHistory,
     IMergedPersonHistory,
     IPerson,
+    IPersonWithHistory,
     IPersonSaleAggregate,
     IRobCourse,
     ISale,
@@ -111,30 +112,34 @@ export class HfzSupabaseApi implements IHfzApi {
 
     async addPersonCourse(personId: IId, amount: number, date: Date): Promise<void> {
         if (amount === 0) return;
-        const supabase = this.supabase;
-        const payload: any = {
-            personId: personId.id,
-            courses: amount,
-            date: date
-        };
-        const {error} = await supabase
-            .from('course_history')
-            .insert(payload);
+        const {error} = await this.supabase.rpc('adjust_person_courses', {
+            p_og: this.og,
+            p_person_id: personId.id,
+            p_amount: amount,
+            p_date: date.toISOString().slice(0, 10)
+        });
         if (error) throw error;
+    }
 
-        // update person
-        const person = await this.getPerson(personId);
-        const newCourseCount = (person.courseCount ?? 0) + amount;
-        const {_, persError} = await supabase
-            .from('person')
-            .update({courseCount: newCourseCount})
-            .eq('og', this.og)
-            .eq('id', personId.id)
-            .select('*')
-            .single();
+    async recordCourseAttendance(personIds: number[], date: string): Promise<number[]> {
+        const {data, error} = await this.supabase.rpc('record_course_attendance', {
+            p_og: this.og,
+            p_person_ids: personIds,
+            p_date: date
+        });
+        if (error) throw error;
+        return data ?? [];
+    }
 
-        if (persError) throw persError;
-        await this.logAction('add_course', 'person', personId.id, `${amount} courses for ${person.firstName} ${person.lastName}`);
+    async undoCourseAttendance(personId: number, historyId: number, date: string, expectedCourses: number): Promise<void> {
+        const {error} = await this.supabase.rpc('undo_course_attendance', {
+            p_og: this.og,
+            p_person_id: personId,
+            p_history_id: historyId,
+            p_date: date,
+            p_expected_courses: expectedCourses
+        });
+        if (error) throw error;
     }
 
     async createPerson(person: Partial<IPerson>): Promise<IPerson> {
@@ -318,7 +323,7 @@ export class HfzSupabaseApi implements IHfzApi {
         })) as Array<IPerson>;
     }
 
-    async getPersonsWithCourseHistory(days: number): Promise<Array<IPersonWithHistory>> {
+    async getPersonsWithCourseHistory(days: number, includeEmpty = false): Promise<Array<IPersonWithHistory>> {
         const supabase = this.supabase;
         const {data, error} = await supabase
             .from('person')
@@ -330,8 +335,8 @@ export class HfzSupabaseApi implements IHfzApi {
         const ret = HfzSupabaseApi.parseData(data, [
             ["course_history", "courseHistory"]
         ]);
-        // Only return persons that have at least one course_history entry
-        return (ret as Array<IPersonWithHistory>).filter(p => p.courseHistory && p.courseHistory.length > 0);
+        // Attendance quick-add also needs people who have never bought or attended a course.
+        return (ret as Array<IPersonWithHistory>).filter(p => includeEmpty || p.courseHistory?.length > 0);
     }
 
     async getPersonCreditHistory(id: IId): Promise<Array<ICreditHistory>> {

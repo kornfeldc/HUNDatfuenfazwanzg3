@@ -24,6 +24,7 @@
                 if (!isNaN(amount) && amount < 0) return 'Guthaben abgezogen';
                 return 'Guthaben aufgeladen';
             }
+            case 'undo_course': return 'Teilnahme rückgängig gemacht';
             case 'add_course': {
                 const amount = parseFloat(item.details);
                 if (!isNaN(amount) && amount < 0) return 'Kurs abgezogen';
@@ -44,6 +45,7 @@
                 if (!isNaN(amount) && amount < 0) return 'text-destructive';
                 return 'text-ok';
             }
+            case 'undo_course': return 'text-ok';
             case 'add_course': {
                 const amount = parseFloat(item.details);
                 if (!isNaN(amount) && amount < 0) return 'text-destructive';
