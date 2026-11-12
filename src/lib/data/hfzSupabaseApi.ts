@@ -6,6 +6,7 @@ import type {
     IId,
     IHistory,
     IMergedPersonHistory,
+    INews,
     IPerson,
     IPersonWithHistory,
     IPersonSaleAggregate,
@@ -518,6 +519,88 @@ export class HfzSupabaseApi implements IHfzApi {
         if (error) throw error;
     }
 
+    async getNews(): Promise<Array<INews>> {
+        const supabase = this.supabase;
+        const {data, error} = await supabase
+            .from('news')
+            .select('*')
+            .eq('og', this.og)
+            .order('date', {ascending: false})
+            .order('id', {ascending: false});
+        if (error) throw error;
+        return HfzSupabaseApi.mapDates(data) as Array<INews>;
+    }
+
+    async getNewsEntry(id: IId): Promise<INews> {
+        const supabase = this.supabase;
+        const {data, error} = await supabase
+            .from('news')
+            .select('*')
+            .eq('og', this.og)
+            .eq('id', id.id)
+            .single();
+        if (error) throw error;
+        return HfzSupabaseApi.mapDates(data) as INews;
+    }
+
+    async createNews(news: Partial<INews>): Promise<INews> {
+        const supabase = this.supabase;
+        const {data, error} = await supabase
+            .from('news')
+            .insert({
+                date: news.date,
+                title: news.title,
+                content: news.content,
+                isPublished: news.isPublished,
+                og: this.og
+            })
+            .select('*')
+            .single();
+        if (error) throw error;
+        const result = HfzSupabaseApi.mapDates(data) as INews;
+        await this.logAction('create', 'news', result.id, result.title);
+        return result;
+    }
+
+    async updateNews(news: INews): Promise<INews> {
+        const supabase = this.supabase;
+        const oldNews = await this.getNewsEntry({id: news.id});
+        const {data, error} = await supabase
+            .from('news')
+            .update({
+                date: news.date,
+                title: news.title,
+                content: news.content,
+                isPublished: news.isPublished,
+            })
+            .eq('og', this.og)
+            .eq('id', news.id)
+            .select('*')
+            .single();
+        if (error) throw error;
+        const result = HfzSupabaseApi.mapDates(data) as INews;
+        // The full text would make the history entry unreadable, so only note that it changed.
+        const diff = [
+            this.getDiff(oldNews, result, ['og', 'id', 'createdAt', 'content']),
+            oldNews.content !== result.content ? 'content geändert' : ''
+        ].filter(Boolean).join(', ');
+        await this.logAction('update', 'news', result.id, diff || result.title);
+        return result;
+    }
+
+    async deleteNews(id: IId): Promise<void> {
+        const supabase = this.supabase;
+        const news = await this.getNewsEntry(id).catch(() => null);
+        const details = news ? news.title : `ID: ${id.id}`;
+        const {error} = await supabase
+            .from('news')
+            .delete()
+            .eq('og', this.og)
+            .eq('id', id.id);
+        if (error) throw error;
+        await this.logAction('delete', 'news', id.id, details);
+    }
+
     async getSale(id: IId): Promise<ISale> {
         const supabase = this.supabase;
         const {data, error} = await supabase
@@ -999,6 +1082,8 @@ export class HfzSupabaseApi implements IHfzApi {
 
             const oldVal = oldObj[key];
             const newVal = newObj[key];
+
+            if (oldVal instanceof Date && newVal instanceof Date && oldVal.getTime() === newVal.getTime()) continue;
 
             if (oldVal !== newVal) {
                 // Special handling for null/undefined/empty string to avoid noisy diffs if they are essentially the same

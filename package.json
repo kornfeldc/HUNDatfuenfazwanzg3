@@ -6,6 +6,7 @@
 	"scripts": {
 		"dev": "vite dev",
 		"test:attendance": "node --test tests/course-attendance*.test.mjs",
+		"test:news": "node --test tests/news-db.test.mjs",
 		"build": "vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",

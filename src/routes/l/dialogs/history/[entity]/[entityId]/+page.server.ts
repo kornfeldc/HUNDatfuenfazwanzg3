@@ -20,6 +20,10 @@ export async function load({params, locals}) {
             const article = await api.getArticle({id: parseInt(entityId)});
             title = `Historie für ${article.title}`;
             break;
+        case 'news':
+            const news = await api.getNewsEntry({id: parseInt(entityId)});
+            title = `Historie für ${news.title}`;
+            break;
         default:
             title = `Historie für ${entity} #${entityId}`;
     }
