@@ -54,6 +54,12 @@ export interface IHfzApi {
     deleteRobCourse(id: IId): Promise<void>;
     addRobCoursePerson(robCourseId: number, personName: string, dogName: string): Promise<void>;
     deleteRobCoursePerson(id: number): Promise<void>;
+
+    getNews(): Promise<Array<INews>>;
+    getNewsEntry(id: IId): Promise<INews>;
+    createNews(news: Partial<INews>): Promise<INews>;
+    updateNews(news: INews): Promise<INews>;
+    deleteNews(id: IId): Promise<void>;
     
     getUnassignedUsers(): Promise<Array<IUser>>;
     assignUserToOg(email: string, og: number): Promise<void>;
@@ -193,6 +199,13 @@ export interface IRobCoursePerson extends IId {
     dogName: string;
     personName: string;
     timestamp: Date;
+}
+
+export interface INews extends IId {
+    date: Date;
+    title: string;
+    content: string;
+    isPublished: boolean;
 }
 
 export const ArticleTypes = {

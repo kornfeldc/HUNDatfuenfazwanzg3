@@ -8,6 +8,7 @@
         CalendarDays,
         Euro,
         History,
+        Newspaper,
         PawPrint,
         ShoppingBag,
         User
@@ -21,6 +22,7 @@
         persons:       { label: 'Personen',  href: '/l/modules/persons', icon: User },
         course:        { label: 'Kurse',     href: '/l/modules/course', icon: PawPrint },
         rob:           { label: 'Rob',       href: '/l/modules/rob', icon: CalendarClock },
+        news:          { label: 'News',      href: '/l/modules/news', icon: Newspaper },
         calendar:      { label: 'Kalender',  href: '/l/modules/calendar', icon: CalendarDays },
         history:       { label: 'Historie',  href: '/l/modules/history', icon: History },
         statistics:    { label: 'Statistik', href: '/l/modules/statistics', icon: BarChart2 },

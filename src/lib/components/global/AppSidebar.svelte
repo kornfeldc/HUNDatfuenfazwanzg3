@@ -11,6 +11,7 @@
         BarChart2,
         History,
         LogOut,
+        Newspaper,
     } from "@lucide/svelte";
     import Avatar from "$lib/components/global/Avatar.svelte";
     import logo from "$lib/assets/logo.svg";
@@ -24,6 +25,7 @@
         { name: "Personen", href: "/l/modules/persons", icon: User },
         { name: "Artikel", href: "/l/modules/articles", icon: ShoppingBag },
         { name: "ROB", href: "/l/modules/rob", icon: CalendarClock },
+        { name: "News", href: "/l/modules/news", icon: Newspaper },
         { name: "Kalender", href: "/l/modules/calendar", icon: CalendarDays },
         { name: "Statistiken", href: "/l/modules/statistics", icon: BarChart2 },
         { name: "Historie", href: "/l/modules/history", icon: History },

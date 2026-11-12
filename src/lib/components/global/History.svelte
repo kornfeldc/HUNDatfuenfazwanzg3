@@ -10,7 +10,8 @@
         const entityMap: Record<string, string> = {
             'person': 'Person',
             'sale': 'Verkauf',
-            'article': 'Artikel'
+            'article': 'Artikel',
+            'news': 'News'
         };
         const entity = entityMap[item.entityType] || item.entityType;
 

@@ -60,3 +60,19 @@ the deployed project's specific RLS policies should also be checked when applyin
 the migration.
 
 This configuration tells Supabase to allow redirects to both your production domain and your local environment.
+
+#### 5. News for the homepage
+
+The **News** module maintains the news shown on the public homepage of an Ortsgruppe
+(svoe.og125.at reads the news of `og = 125`). Apply these migrations in the Supabase SQL Editor,
+in this order:
+
+1. [`supabase/migrations/20261112120000_news.sql`](supabase/migrations/20261112120000_news.sql) creates
+   the `news` table. Published news (`isPublished`) are readable without login (role `anon`), which
+   the static homepage needs. Creating, editing and deleting is limited to users whose
+   `public.users.og` matches the news' `og`. Drafts are only visible to them.
+2. [`supabase/migrations/20261112120100_news_import_og125.sql`](supabase/migrations/20261112120100_news_import_og125.sql)
+   imports the 111 existing news from the old homepage for `og = 125`. It does nothing if
+   og 125 already has news, so it can be rerun.
+
+Run `pnpm test:news` to check the RLS policies and the import against PGlite.
