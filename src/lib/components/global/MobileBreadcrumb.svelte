@@ -24,6 +24,7 @@
         rob:           { label: 'Rob',       href: '/l/modules/rob', icon: CalendarClock },
         news:          { label: 'Homepage',  href: '/l/modules/news', icon: Globe },
         albums:        { label: 'Homepage',  href: '/l/modules/albums', icon: Globe },
+        mailingList:   { label: 'Homepage',  href: '/l/modules/mailingList', icon: Globe },
         calendar:      { label: 'Kalender',  href: '/l/modules/calendar', icon: CalendarDays },
         history:       { label: 'Historie',  href: '/l/modules/history', icon: History },
         statistics:    { label: 'Statistik', href: '/l/modules/statistics', icon: BarChart2 },

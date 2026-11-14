@@ -28,9 +28,9 @@
         { name: "Kalender", href: "/l/modules/calendar", icon: CalendarDays },
         { name: "Statistiken", href: "/l/modules/statistics", icon: BarChart2 },
         { name: "Historie", href: "/l/modules/history", icon: History },
-        // News and Fotos for the public homepage, shown as tabs (HomepageTabs.svelte)
+        // News, Fotos and the mailing list, shown as tabs (HomepageTabs.svelte)
         { name: "Homepage", href: "/l/modules/news", icon: Globe,
-          also: ["/l/modules/albums", "/l/dialogs/news", "/l/dialogs/album"] },
+          also: ["/l/modules/albums", "/l/modules/mailingList", "/l/dialogs/news", "/l/dialogs/album"] },
     ];
 
     const isActive = (module: { href: string; also?: string[] }) => {

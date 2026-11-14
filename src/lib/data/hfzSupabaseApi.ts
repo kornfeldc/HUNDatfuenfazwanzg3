@@ -17,6 +17,7 @@ import type {
     IUser
 } from "$lib/data/hfzApi";
 import {type SupabaseClient} from '@supabase/supabase-js';
+import type {IMailingListPerson} from "$lib/mailingList";
 import {moment} from "$lib/util";
 
 export class HfzSupabaseApi implements IHfzApi {
@@ -176,6 +177,7 @@ export class HfzSupabaseApi implements IHfzApi {
                 phone: person.phone,
                 email: person.email,
                 isMember: person.isMember,
+                isOnMailingList: person.isOnMailingList,
                 isActive: person.isActive,
                 personGroup: person.personGroup,
                 info: person.info
@@ -339,6 +341,32 @@ export class HfzSupabaseApi implements IHfzApi {
         ]);
         // Attendance quick-add also needs people who have never bought or attended a course.
         return (ret as Array<IPersonWithHistory>).filter(p => includeEmpty || p.courseHistory?.length > 0);
+    }
+
+    async getMailingListPersons(): Promise<Array<IMailingListPerson>> {
+        const supabase = this.supabase;
+        const {data, error} = await supabase
+            .from('person')
+            .select('id, firstName, lastName, email, isMember, course_history(date)')
+            .eq('og', this.og)
+            .eq('isOnMailingList', true)
+            .lt('course_history.courses', 0);
+
+        if (error) throw error;
+
+        // Dates stay YYYY-MM-DD strings, so they compare without time zone shifts.
+        return (data ?? []).map((p: any) => ({
+            id: p.id,
+            firstName: p.firstName,
+            lastName: p.lastName,
+            email: p.email,
+            isMember: !!p.isMember,
+            lastCourseDate: (p.course_history ?? [])
+                .map((c: any) => c.date as string)
+                .filter(Boolean)
+                .sort()
+                .at(-1) ?? null
+        }));
     }
 
     async getPersonCreditHistory(id: IId): Promise<Array<ICreditHistory>> {
