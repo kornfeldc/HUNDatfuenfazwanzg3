@@ -31,6 +31,7 @@ The live database is the user's. Write SQL as a new `supabase/migrations/<yyyymm
 
 - Use pnpm (`pnpm-lock.yaml`); the README's npm examples are outdated.
 - Most files do not match the Prettier config (4-space indentation instead of tabs). Match the style of the file you edit; `pnpm format` would reformat almost the whole app.
+- `supabase/functions/events/index.ts` is a Supabase Edge Function (Deno) that the user deploys by hand (`SUPABASE_SETUP.md`, section 7). Keep it one self-contained file without imports, so it can be pasted into the dashboard; `tests/events-function.test.mjs` imports it in Node.
 - `.env` holds `VITE_SUPABASE_URL` and the anon `VITE_SUPABASE_KEY`. RLS is the only thing protecting the data.
 
 ## Checks
