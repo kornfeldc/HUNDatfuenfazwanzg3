@@ -8,6 +8,7 @@
         CalendarDays,
         Euro,
         History,
+        Images,
         Newspaper,
         PawPrint,
         ShoppingBag,
@@ -23,6 +24,7 @@
         course:        { label: 'Kurse',     href: '/l/modules/course', icon: PawPrint },
         rob:           { label: 'Rob',       href: '/l/modules/rob', icon: CalendarClock },
         news:          { label: 'News',      href: '/l/modules/news', icon: Newspaper },
+        albums:        { label: 'Fotos',     href: '/l/modules/albums', icon: Images },
         calendar:      { label: 'Kalender',  href: '/l/modules/calendar', icon: CalendarDays },
         history:       { label: 'Historie',  href: '/l/modules/history', icon: History },
         statistics:    { label: 'Statistik', href: '/l/modules/statistics', icon: BarChart2 },
@@ -32,6 +34,7 @@
         article: { label: 'Artikel',   href: '/l/modules/articles', icon: ShoppingBag },
         person:  { label: 'Personen',  href: '/l/modules/persons', icon: User },
         user:    { label: 'Profil',    href: '/l/modules/persons', icon: User },
+        album:   { label: 'Fotos',     href: '/l/modules/albums', icon: Images },
     };
 
     const info = $derived.by((): { module: ModuleInfo | null; isModule: boolean } => {

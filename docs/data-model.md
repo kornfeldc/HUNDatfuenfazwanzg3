@@ -38,6 +38,16 @@ Title and price are copied from the article, so later article edits do not chang
 
 Filled by the public registration page `/rob/[link]`, which runs without login (role `anon`).
 
+### `news`
+`id` integer (identity); `og` integer; `date` date; `title` text; `content` text; `isPublished` boolean (default true); `createdAt` timestamptz
+
+News for the public homepage (svoe.og125.at). Published rows are readable without login (role `anon`).
+
+### `album`
+`id` integer (identity); `og` integer; `date` date (sorts the gallery, sets its year filter); `dateText` text (shown instead of the date when set, e.g. `2025`); `title` text; `link` text (Google Photos share link); `coverUrl` text; `isPublished` boolean (default true); `createdAt` timestamptz
+
+Photo albums for the gallery of the public homepage (svoe.og125.at/fotos). The photos stay in Google Photos; `src/lib/googlePhotos.ts` reads title, date and cover from the share page. Published rows are readable without login (role `anon`).
+
 ### `users`
 `login` varchar (not null; the Google e-mail); `og` integer (null until an admin assigns one); `theme` varchar (default `'system'`); `admin` boolean (default false); legacy columns `pw`, `hash`, `usetop`
 

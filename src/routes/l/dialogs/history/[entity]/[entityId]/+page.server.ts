@@ -24,6 +24,10 @@ export async function load({params, locals}) {
             const news = await api.getNewsEntry({id: parseInt(entityId)});
             title = `Historie für ${news.title}`;
             break;
+        case 'album':
+            const album = await api.getAlbum({id: parseInt(entityId)});
+            title = `Historie für ${album.title}`;
+            break;
         default:
             title = `Historie für ${entity} #${entityId}`;
     }
