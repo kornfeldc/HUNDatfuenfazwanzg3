@@ -60,6 +60,12 @@ export interface IHfzApi {
     createNews(news: Partial<INews>): Promise<INews>;
     updateNews(news: INews): Promise<INews>;
     deleteNews(id: IId): Promise<void>;
+
+    getAlbums(): Promise<Array<IAlbum>>;
+    getAlbum(id: IId): Promise<IAlbum>;
+    createAlbum(album: Partial<IAlbum>): Promise<IAlbum>;
+    updateAlbum(album: IAlbum): Promise<IAlbum>;
+    deleteAlbum(id: IId): Promise<void>;
     
     getUnassignedUsers(): Promise<Array<IUser>>;
     assignUserToOg(email: string, og: number): Promise<void>;
@@ -205,6 +211,15 @@ export interface INews extends IId {
     date: Date;
     title: string;
     content: string;
+    isPublished: boolean;
+}
+
+export interface IAlbum extends IId {
+    date: Date;
+    dateText: string | null;
+    title: string;
+    link: string;
+    coverUrl: string;
     isPublished: boolean;
 }
 

@@ -11,7 +11,8 @@
             'person': 'Person',
             'sale': 'Verkauf',
             'article': 'Artikel',
-            'news': 'News'
+            'news': 'News',
+            'album': 'Album'
         };
         const entity = entityMap[item.entityType] || item.entityType;
 

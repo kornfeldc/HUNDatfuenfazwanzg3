@@ -1,4 +1,5 @@
 import type {
+    IAlbum,
     IArticle,
     ICourseHistory,
     ICreditHistory,
@@ -599,6 +600,92 @@ export class HfzSupabaseApi implements IHfzApi {
             .eq('id', id.id);
         if (error) throw error;
         await this.logAction('delete', 'news', id.id, details);
+    }
+
+    async getAlbums(): Promise<Array<IAlbum>> {
+        const supabase = this.supabase;
+        const {data, error} = await supabase
+            .from('album')
+            .select('*')
+            .eq('og', this.og)
+            .order('date', {ascending: false})
+            .order('id', {ascending: false});
+        if (error) throw error;
+        return HfzSupabaseApi.mapDates(data) as Array<IAlbum>;
+    }
+
+    async getAlbum(id: IId): Promise<IAlbum> {
+        const supabase = this.supabase;
+        const {data, error} = await supabase
+            .from('album')
+            .select('*')
+            .eq('og', this.og)
+            .eq('id', id.id)
+            .single();
+        if (error) throw error;
+        return HfzSupabaseApi.mapDates(data) as IAlbum;
+    }
+
+    async createAlbum(album: Partial<IAlbum>): Promise<IAlbum> {
+        const supabase = this.supabase;
+        const {data, error} = await supabase
+            .from('album')
+            .insert({
+                date: album.date,
+                dateText: album.dateText,
+                title: album.title,
+                link: album.link,
+                coverUrl: album.coverUrl,
+                isPublished: album.isPublished,
+                og: this.og
+            })
+            .select('*')
+            .single();
+        if (error) throw error;
+        const result = HfzSupabaseApi.mapDates(data) as IAlbum;
+        await this.logAction('create', 'album', result.id, result.title);
+        return result;
+    }
+
+    async updateAlbum(album: IAlbum): Promise<IAlbum> {
+        const supabase = this.supabase;
+        const oldAlbum = await this.getAlbum({id: album.id});
+        const {data, error} = await supabase
+            .from('album')
+            .update({
+                date: album.date,
+                dateText: album.dateText,
+                title: album.title,
+                link: album.link,
+                coverUrl: album.coverUrl,
+                isPublished: album.isPublished,
+            })
+            .eq('og', this.og)
+            .eq('id', album.id)
+            .select('*')
+            .single();
+        if (error) throw error;
+        const result = HfzSupabaseApi.mapDates(data) as IAlbum;
+        // Image URLs are long and unreadable, so only note that the cover changed.
+        const diff = [
+            this.getDiff(oldAlbum, result, ['og', 'id', 'createdAt', 'coverUrl']),
+            oldAlbum.coverUrl !== result.coverUrl ? 'coverUrl geändert' : ''
+        ].filter(Boolean).join(', ');
+        await this.logAction('update', 'album', result.id, diff || result.title);
+        return result;
+    }
+
+    async deleteAlbum(id: IId): Promise<void> {
+        const supabase = this.supabase;
+        const album = await this.getAlbum(id).catch(() => null);
+        const details = album ? album.title : `ID: ${id.id}`;
+        const {error} = await supabase
+            .from('album')
+            .delete()
+            .eq('og', this.og)
+            .eq('id', id.id);
+        if (error) throw error;
+        await this.logAction('delete', 'album', id.id, details);
     }
 
     async getSale(id: IId): Promise<ISale> {

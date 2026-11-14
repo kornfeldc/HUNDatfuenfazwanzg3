@@ -7,6 +7,7 @@
 		"dev": "vite dev",
 		"test:attendance": "node --test tests/course-attendance*.test.mjs",
 		"test:news": "node --test tests/news-db.test.mjs",
+		"test:albums": "node --test tests/album-db.test.mjs tests/google-photos.test.mjs",
 		"build": "vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",

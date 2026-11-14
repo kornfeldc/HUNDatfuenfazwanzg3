@@ -76,3 +76,19 @@ in this order:
    og 125 already has news, so it can be rerun.
 
 Run `pnpm test:news` to check the RLS policies and the import against PGlite.
+
+#### 6. Photo albums for the homepage
+
+The **Fotos** module maintains the albums of the gallery on the public homepage (svoe.og125.at/fotos reads
+the albums of `og = 125`). The photos stay in Google Photos; an album stores its share link and a cover
+image, which the app reads from the share page when the link is pasted. Apply these migrations in the
+Supabase SQL Editor, in this order:
+
+1. [`supabase/migrations/20261114120000_album.sql`](supabase/migrations/20261114120000_album.sql) creates
+   the `album` table, with the same rules as `news`: published albums are readable without login (role
+   `anon`), creating, editing and deleting is limited to users of the same `og`.
+2. [`supabase/migrations/20261114120100_album_import_og125.sql`](supabase/migrations/20261114120100_album_import_og125.sql)
+   imports the 61 albums of the current gallery for `og = 125`. It does nothing if og 125 already has
+   albums, so it can be rerun.
+
+Run `pnpm test:albums` to check the RLS policies, the import and the Google Photos parsing against PGlite.
