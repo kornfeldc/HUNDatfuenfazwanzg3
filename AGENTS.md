@@ -20,7 +20,7 @@ One "ok" covers one PR. Follow-up changes to an open PR go onto its branch, agai
 
 - **Tenancy:** `src/hooks.server.ts` looks up the logged-in Google user in `public.users` and sets `locals.og`. `/l/**` requires a login and an `og`; users without one land on `/no-tenant`.
 - **Data access:** every page goes through `HfzApi.create(locals.supabase, locals.og!)`, which returns `HfzSupabaseApi` (`src/lib/data/hfzSupabaseApi.ts`, interface and types in `hfzApi.ts`). Scope each query with `.eq('og', this.og)` on top of RLS, and log every create/update/delete with `logAction`; `History.svelte` maps the entity names to German labels. `HfzMockApi` is unused and out of date.
-- **Modules:** a list page in `src/routes/l/modules/<name>` plus an edit page in `src/routes/l/dialogs/<name>/[[id]]` with a default form action (`articles` / `article` is the simplest example). A new module needs entries in `AppSidebar.svelte` and `MobileBreadcrumb.svelte`; `MobileDock.svelte` only lists the four main modules. `TopBar.svelte` and `NavigationBar.svelte` are unused.
+- **Modules:** a list page in `src/routes/l/modules/<name>` plus an edit page in `src/routes/l/dialogs/<name>/[[id]]` with a default form action (`articles` / `article` is the simplest example). A new module needs entries in `AppSidebar.svelte` and `MobileBreadcrumb.svelte`; modules for the public homepage (`news`, `albums`) share the "Homepage" sidebar entry and switch via `HomepageTabs.svelte`; `MobileDock.svelte` only lists the four main modules. `TopBar.svelte` and `NavigationBar.svelte` are unused.
 - **Dates and money:** `moment` and `Util` from `$lib/util` (German locale, `Util.formatDate`, `Util.formatCurrency`).
 
 ## Database changes

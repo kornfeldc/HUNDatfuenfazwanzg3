@@ -11,8 +11,7 @@
         BarChart2,
         History,
         LogOut,
-        Newspaper,
-        Images,
+        Globe,
     } from "@lucide/svelte";
     import Avatar from "$lib/components/global/Avatar.svelte";
     import logo from "$lib/assets/logo.svg";
@@ -26,16 +25,17 @@
         { name: "Personen", href: "/l/modules/persons", icon: User },
         { name: "Artikel", href: "/l/modules/articles", icon: ShoppingBag },
         { name: "ROB", href: "/l/modules/rob", icon: CalendarClock },
-        { name: "News", href: "/l/modules/news", icon: Newspaper },
-        { name: "Fotos", href: "/l/modules/albums", icon: Images },
         { name: "Kalender", href: "/l/modules/calendar", icon: CalendarDays },
         { name: "Statistiken", href: "/l/modules/statistics", icon: BarChart2 },
         { name: "Historie", href: "/l/modules/history", icon: History },
+        // News and Fotos for the public homepage, shown as tabs (HomepageTabs.svelte)
+        { name: "Homepage", href: "/l/modules/news", icon: Globe,
+          also: ["/l/modules/albums", "/l/dialogs/news", "/l/dialogs/album"] },
     ];
 
-    const isActive = (href: string) => {
+    const isActive = (module: { href: string; also?: string[] }) => {
         const path = $page.url.pathname;
-        return path === href || path.startsWith(href + '/');
+        return [module.href, ...(module.also ?? [])].some(href => path === href || path.startsWith(href + '/'));
     };
 </script>
 
@@ -56,7 +56,7 @@
                     {#each modules as module}
                         <Sidebar.MenuItem>
                             <Sidebar.MenuButton
-                                    class={isActive(module.href) ? 'bg-primary/10! text-primary font-medium' : ''}>
+                                    class={isActive(module) ? 'bg-primary/10! text-primary font-medium' : ''}>
                                 {#snippet child({props})}
                                     <a href={module.href} {...props} onclick={closeIfMobile}>
                                         <module.icon />

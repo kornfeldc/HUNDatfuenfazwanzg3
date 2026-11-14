@@ -63,7 +63,7 @@ This configuration tells Supabase to allow redirects to both your production dom
 
 #### 5. News for the homepage
 
-The **News** module maintains the news shown on the public homepage of an Ortsgruppe
+The **News** tab under **Homepage** maintains the news shown on the public homepage of an Ortsgruppe
 (svoe.og125.at reads the news of `og = 125`). Apply these migrations in the Supabase SQL Editor,
 in this order:
 
@@ -79,7 +79,7 @@ Run `pnpm test:news` to check the RLS policies and the import against PGlite.
 
 #### 6. Photo albums for the homepage
 
-The **Fotos** module maintains the albums of the gallery on the public homepage (svoe.og125.at/fotos reads
+The **Fotos** tab under **Homepage** maintains the albums of the gallery on the public homepage (svoe.og125.at/fotos reads
 the albums of `og = 125`). The photos stay in Google Photos; an album stores its share link and a cover
 image, which the app reads from the share page when the link is pasted. Apply these migrations in the
 Supabase SQL Editor, in this order:
