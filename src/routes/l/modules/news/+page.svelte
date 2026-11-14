@@ -4,6 +4,7 @@
     import AddButton from "$lib/components/global/NavigationButtons/AddButton.svelte";
     import type {INews} from "$lib/data/hfzApi";
     import FilterBar from "$lib/components/global/FilterBar.svelte";
+    import HomepageTabs from "$lib/components/homepage/HomepageTabs.svelte";
     import {uiState} from "$lib/stores/uiState.svelte";
     import {page} from '$app/stores';
 
@@ -29,6 +30,7 @@
         {id: "draft", label: "Entwürfe"},
     ];
 </script>
+<HomepageTabs/>
 {#await data.news}
     <Loading></Loading>
 {:then news}
