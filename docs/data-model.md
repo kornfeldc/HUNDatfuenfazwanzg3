@@ -7,9 +7,9 @@ This is a snapshot taken from the database, plus later migrations in `supabase/m
 ## Tables
 
 ### `person`
-`id` integer (serial); `og` integer; `firstName` varchar (not null); `lastName` varchar (not null); `isMember` boolean (not null); `mainPersonId` integer; `personGroup` varchar (not null); `credit` double (not null); `saleCount` integer (not null); `saleSum` double (not null); `phone` varchar; `email` varchar; `extId` varchar; `isActive` boolean; `saleCountActive` integer; `courseCount` integer (not null, default 0); `dogNames` varchar; `info` varchar
+`id` integer (serial); `og` integer; `firstName` varchar (not null); `lastName` varchar (not null); `isMember` boolean (not null); `mainPersonId` integer; `personGroup` varchar (not null); `credit` double (not null); `saleCount` integer (not null); `saleSum` double (not null); `phone` varchar; `email` varchar; `extId` varchar; `isActive` boolean; `saleCountActive` integer; `courseCount` integer (not null, default 0); `dogNames` varchar; `info` varchar; `isOnMailingList` boolean (not null, default false)
 
-`credit`, `courseCount`, `saleCount` and `saleSum` are running balances. Change them together with the matching `credit_history` / `course_history` / `sale` rows. `mainPersonId` links family members to the person who pays.
+`credit`, `courseCount`, `saleCount` and `saleSum` are running balances. Change them together with the matching `credit_history` / `course_history` / `sale` rows. `mainPersonId` links family members to the person who pays. `isOnMailingList` is the opt-in for the mailing list export (tab "Mailing Liste" under Homepage); only persons with it and an `email` are exported.
 
 ### `course_history`
 `id` integer (serial); `personId` integer; `courses` integer (not null; positive = bought, negative = attended); `date` date

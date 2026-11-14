@@ -1,6 +1,7 @@
 import HfzMockApi from "$lib/data/hfzMockApi";
 import {HfzSupabaseApi} from "$lib/data/hfzSupabaseApi";
 import type {SupabaseClient} from "@supabase/supabase-js";
+import type {IMailingListPerson} from "$lib/mailingList";
 
 export interface IHfzApi {
     getUser(): Promise<IUser>;
@@ -15,6 +16,7 @@ export interface IHfzApi {
 
     getPersons(): Promise<Array<IPerson>>;
     getPersonsWithCourseHistory(days: number, includeEmpty?: boolean): Promise<Array<IPersonWithHistory>>;
+    getMailingListPersons(): Promise<Array<IMailingListPerson>>;
     getPerson(id: IId): Promise<IPerson>;
     getPersonCreditHistory(id: IId): Promise<Array<ICreditHistory>>;
     getPersonCourseHistory(id: IId): Promise<Array<ICourseHistory>>;
@@ -138,6 +140,7 @@ export interface IPerson extends IId {
     lastName: string;
     isActive: boolean;
     isMember: boolean;
+    isOnMailingList: boolean;
     mainPersonId?: number;
     personGroup: string;
     phone: string;

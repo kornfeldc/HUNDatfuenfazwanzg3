@@ -38,7 +38,7 @@ export const actions = {
 
         let data = Util.parseFormData(formData, [
                 {
-                    properties: ["isMember", "isActive", "isConnected"],
+                    properties: ["isMember", "isActive", "isOnMailingList", "isConnected"],
                     method: (value: any) => value === 'true' || value === 'on'
                 }
             ]);

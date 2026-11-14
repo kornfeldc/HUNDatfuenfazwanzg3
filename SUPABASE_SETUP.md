@@ -112,3 +112,10 @@ Check it with `curl "https://<project ref>.supabase.co/functions/v1/events?og=12
 list (empty when no event is planned). Another Ortsgruppe needs an entry in `calendars` in `index.ts`.
 Run `pnpm test:events` to test the parsing in Node.
 
+#### 8. Mailing list
+
+Run [`supabase/migrations/20261114150000_person_mailing_list.sql`](supabase/migrations/20261114150000_person_mailing_list.sql)
+in the Supabase SQL Editor. It adds the column `person."isOnMailingList"` (the checkbox "Auf Mailing-Liste",
+off for everyone) and can be rerun. The existing person policies cover it.
+
+Run `pnpm test:mailing` to check the migration and the export filters against PGlite.

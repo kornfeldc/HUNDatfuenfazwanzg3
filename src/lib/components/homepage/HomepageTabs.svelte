@@ -1,11 +1,12 @@
 <script lang="ts">
     import {page} from '$app/stores';
-    import {Images, Newspaper} from "@lucide/svelte";
+    import {Images, Mail, Newspaper} from "@lucide/svelte";
 
-    // News and Fotos are two modules shown under the one "Homepage" sidebar entry.
+    // News, Fotos and the mailing list are modules shown under the one "Homepage" sidebar entry.
     const tabs = [
         {label: "News", href: "/l/modules/news", icon: Newspaper},
         {label: "Fotos", href: "/l/modules/albums", icon: Images},
+        {label: "Mailing Liste", href: "/l/modules/mailingList", icon: Mail},
     ];
 </script>
 <nav class="flex justify-center sm:justify-start px-3 mb-2">

@@ -41,6 +41,7 @@
         formPerson.phone = person?.phone ?? "";
         formPerson.email = person?.email ?? "";
         formPerson.isMember = person?.isMember ?? false;
+        formPerson.isOnMailingList = person?.isOnMailingList ?? false;
         formPerson.isActive = person?.isActive ?? true;
         formPerson.info = person?.info ?? "";
         breadcrumbStore.detailLabel = formPerson.id
@@ -138,6 +139,15 @@
                         <InputGroup.Input name="email" id="email-{id}"
                                           bind:value={formPerson.email}></InputGroup.Input>
                     </InputGroup.Root>
+                </div>
+
+                <div class="col-span-12 flex flex-col gap-2">
+                    <Label for="mailingList-{id}" class="whitespace-nowrap">Auf Mailing-Liste</Label>
+                    <input type="hidden" name="isOnMailingList" value={formPerson.isOnMailingList ? 'on' : ''}/>
+                    <Checkbox id="mailingList-{id}" bind:checked={formPerson.isOnMailingList}/>
+                    {#if formPerson.isOnMailingList && !formPerson.email?.includes("@")}
+                        <span class="text-xs text-muted-foreground">Ohne gültige Email wird die Person nicht exportiert.</span>
+                    {/if}
                 </div>
 
                 <div class="col-span-6 flex flex-col gap-2">
