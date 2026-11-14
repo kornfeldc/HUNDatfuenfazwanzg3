@@ -92,3 +92,23 @@ Supabase SQL Editor, in this order:
    albums, so it can be rerun.
 
 Run `pnpm test:albums` to check the RLS policies, the import and the Google Photos parsing against PGlite.
+
+#### 7. Events for the homepage (Edge Function)
+
+The Veranstaltungen on the public homepage come from the Ortsgruppe's public Google Calendar (for og 125
+"Kurse und Veranstaltungen"), not from the database. Browsers cannot read the calendar feed themselves, so
+the Edge Function [`supabase/functions/events/index.ts`](supabase/functions/events/index.ts) reads it and
+returns the upcoming events: single calendar entries **with a description**. Recurring course dates and
+entries without a description are left out, so an event needs a description to appear on the homepage.
+
+Deploy it once, and again after every change to the file:
+
+- **Dashboard:** Edge Functions → Deploy a new function → Via Editor, name it `events`, replace the
+  example code with the content of `index.ts` and deploy. Then open the function's settings and turn off
+  **Enforce JWT verification** (it only returns public calendar data, and the homepage calls it without a key).
+- **CLI:** `supabase functions deploy events --no-verify-jwt --project-ref <project ref>`
+
+Check it with `curl "https://<project ref>.supabase.co/functions/v1/events?og=125"`; it answers with a JSON
+list (empty when no event is planned). Another Ortsgruppe needs an entry in `calendars` in `index.ts`.
+Run `pnpm test:events` to test the parsing in Node.
+
