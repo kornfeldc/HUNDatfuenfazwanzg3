@@ -19,6 +19,7 @@
 
         switch (item.action) {
             case 'create': return `${entity} erstellt`;
+            case 'register': return 'Online angemeldet';
             case 'update': return `${entity} bearbeitet`;
             case 'delete': return `${entity} gelöscht`;
             case 'pay_sale': return 'Verkauf bezahlt';
@@ -42,6 +43,7 @@
     const getActionColor = (item: IHistory) => {
         switch (item.action) {
             case 'create': return 'text-ok';
+            case 'register': return 'text-ok';
             case 'update': return 'text-primary';
             case 'delete': return 'text-destructive';
             case 'pay_sale': return 'text-ok';

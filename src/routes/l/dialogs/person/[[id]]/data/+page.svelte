@@ -12,6 +12,8 @@
     import * as InputGroup from "$lib/components/shadcn/ui/input-group/index.js";
     import {Button} from "$lib/components/shadcn/ui/button";
     import {Checkbox} from "$lib/components/shadcn/ui/checkbox";
+    // noinspection ES6UnusedImports
+    import * as Select from "$lib/components/shadcn/ui/select/index.js";
     import CardTitleBig from "$lib/components/global/CardTitleBig.svelte";
     import {Util} from "$lib/util";
     import {uiState} from "$lib/stores/uiState.svelte";
@@ -32,6 +34,8 @@
 
     let redirectValue = $state(uiState.getLastRouteSmart());
 
+    const dogSexLabels: Record<string, string> = {"": "–", male: "Rüde", female: "Hündin"};
+
     const loadPerson = async () => {
         person = await data.person;
         formPerson.id = person?.id;
@@ -44,6 +48,17 @@
         formPerson.isOnMailingList = person?.isOnMailingList ?? false;
         formPerson.isActive = person?.isActive ?? true;
         formPerson.info = person?.info ?? "";
+        formPerson.birthDate = person?.birthDate ?? "";
+        formPerson.street = person?.street ?? "";
+        formPerson.postalCode = person?.postalCode ?? "";
+        formPerson.city = person?.city ?? "";
+        formPerson.dogBreed = person?.dogBreed ?? "";
+        formPerson.dogSex = person?.dogSex ?? "" as any;
+        formPerson.dogBirthDate = person?.dogBirthDate ?? "";
+        formPerson.dogChipNumber = person?.dogChipNumber ?? "";
+        formPerson.dogInsuranceNumber = person?.dogInsuranceNumber ?? "";
+        formPerson.photoConsent = person?.photoConsent ?? false;
+        formPerson.referralSource = person?.referralSource ?? "";
         breadcrumbStore.detailLabel = formPerson.id
             ? (formPerson.firstName + ' ' + formPerson.lastName).trim()
             : 'Neue Person';
@@ -125,6 +140,50 @@
                 </div>
 
 
+                <div class="col-span-6 flex flex-col gap-2">
+                    <Label for="dogBreed-{id}">Rasse</Label>
+                    <InputGroup.Root>
+                        <InputGroup.Input name="dogBreed" id="dogBreed-{id}"
+                                          bind:value={formPerson.dogBreed}></InputGroup.Input>
+                    </InputGroup.Root>
+                </div>
+
+                <div class="col-span-6 flex flex-col gap-2">
+                    <Label for="dogSex-{id}">Geschlecht</Label>
+                    <Select.Root type="single" name="dogSex" bind:value={formPerson.dogSex as string}>
+                        <Select.Trigger id="dogSex-{id}" class="w-full">{dogSexLabels[formPerson.dogSex ?? ""]}</Select.Trigger>
+                        <Select.Content>
+                            {#each Object.keys(dogSexLabels) as sex}
+                                <Select.Item value={sex}>{dogSexLabels[sex]}</Select.Item>
+                            {/each}
+                        </Select.Content>
+                    </Select.Root>
+                </div>
+
+                <div class="col-span-6 flex flex-col gap-2">
+                    <Label for="dogBirthDate-{id}">Wurfdatum</Label>
+                    <InputGroup.Root>
+                        <InputGroup.Input type="date" name="dogBirthDate" id="dogBirthDate-{id}"
+                                          bind:value={formPerson.dogBirthDate}></InputGroup.Input>
+                    </InputGroup.Root>
+                </div>
+
+                <div class="col-span-6 flex flex-col gap-2">
+                    <Label for="dogChipNumber-{id}">Chipnummer</Label>
+                    <InputGroup.Root>
+                        <InputGroup.Input name="dogChipNumber" id="dogChipNumber-{id}"
+                                          bind:value={formPerson.dogChipNumber}></InputGroup.Input>
+                    </InputGroup.Root>
+                </div>
+
+                <div class="col-span-12 flex flex-col gap-2">
+                    <Label for="dogInsuranceNumber-{id}">Versicherungsnummer</Label>
+                    <InputGroup.Root>
+                        <InputGroup.Input name="dogInsuranceNumber" id="dogInsuranceNumber-{id}"
+                                          bind:value={formPerson.dogInsuranceNumber}></InputGroup.Input>
+                    </InputGroup.Root>
+                </div>
+
                 <div class="col-span-12 flex flex-col gap-2">
                     <Label for="phone-{id}">Telefon</Label>
                     <InputGroup.Root>
@@ -138,6 +197,38 @@
                     <InputGroup.Root>
                         <InputGroup.Input name="email" id="email-{id}"
                                           bind:value={formPerson.email}></InputGroup.Input>
+                    </InputGroup.Root>
+                </div>
+
+                <div class="col-span-12 flex flex-col gap-2">
+                    <Label for="birthDate-{id}">Geburtsdatum</Label>
+                    <InputGroup.Root>
+                        <InputGroup.Input type="date" name="birthDate" id="birthDate-{id}"
+                                          bind:value={formPerson.birthDate}></InputGroup.Input>
+                    </InputGroup.Root>
+                </div>
+
+                <div class="col-span-12 flex flex-col gap-2">
+                    <Label for="street-{id}">Adresse</Label>
+                    <InputGroup.Root>
+                        <InputGroup.Input name="street" id="street-{id}"
+                                          bind:value={formPerson.street}></InputGroup.Input>
+                    </InputGroup.Root>
+                </div>
+
+                <div class="col-span-4 flex flex-col gap-2">
+                    <Label for="postalCode-{id}">PLZ</Label>
+                    <InputGroup.Root>
+                        <InputGroup.Input name="postalCode" id="postalCode-{id}"
+                                          bind:value={formPerson.postalCode}></InputGroup.Input>
+                    </InputGroup.Root>
+                </div>
+
+                <div class="col-span-8 flex flex-col gap-2">
+                    <Label for="city-{id}">Ort</Label>
+                    <InputGroup.Root>
+                        <InputGroup.Input name="city" id="city-{id}"
+                                          bind:value={formPerson.city}></InputGroup.Input>
                     </InputGroup.Root>
                 </div>
 
@@ -163,6 +254,20 @@
                 </div>
 
                 <div class="col-span-12 flex flex-col gap-2">
+                    <Label for="photoConsent-{id}" class="whitespace-nowrap">Fotos/Videos dürfen veröffentlicht werden</Label>
+                    <input type="hidden" name="photoConsent" value={formPerson.photoConsent ? 'on' : ''}/>
+                    <Checkbox id="photoConsent-{id}" bind:checked={formPerson.photoConsent}/>
+                </div>
+
+                <div class="col-span-12 flex flex-col gap-2">
+                    <Label for="referralSource-{id}">Aufmerksam geworden durch</Label>
+                    <InputGroup.Root>
+                        <InputGroup.Input name="referralSource" id="referralSource-{id}"
+                                          bind:value={formPerson.referralSource}></InputGroup.Input>
+                    </InputGroup.Root>
+                </div>
+
+                <div class="col-span-12 flex flex-col gap-2">
                     <Label for="info-{id}">Sonstige Infos</Label>
                     <InputGroup.Root>
                         <InputGroup.Textarea name="info" id="info-{id}"
@@ -171,6 +276,9 @@
                 </div>
 
             </div>
+            {#if person?.registeredAt}
+                <p class="pt-4 text-xs text-muted-foreground">Online angemeldet am {Util.formatDate(new Date(person.registeredAt))}</p>
+            {/if}
 
         </Card>
 

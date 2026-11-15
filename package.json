@@ -11,6 +11,7 @@
 		"test:events": "node --test tests/events-function.test.mjs",
 		"test:mailing": "node --test tests/mailing-list.test.mjs",
 		"test:users": "node --test tests/users-disabled-db.test.mjs",
+		"test:registration": "node --test tests/person-registration-db.test.mjs",
 		"build": "vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",

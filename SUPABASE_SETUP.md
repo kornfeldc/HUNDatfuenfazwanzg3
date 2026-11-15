@@ -131,3 +131,18 @@ as they are, but sees "Zugang gesperrt" instead of the app. Restrictive RLS poli
 user all access to the tenant tables, also outside the app. They only take effect on tables that already have RLS enabled.
 
 Run `pnpm test:users` to check the policies and functions against PGlite.
+
+#### 10. Online course registration
+
+Run [`supabase/migrations/20261115120000_person_registration.sql`](supabase/migrations/20261115120000_person_registration.sql)
+in the Supabase SQL Editor **before deploying the app** (the person dialog saves the new columns) and before the homepage
+form goes live (svoe.og125.at/kurse/anmeldung). It can be rerun.
+
+It adds the fields of the paper "Kursanmeldung" to `person` (birth date, address, dog breed, sex, birth date, chip and
+insurance number, photo consent, how the person found the club, `registeredAt`) and the function `register_person`, which
+the homepage calls without login. Accepting the terms on the form includes the photo/video consent, so online
+registrations always get `photoConsent`. The function checks every field, creates an active non-member person and logs
+"Online angemeldet" in the history; role `anon` still has no access to the `person` table itself. At most 20 registrations
+per hour and Ortsgruppe are accepted. New registrations show "Online angemeldet am …" in the person dialog.
+
+Run `pnpm test:registration` to check the function against PGlite.

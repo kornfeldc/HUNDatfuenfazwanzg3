@@ -38,8 +38,13 @@ export const actions = {
 
         let data = Util.parseFormData(formData, [
                 {
-                    properties: ["isMember", "isActive", "isOnMailingList", "isConnected"],
+                    properties: ["isMember", "isActive", "isOnMailingList", "photoConsent", "isConnected"],
                     method: (value: any) => value === 'true' || value === 'on'
+                },
+                {
+                    // Empty dates and an unset dog sex have to be null for the database.
+                    properties: ["birthDate", "dogBirthDate", "dogSex"],
+                    method: (value: any) => value || null
                 }
             ]);
         if(id)
