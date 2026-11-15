@@ -148,6 +148,18 @@ export interface IPerson extends IId {
     saleCountActive: number;
     saleSum: number;
     info: string;
+    birthDate?: string;
+    street?: string;
+    postalCode?: string;
+    city?: string;
+    dogBreed?: string;
+    dogSex?: "male" | "female";
+    dogBirthDate?: string;
+    dogChipNumber?: string;
+    dogInsuranceNumber?: string;
+    photoConsent: boolean;
+    referralSource?: string;
+    registeredAt?: string;
 }
 
 export interface IPersonWithHistory extends IPerson {

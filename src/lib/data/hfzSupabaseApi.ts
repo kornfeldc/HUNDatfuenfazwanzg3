@@ -180,7 +180,18 @@ export class HfzSupabaseApi implements IHfzApi {
                 isOnMailingList: person.isOnMailingList,
                 isActive: person.isActive,
                 personGroup: person.personGroup,
-                info: person.info
+                info: person.info,
+                birthDate: person.birthDate,
+                street: person.street,
+                postalCode: person.postalCode,
+                city: person.city,
+                dogBreed: person.dogBreed,
+                dogSex: person.dogSex,
+                dogBirthDate: person.dogBirthDate,
+                dogChipNumber: person.dogChipNumber,
+                dogInsuranceNumber: person.dogInsuranceNumber,
+                photoConsent: person.photoConsent,
+                referralSource: person.referralSource
             })
             .eq('og', this.og)
             .eq('id', person.id)
@@ -188,7 +199,7 @@ export class HfzSupabaseApi implements IHfzApi {
             .single();
         if (error) throw error;
         const result = HfzSupabaseApi.mapDates(data) as IPerson;
-        const diff = this.getDiff(oldPerson, result, ['og', 'id', 'extId', 'credit', 'saleCount', 'saleSum', 'courseCount', 'saleCountActive']);
+        const diff = this.getDiff(oldPerson, result, ['og', 'id', 'extId', 'credit', 'saleCount', 'saleSum', 'courseCount', 'saleCountActive', 'registeredAt']);
         await this.logAction('update', 'person', result.id, diff || `${result.firstName} ${result.lastName}`);
         return result;
     }

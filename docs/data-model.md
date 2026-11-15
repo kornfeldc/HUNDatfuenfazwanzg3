@@ -7,9 +7,11 @@ This is a snapshot taken from the database, plus later migrations in `supabase/m
 ## Tables
 
 ### `person`
-`id` integer (serial); `og` integer; `firstName` varchar (not null); `lastName` varchar (not null); `isMember` boolean (not null); `mainPersonId` integer; `personGroup` varchar (not null); `credit` double (not null); `saleCount` integer (not null); `saleSum` double (not null); `phone` varchar; `email` varchar; `extId` varchar; `isActive` boolean; `saleCountActive` integer; `courseCount` integer (not null, default 0); `dogNames` varchar; `info` varchar; `isOnMailingList` boolean (not null, default false)
+`id` integer (serial); `og` integer; `firstName` varchar (not null); `lastName` varchar (not null); `isMember` boolean (not null); `mainPersonId` integer; `personGroup` varchar (not null); `credit` double (not null); `saleCount` integer (not null); `saleSum` double (not null); `phone` varchar; `email` varchar; `extId` varchar; `isActive` boolean; `saleCountActive` integer; `courseCount` integer (not null, default 0); `dogNames` varchar; `info` varchar; `isOnMailingList` boolean (not null, default false); `birthDate` date; `street` varchar; `postalCode` varchar; `city` varchar; `dogBreed` varchar; `dogSex` varchar (`male` / `female`); `dogBirthDate` date; `dogChipNumber` varchar; `dogInsuranceNumber` varchar; `photoConsent` boolean (not null, default false); `referralSource` varchar; `registeredAt` timestamptz
 
 `credit`, `courseCount`, `saleCount` and `saleSum` are running balances. Change them together with the matching `credit_history` / `course_history` / `sale` rows. `mainPersonId` links family members to the person who pays. `isOnMailingList` is the opt-in for the mailing list export (tab "Mailing Liste" under Homepage); only persons with it and an `email` are exported.
+
+The fields from `birthDate` on come from the course registration form ("Kursanmeldung"). `registeredAt` is set when the person registered on the public homepage (`register_person`); the dog fields describe the dog named in `dogNames` at registration. `photoConsent` is the consent to publish photos and videos of the person; online registrations always have it, because it is part of the accepted terms.
 
 ### `course_history`
 `id` integer (serial); `personId` integer; `courses` integer (not null; positive = bought, negative = attended); `date` date
@@ -62,6 +64,10 @@ Audit log, written by `logAction` in `hfzSupabaseApi.ts` and by the database fun
 `person_article_usage` (`personId`, `articleId`, `amount`) and `sale_day` (`og`, `day`, `payed`, `toPay`).
 
 ## Database functions
+
+From `supabase/migrations/20261115120000_person_registration.sql`. `security definer` and executable by `anon`, because the public homepage calls it without login.
+
+- `register_person(p_og, p_first_name, p_last_name, p_birth_date, p_street, p_postal_code, p_city, p_phone, p_email, p_dog_name, p_dog_breed, p_dog_sex, p_dog_birth_date, p_dog_chip_number, p_dog_insurance_number, p_mailing_list, p_referral_source, p_accept_terms)`: creates an active non-member person from the course registration form and writes a `register` entry to `history`. Sets `photoConsent`, which is part of the terms. Requires an `og` that has users, accepted terms, first and last name, address (street, postal code, city), phone, a valid email and the dog's name, chip and insurance number; caps text at 200 characters and registrations at 20 per hour and `og`.
 
 From `supabase/migrations/20261108120000_course_attendance.sql`. They are `security invoker`, so RLS still applies, and each one checks that the caller's `users.og` matches `p_og`.
 
