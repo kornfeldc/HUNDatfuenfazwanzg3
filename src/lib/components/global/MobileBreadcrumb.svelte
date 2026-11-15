@@ -20,6 +20,7 @@
         sales:         { label: 'Verkäufe',  href: '/l/modules/sales', icon: Euro },
         articles:      { label: 'Artikel',   href: '/l/modules/articles', icon: ShoppingBag },
         persons:       { label: 'Personen',  href: '/l/modules/persons', icon: User },
+        registrations: { label: 'Personen',  href: '/l/modules/registrations', icon: User },
         course:        { label: 'Kurse',     href: '/l/modules/course', icon: PawPrint },
         rob:           { label: 'Rob',       href: '/l/modules/rob', icon: CalendarClock },
         news:          { label: 'Homepage',  href: '/l/modules/news', icon: Globe },

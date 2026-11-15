@@ -190,7 +190,6 @@ export class HfzSupabaseApi implements IHfzApi {
                 dogBirthDate: person.dogBirthDate,
                 dogChipNumber: person.dogChipNumber,
                 dogInsuranceNumber: person.dogInsuranceNumber,
-                photoConsent: person.photoConsent,
                 referralSource: person.referralSource
             })
             .eq('og', this.og)
@@ -352,6 +351,20 @@ export class HfzSupabaseApi implements IHfzApi {
         ]);
         // Attendance quick-add also needs people who have never bought or attended a course.
         return (ret as Array<IPersonWithHistory>).filter(p => includeEmpty || p.courseHistory?.length > 0);
+    }
+
+    // Persons who registered on the public homepage, newest first.
+    async getRegistrations(): Promise<Array<IPerson>> {
+        const supabase = this.supabase;
+        const {data, error} = await supabase
+            .from('person')
+            .select('*')
+            .eq('og', this.og)
+            .not('registeredAt', 'is', null)
+            .order('registeredAt', {ascending: false});
+
+        if (error) throw error;
+        return HfzSupabaseApi.mapDates(data) as Array<IPerson>;
     }
 
     async getMailingListPersons(): Promise<Array<IMailingListPerson>> {

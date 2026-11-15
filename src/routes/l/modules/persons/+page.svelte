@@ -11,6 +11,7 @@
     let {data}: { data: any } = $props();
     import { page } from '$app/stores';
     import FilterBar from "$lib/components/global/FilterBar.svelte";
+    import PersonsTabs from "$lib/components/persons/PersonsTabs.svelte";
     let type = $derived($page.url.searchParams.get("type") ?? "active");
     
     const filter = (persons: Array<IPerson>) => {
@@ -39,6 +40,7 @@
         {id: "inactive", label: "Inaktiv"},
     ];
 </script>
+<PersonsTabs/>
 {#await data.persons}
     <Loading></Loading>
 {:then persons}

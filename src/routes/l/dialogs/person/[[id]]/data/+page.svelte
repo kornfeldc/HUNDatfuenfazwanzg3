@@ -57,7 +57,6 @@
         formPerson.dogBirthDate = person?.dogBirthDate ?? "";
         formPerson.dogChipNumber = person?.dogChipNumber ?? "";
         formPerson.dogInsuranceNumber = person?.dogInsuranceNumber ?? "";
-        formPerson.photoConsent = person?.photoConsent ?? false;
         formPerson.referralSource = person?.referralSource ?? "";
         breadcrumbStore.detailLabel = formPerson.id
             ? (formPerson.firstName + ' ' + formPerson.lastName).trim()
@@ -251,12 +250,6 @@
                     <Label for="active-{id}" class="whitespace-nowrap">Ist Aktiv</Label>
                     <input type="hidden" name="isActive" value={formPerson.isActive ? 'on' : ''}/>
                     <Checkbox id="active-{id}" bind:checked={formPerson.isActive}/>
-                </div>
-
-                <div class="col-span-12 flex flex-col gap-2">
-                    <Label for="photoConsent-{id}" class="whitespace-nowrap">Fotos/Videos dürfen veröffentlicht werden</Label>
-                    <input type="hidden" name="photoConsent" value={formPerson.photoConsent ? 'on' : ''}/>
-                    <Checkbox id="photoConsent-{id}" bind:checked={formPerson.photoConsent}/>
                 </div>
 
                 <div class="col-span-12 flex flex-col gap-2">

@@ -11,7 +11,7 @@ This is a snapshot taken from the database, plus later migrations in `supabase/m
 
 `credit`, `courseCount`, `saleCount` and `saleSum` are running balances. Change them together with the matching `credit_history` / `course_history` / `sale` rows. `mainPersonId` links family members to the person who pays. `isOnMailingList` is the opt-in for the mailing list export (tab "Mailing Liste" under Homepage); only persons with it and an `email` are exported.
 
-The fields from `birthDate` on come from the course registration form ("Kursanmeldung"). `registeredAt` is set when the person registered on the public homepage (`register_person`); the dog fields describe the dog named in `dogNames` at registration. `photoConsent` is the consent to publish photos and videos of the person; online registrations always have it, because it is part of the accepted terms.
+The fields from `birthDate` on come from the course registration form ("Kursanmeldung"). `registeredAt` is set when the person registered on the public homepage (`register_person`); these persons are listed in the tab Personen → Anmeldungen; the dog fields describe the dog named in `dogNames` at registration. `photoConsent` is the consent to publish photos and videos of the person; online registrations always have it, because it is part of the accepted terms. The app neither shows nor edits it.
 
 ### `course_history`
 `id` integer (serial); `personId` integer; `courses` integer (not null; positive = bought, negative = attended); `date` date
