@@ -119,3 +119,15 @@ in the Supabase SQL Editor. It adds the column `person."isOnMailingList"` (the c
 off for everyone) and can be rerun. The existing person policies cover it.
 
 Run `pnpm test:mailing` to check the migration and the export filters against PGlite.
+
+#### 9. Disabling users
+
+Run [`supabase/migrations/20261114170000_users_disabled.sql`](supabase/migrations/20261114170000_users_disabled.sql)
+in the Supabase SQL Editor **before deploying the app** (the app reads the new column at every login). It can be rerun.
+
+It adds `users.disabled` (off for everyone). Admins lock and unlock the users of their Ortsgruppe in **Mein Profil →
+Benutzer**; the change is logged in the history. A disabled user keeps the `users` row, so their history entries stay
+as they are, but sees "Zugang gesperrt" instead of the app. Restrictive RLS policies (`login_enabled`) deny a disabled
+user all access to the tenant tables, also outside the app. They only take effect on tables that already have RLS enabled.
+
+Run `pnpm test:users` to check the policies and functions against PGlite.

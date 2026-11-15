@@ -49,9 +49,9 @@ News for the public homepage (svoe.og125.at). Published rows are readable withou
 Photo albums for the gallery of the public homepage (svoe.og125.at/fotos). The photos stay in Google Photos; `src/lib/googlePhotos.ts` reads title, date and cover from the share page. Published rows are readable without login (role `anon`).
 
 ### `users`
-`login` varchar (not null; the Google e-mail); `og` integer (null until an admin assigns one); `theme` varchar (default `'system'`); `admin` boolean (default false); legacy columns `pw`, `hash`, `usetop`
+`login` varchar (not null; the Google e-mail); `og` integer (null until an admin assigns one); `theme` varchar (default `'system'`); `admin` boolean (default false); `disabled` boolean (not null, default false); legacy columns `pw`, `hash`, `usetop`
 
-A user is inserted automatically on first Google login (`src/hooks.server.ts`).
+A user is inserted automatically on first Google login (`src/hooks.server.ts`). A disabled user keeps the row (and so the history entries stay attributable) but is sent to `/disabled` instead of `/l/**`; a restrictive policy `login_enabled` on every tenant table (and on insert/update/delete of `users`) denies the user all data access. Only `set_user_disabled` can change the flag (trigger `users_guard_disabled`).
 
 ### `history`
 `id` serial; `timestamp` timestamptz (default now); `userEmail` text; `action` text; `entityType` text; `entityId` text; `details` text; `og` integer
@@ -68,3 +68,9 @@ From `supabase/migrations/20261108120000_course_attendance.sql`. They are `secur
 - `adjust_person_courses(p_og, p_person_id, p_amount, p_date) → integer`: adds or deducts courses for one person; returns the `course_history` id.
 - `record_course_attendance(p_og, p_person_ids[], p_date) → integer[]`: deducts one course per person, at most once per person and day; returns the ids actually recorded.
 - `undo_course_attendance(p_og, p_person_id, p_history_id, p_date, p_expected_courses)`: gives one course back on an attendance entry; rejects stale undos.
+
+From `supabase/migrations/20261114170000_users_disabled.sql`. They are `security definer`, so they do not depend on the policies of `users`.
+
+- `login_enabled() → boolean`: false when the caller's `users` row is disabled; used by the `login_enabled` policies.
+- `og_users(p_og) → table (login, admin, disabled)`: the users of an Ortsgruppe; only for enabled admins of `p_og`.
+- `set_user_disabled(p_og, p_login, p_disabled)`: disables or enables a user of `p_og` (not oneself) and writes a `disable` / `enable` entry to `history`; only for enabled admins of `p_og`.
