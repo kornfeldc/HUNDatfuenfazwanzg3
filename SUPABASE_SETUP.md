@@ -120,10 +120,23 @@ off for everyone) and can be rerun. The existing person policies cover it.
 
 Run `pnpm test:mailing` to check the migration and the export filters against PGlite.
 
-#### 9. Online course registration
+#### 9. Disabling users
+
+Run [`supabase/migrations/20261114170000_users_disabled.sql`](supabase/migrations/20261114170000_users_disabled.sql)
+in the Supabase SQL Editor **before deploying the app** (the app reads the new column at every login). It can be rerun.
+
+It adds `users.disabled` (off for everyone). Admins lock and unlock the users of their Ortsgruppe in **Mein Profil →
+Benutzer**; the change is logged in the history. A disabled user keeps the `users` row, so their history entries stay
+as they are, but sees "Zugang gesperrt" instead of the app. Restrictive RLS policies (`login_enabled`) deny a disabled
+user all access to the tenant tables, also outside the app. They only take effect on tables that already have RLS enabled.
+
+Run `pnpm test:users` to check the policies and functions against PGlite.
+
+#### 10. Online course registration
 
 Run [`supabase/migrations/20261115120000_person_registration.sql`](supabase/migrations/20261115120000_person_registration.sql)
-in the Supabase SQL Editor **before the homepage goes live with the form** (svoe.og125.at/kurse/anmeldung). It can be rerun.
+in the Supabase SQL Editor **before deploying the app** (the person dialog saves the new columns) and before the homepage
+form goes live (svoe.og125.at/kurse/anmeldung). It can be rerun.
 
 It adds the fields of the paper "Kursanmeldung" to `person` (birth date, address, dog breed, sex, birth date, chip and
 insurance number, photo consent, how the person found the club, `registeredAt`) and the function `register_person`, which

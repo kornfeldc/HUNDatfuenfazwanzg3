@@ -71,6 +71,8 @@ export interface IHfzApi {
     
     getUnassignedUsers(): Promise<Array<IUser>>;
     assignUserToOg(email: string, og: number): Promise<void>;
+    getOgUsers(): Promise<Array<IUser>>;
+    setUserDisabled(email: string, disabled: boolean): Promise<void>;
 
     getHistory(entityType?: string, entityId?: string | number): Promise<Array<IHistory>>;
     getHistoryPage(limit: number, offset: number): Promise<Array<IHistory>>;
@@ -97,6 +99,7 @@ export interface IUser  {
    lastLogin?: Date;
    admin?: boolean;
    og?: number;
+   disabled?: boolean;
 }
 
 export interface ISale extends IId {

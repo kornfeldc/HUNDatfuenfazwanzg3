@@ -12,7 +12,8 @@
             'sale': 'Verkauf',
             'article': 'Artikel',
             'news': 'News',
-            'album': 'Album'
+            'album': 'Album',
+            'user': 'Benutzer'
         };
         const entity = entityMap[item.entityType] || item.entityType;
 
@@ -28,6 +29,8 @@
                 return 'Guthaben aufgeladen';
             }
             case 'undo_course': return 'Teilnahme rückgängig gemacht';
+            case 'disable': return `${entity} gesperrt`;
+            case 'enable': return `${entity} entsperrt`;
             case 'add_course': {
                 const amount = parseFloat(item.details);
                 if (!isNaN(amount) && amount < 0) return 'Kurs abgezogen';
@@ -50,6 +53,8 @@
                 return 'text-ok';
             }
             case 'undo_course': return 'text-ok';
+            case 'disable': return 'text-destructive';
+            case 'enable': return 'text-ok';
             case 'add_course': {
                 const amount = parseFloat(item.details);
                 if (!isNaN(amount) && amount < 0) return 'text-destructive';
