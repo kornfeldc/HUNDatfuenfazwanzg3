@@ -8,13 +8,16 @@ export async function load({cookies, params, url, locals}) {
     const hfzUser = await api.getUser();
     
     let unassignedUsers: any[] = [];
+    let ogUsers: any[] = [];
     if (hfzUser.admin) {
         unassignedUsers = await api.getUnassignedUsers();
+        ogUsers = await api.getOgUsers();
     }
     
     return {
         hfzUser,
         unassignedUsers,
+        ogUsers,
         version: pkg.version
     };
 }
@@ -67,6 +70,35 @@ export const actions = {
             await api.assignUserToOg(email, locals.og);
         } catch (e: any) {
             return fail(500, { error: e.message });
+        }
+
+        return { success: true };
+    },
+
+    setDisabled: async ({request, locals}) => {
+        const formData = await request.formData();
+        const email = formData.get('email')?.toString();
+        const disabled = formData.get('disabled')?.toString() === 'true';
+
+        if (!email) {
+            return fail(400, { userError: 'Email is required' });
+        }
+
+        const api = HfzApi.create(locals.supabase, locals.og!);
+        const currentUser = await api.getUser();
+
+        if (!currentUser.admin) {
+            return fail(403, { userError: 'Forbidden' });
+        }
+
+        if (currentUser.email === email) {
+            return fail(400, { userError: 'Sie können sich nicht selbst sperren' });
+        }
+
+        try {
+            await api.setUserDisabled(email, disabled);
+        } catch (e: any) {
+            return fail(500, { userError: e.message });
         }
 
         return { success: true };

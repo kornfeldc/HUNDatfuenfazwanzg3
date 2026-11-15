@@ -127,6 +127,48 @@
         </Card>
     {/if}
 
+    {#if formUser.admin && data.ogUsers?.length > 0}
+        <Card className="max-w-xl m-auto mt-4">
+             <div class="flex flex-col gap-4 p-4">
+                 <h3 class="font-bold text-lg">Benutzer</h3>
+                 {#if form?.userError}
+                     <div class="bg-destructive/15 text-destructive p-3 rounded-md text-sm font-medium">
+                         {form.userError}
+                     </div>
+                 {/if}
+                 {#each data.ogUsers as user}
+                     <div class="flex justify-between items-center gap-2 border-b pb-2 last:border-0 last:pb-0">
+                         <div class="flex flex-col min-w-0">
+                             <span class="font-medium truncate" class:text-muted-foreground={user.disabled}>{user.email}</span>
+                             {#if user.disabled}
+                                 <span class="text-xs text-destructive">Gesperrt</span>
+                             {:else if user.admin}
+                                 <span class="text-xs text-muted-foreground">Administrator</span>
+                             {/if}
+                         </div>
+                         {#if user.email !== formUser.email}
+                             <form method="post" action="?/setDisabled" use:enhance={() => {
+                                 submitting = true;
+                                 return async ({ update }) => {
+                                     await update();
+                                     submitting = false;
+                                 };
+                             }}>
+                                 <input type="hidden" name="email" value={user.email} />
+                                 <input type="hidden" name="disabled" value={user.disabled ? 'false' : 'true'} />
+                                 {#if user.disabled}
+                                     <Button type="submit" size="sm" variant="secondary">Entsperren</Button>
+                                 {:else}
+                                     <Button type="submit" size="sm" variant="outline" class="text-destructive">Sperren</Button>
+                                 {/if}
+                             </form>
+                         {/if}
+                     </div>
+                 {/each}
+             </div>
+        </Card>
+    {/if}
+
     <BackButton></BackButton>
     <PlaceAtBottom>
         <button type="button" onclick={() => goto('/logout')} class="flex items-center justify-center w-[34px] h-[34px] rounded-full text-destructive cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors">

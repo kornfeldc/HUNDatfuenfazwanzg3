@@ -1122,7 +1122,8 @@ export class HfzSupabaseApi implements IHfzApi {
         const {data, error} = await this.supabase
             .from('users')
             .select('*')
-            .is('og', null);
+            .is('og', null)
+            .eq('disabled', false);
 
         if (error) throw error;
 
@@ -1142,6 +1143,34 @@ export class HfzSupabaseApi implements IHfzApi {
 
         if (error) {
             console.error("assignUserToOg error", error);
+            throw error;
+        }
+    }
+
+    async getOgUsers(): Promise<Array<IUser>> {
+        const {data, error} = await this.supabase.rpc('og_users', {p_og: this.og});
+
+        if (error) throw error;
+
+        return (data as any[]).map((u: any) => ({
+            theme: "system",
+            email: u.login,
+            admin: u.admin,
+            og: this.og,
+            disabled: u.disabled
+        }));
+    }
+
+    // Logs to history itself (set_user_disabled in 20261114170000_users_disabled.sql).
+    async setUserDisabled(email: string, disabled: boolean): Promise<void> {
+        const {error} = await this.supabase.rpc('set_user_disabled', {
+            p_og: this.og,
+            p_login: email,
+            p_disabled: disabled
+        });
+
+        if (error) {
+            console.error("setUserDisabled error", error);
             throw error;
         }
     }

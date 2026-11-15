@@ -60,10 +60,10 @@ const authGuard: Handle = async ({ event, resolve }) => {
   let theme = 'system'
 
   if (user) {
-    // Check for tenant (og) and theme in the users table
+    // Check for tenant (og), theme and a disabled login in the users table
     const { data: userData, error: fetchError } = await event.locals.supabase
       .from('users')
-      .select('og, theme')
+      .select('og, theme, disabled')
       .eq('login', user.email)
       .maybeSingle()
 
@@ -89,6 +89,9 @@ const authGuard: Handle = async ({ event, resolve }) => {
     }
 
     if (event.url.pathname === '/l' || event.url.pathname.startsWith('/l/')) {
+      if (userData?.disabled) {
+        throw redirect(303, '/disabled')
+      }
       if (!userData || userData.og === null) {
         // If they have no 'og', redirect to no-tenant page
         if (event.url.pathname !== '/no-tenant') {
