@@ -17,6 +17,7 @@ export interface IHfzApi {
     getPersons(): Promise<Array<IPerson>>;
     getPersonsWithCourseHistory(days: number, includeEmpty?: boolean): Promise<Array<IPersonWithHistory>>;
     getMailingListPersons(): Promise<Array<IMailingListPerson>>;
+    getRegistrations(): Promise<Array<IPerson>>;
     getPerson(id: IId): Promise<IPerson>;
     getPersonCreditHistory(id: IId): Promise<Array<ICreditHistory>>;
     getPersonCourseHistory(id: IId): Promise<Array<ICourseHistory>>;

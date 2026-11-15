@@ -22,7 +22,8 @@
     const modules = [
         { name: "Verkäufe", href: "/l/modules/sales", icon: Euro },
         { name: "Kurse", href: "/l/modules/course", icon: PawPrint },
-        { name: "Personen", href: "/l/modules/persons", icon: User },
+        // Personen and the online registrations, shown as tabs (PersonsTabs.svelte)
+        { name: "Personen", href: "/l/modules/persons", icon: User, also: ["/l/modules/registrations"] },
         { name: "Artikel", href: "/l/modules/articles", icon: ShoppingBag },
         { name: "ROB", href: "/l/modules/rob", icon: CalendarClock },
         { name: "Kalender", href: "/l/modules/calendar", icon: CalendarDays },

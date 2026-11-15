@@ -143,6 +143,6 @@ insurance number, photo consent, how the person found the club, `registeredAt`) 
 the homepage calls without login. Accepting the terms on the form includes the photo/video consent, so online
 registrations always get `photoConsent`. The function checks every field, creates an active non-member person and logs
 "Online angemeldet" in the history; role `anon` still has no access to the `person` table itself. At most 20 registrations
-per hour and Ortsgruppe are accepted. New registrations show "Online angemeldet am …" in the person dialog.
+per hour and Ortsgruppe are accepted. New registrations are listed, newest first, in the tab **Personen → Anmeldungen** and show "Online angemeldet am …" in the person dialog.
 
 Run `pnpm test:registration` to check the function against PGlite.
